@@ -145,7 +145,7 @@ function bridgeListener(port: any) {
 
   blockForBootloader.then(() => {
     port.postMessage({
-      method: "KernelAuthStatus",
+      method: "kernelAuthStatus",
       data: authStatus,
     });
   });
