@@ -55,6 +55,20 @@ function handleKernelMessage(event: MessageEvent) {
   }
   let data = event.data.data;
 
+  if (event.data.method === "kernelBridgeVersion") {
+    for (let [, port] of Object.entries(openPorts)) {
+      try {
+        (port as any).postMessage(event.data);
+      } catch {}
+    }
+
+    return;
+  }
+
+  if (event.origin !== "http://kernel.skynet") {
+    return;
+  }
+
   if (event.data.method === "log") {
     if (data.isErr === false) {
       console.log(data.message);
@@ -115,6 +129,11 @@ function handleBridgeMessage(
   domain: string
 ) {
   if (!("nonce" in data)) {
+    return;
+  }
+
+  if (data.method === "response") {
+    window.postMessage(data);
     return;
   }
 

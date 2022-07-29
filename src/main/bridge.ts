@@ -49,14 +49,17 @@ port.onMessage.addListener(handleBackgroundMessage);
 // appeared which will need the auth status of the kernel repeated.
 function handleVersion(data: any) {
   // Send a message indicating that the bridge is alive.
-  window.postMessage({
+  const message = {
     nonce: data.nonce,
     method: "response",
     err: null,
     data: {
       version: "v0.2.0",
     },
-  });
+  };
+
+  window.postMessage(message);
+  port.postMessage(message);
 
   // Wait until the kernel auth status is known, then send a message with
   // the kernel auth status.
