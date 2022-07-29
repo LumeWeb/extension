@@ -64,7 +64,7 @@ function handleKernelMessage(event: MessageEvent) {
     return;
   }
 
-  if (event.data.method === "KernelAuthStatus") {
+  if (event.data.method === "kernelAuthStatus") {
     authStatus = data;
     if (authStatusKnown === false) {
       authStatusResolve();
