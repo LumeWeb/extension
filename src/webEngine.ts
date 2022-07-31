@@ -13,6 +13,7 @@ import {
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
   private requests: Map<string, OnBeforeRequestDetailsType> = new Map();
+  private requestData: Map<string, {}> = new Map();
 
   constructor() {
     browser.webRequest.onHeadersReceived.addListener(
@@ -28,6 +29,7 @@ export default class WebEngine {
       { urls: ["<all_urls>"] },
       ["blocking"]
     );
+
     browser.webRequest.onCompleted.addListener(
       this.onCompletedHandler.bind(this),
       {
@@ -108,12 +110,20 @@ export default class WebEngine {
     if (this.requests.has(details.requestId)) {
       this.requests.delete(details.requestId);
     }
+
+    if (this.requestData.has(details.requestId)) {
+      this.requests.delete(details.requestId);
+    }
   }
 
   private async onErrorHandler(
     details: OnErrorOccurredDetailsType
   ): Promise<void> {
     if (this.requests.has(details.requestId)) {
+      this.requests.delete(details.requestId);
+    }
+
+    if (this.requestData.has(details.requestId)) {
       this.requests.delete(details.requestId);
     }
   }
@@ -124,5 +134,27 @@ export default class WebEngine {
     }
 
     this.contentProviders.push(provider);
+  }
+
+  public getRequestData(requestId: string, key: string) {
+    if (!this.requestData.has(requestId)) {
+      return undefined;
+    }
+
+    const store: any = this.requestData.get(requestId);
+
+    return store[key];
+  }
+
+  public setRequestData(requestId: string, key: string, value: any) {
+    let store: any = {};
+
+    if (this.requestData.has(requestId)) {
+      store = this.requestData.get(requestId);
+    }
+
+    store[key] = value;
+
+    this.requestData.set(requestId, store);
   }
 }
