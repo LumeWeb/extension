@@ -3,6 +3,7 @@ import tldEnum from "@lumeweb/tld-enum";
 import WebEngine from "../webEngine.js";
 import InternalProvider from "../contentProviders/internalProvider.js";
 import SkynetProvider from "../contentProviders/skynetProvider.js";
+import ServerProvider from "../contentProviders/serverProvider.js";
 import { init } from "libkernel";
 
 declare var browser: any; // tsc
@@ -188,6 +189,7 @@ browser.runtime.onConnect.addListener(bridgeListener);
 
 const engine = new WebEngine();
 engine.registerContentProvider(new InternalProvider(engine));
+engine.registerContentProvider(new ServerProvider(engine));
 engine.registerContentProvider(new SkynetProvider(engine));
 
 // @ts-ignore
