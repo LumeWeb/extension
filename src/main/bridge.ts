@@ -130,3 +130,6 @@ function handleMessage(event: MessageEvent) {
   // Everything else just gets ignored.
 }
 window.addEventListener("message", handleMessage);
+port.postMessage({
+  method: "bridgeLoaded",
+});

@@ -24,9 +24,15 @@ setTimeout(logLargeObjects, timer);
 let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
 let authStatusResolve: DataFn;
+let bridgeLoadedResolve: DataFn;
 let blockForBootloader = new Promise((resolve) => {
   authStatusResolve = resolve;
 });
+let blockForBridge = new Promise((resolve) => {
+  bridgeLoadedResolve = resolve;
+});
+
+tldEnum.list.push("localhost");
 
 export function queryKernel(query: any): Promise<any> {
   return new Promise((resolve) => {
@@ -50,17 +56,16 @@ export function queryKernel(query: any): Promise<any> {
   });
 }
 function handleKernelMessage(event: MessageEvent) {
-  if (event.origin !== "http://kernel.skynet") {
-    return;
-  }
   let data = event.data.data;
 
   if (event.data.method === "kernelBridgeVersion") {
-    for (let [, port] of Object.entries(openPorts)) {
-      try {
-        (port as any).postMessage(event.data);
-      } catch {}
-    }
+    blockForBridge.then(() => {
+      for (let [, port] of Object.entries(openPorts)) {
+        try {
+          (port as any).postMessage(event.data);
+        } catch {}
+      }
+    });
 
     return;
   }
@@ -128,6 +133,11 @@ function handleBridgeMessage(
   data: any,
   domain: string
 ) {
+  if (data.method === "bridgeLoaded") {
+    bridgeLoadedResolve();
+    return;
+  }
+
   if (!("nonce" in data)) {
     return;
   }
@@ -180,4 +190,5 @@ engine.registerContentProvider(new InternalProvider(engine));
 // @ts-ignore
 let kernelFrame: HTMLIFrameElement = document.createElement("iframe");
 kernelFrame.src = "http://kernel.skynet";
+kernelFrame.onload = init;
 document.body.appendChild(kernelFrame);
