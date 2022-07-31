@@ -32,7 +32,7 @@
 	},
 	"dependencies": {
 		"@lumeweb/tld-enum": "https://github.com/LumeWeb/list-of-top-level-domains.git",
-		"libkernel": "^0.1.38",
+		"libkernel": "https://github.com/LumeWeb/libextension.git",
 		"libskynet": "^0.0.62"
 	},
 	"browser": {
