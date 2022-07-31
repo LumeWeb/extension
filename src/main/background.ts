@@ -1,4 +1,9 @@
 import type { DataFn, KernelAuthStatus } from "libskynet";
+import tldEnum from "@lumeweb/tld-enum";
+import WebEngine from "../webEngine.js";
+import InternalProvider from "../contentProviders/internalProvider.js";
+import SkynetProvider from "../contentProviders/skynetProvider.js";
+import { init } from "libkernel";
 
 declare var browser: any; // tsc
 let queriesNonce = 1;
@@ -181,11 +186,9 @@ function bridgeListener(port: any) {
 }
 browser.runtime.onConnect.addListener(bridgeListener);
 
-import WebEngine from "../webEngine.js";
-import InternalProvider from "../contentProviders/internalProvider.js";
-
 const engine = new WebEngine();
 engine.registerContentProvider(new InternalProvider(engine));
+engine.registerContentProvider(new SkynetProvider(engine));
 
 // @ts-ignore
 let kernelFrame: HTMLIFrameElement = document.createElement("iframe");
