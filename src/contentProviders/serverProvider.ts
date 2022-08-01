@@ -26,6 +26,10 @@ export default class ServerProvider extends BaseProvider {
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
     const dns = await this.resolveDns(details);
 
-    return { type: "http", host: dns, port: 80 };
+    if (isIp(dns) || isDomain(dns)) {
+      return { type: "http", host: dns, port: 80 };
+    }
+
+    return false;
   }
 }
