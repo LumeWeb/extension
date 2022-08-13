@@ -5,6 +5,7 @@ import InternalProvider from "../contentProviders/internalProvider.js";
 import SkynetProvider from "../contentProviders/skynetProvider.js";
 import ServerProvider from "../contentProviders/serverProvider.js";
 import { init } from "libkernel";
+import IpfsProvider from "../contentProviders/ipfsProvider.js";
 
 declare var browser: any; // tsc
 let queriesNonce = 1;
@@ -191,6 +192,7 @@ const engine = new WebEngine();
 engine.registerContentProvider(new InternalProvider(engine));
 engine.registerContentProvider(new ServerProvider(engine));
 engine.registerContentProvider(new SkynetProvider(engine));
+engine.registerContentProvider(new IpfsProvider(engine));
 
 // @ts-ignore
 let kernelFrame: HTMLIFrameElement = document.createElement("iframe");
