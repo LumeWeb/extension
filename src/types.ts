@@ -7,6 +7,8 @@ import OnErrorOccurredDetailsType = WebRequest.OnErrorOccurredDetailsType;
 import BlockingResponse = WebRequest.BlockingResponse;
 import OnRequestDetailsType = Proxy.OnRequestDetailsType;
 import HttpHeaders = WebRequest.HttpHeaders;
+import StreamFilter = WebRequest.StreamFilter;
+import HttpHeadersItemType = WebRequest.HttpHeadersItemType;
 
 export {
   OnHeadersReceivedDetailsType,
@@ -17,4 +19,6 @@ export {
   BlockingResponse,
   OnRequestDetailsType,
   HttpHeaders,
+  StreamFilter,
+  HttpHeadersItemType,
 };
