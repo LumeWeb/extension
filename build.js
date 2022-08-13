@@ -10,6 +10,7 @@ esbuild.buildSync({
   define: {
     global: "self",
   },
+  inject: ["./polyfill.js"],
 });
 
 esbuild.buildSync({
