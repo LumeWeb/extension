@@ -11,5 +11,6 @@ export const contentModes: { [mimeType: string]: string } = {
   "image/webp": CONTENT_MODE_BUFFERED,
 
   //JS
-  "application/javascript": CONTENT_MODE_CHUNKED,
+  "application/javascript": CONTENT_MODE_BUFFERED,
+  "application/json": CONTENT_MODE_BUFFERED,
 };
