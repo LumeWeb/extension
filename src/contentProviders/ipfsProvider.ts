@@ -103,9 +103,11 @@ export default class IpfsProvider extends BaseProvider {
 
     return false;
   }
+
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
     return requestProxies;
   }
+
   async handleReqHeaders(
     details: OnBeforeSendHeadersDetailsType
   ): Promise<BlockingResponse | boolean> {
@@ -247,35 +249,42 @@ export default class IpfsProvider extends BaseProvider {
         if (buffer.length) {
           let mode = contentModes[contentType as string];
           if (mode === CONTENT_MODE_BUFFERED) {
-            filter.write(
-              Uint8Array.from(
-                buffer.reduce(
-                  (previousValue: Uint8Array, currentValue: Uint8Array) => {
-                    return Uint8Array.from([...previousValue, ...currentValue]);
-                  }
-                )
+            let data: string | Uint8Array = Uint8Array.from(
+              buffer.reduce(
+                (previousValue: Uint8Array, currentValue: Uint8Array) => {
+                  return Uint8Array.from([...previousValue, ...currentValue]);
+                }
               )
             );
+            if (contentType === "application/javascript") {
+              data = new TextDecoder("utf-8", { fatal: true }).decode(data);
+              data = data.replace(
+                /\/\/#\s*sourceMappingURL=([^\.]+)\.js.map/,
+                ""
+              );
+              data = new TextEncoder().encode(data);
+            }
+            filter.write(data);
           } else if (mode == CONTENT_MODE_CHUNKED) {
-            buffer.forEach(filter.write);
+            buffer.forEach((data) => filter.write(data));
           }
         }
         filter.close();
       })
       .catch((e) => {
-        console.log("page error", urlPath, e.message);
+        console.error("page error", urlPath, e.message);
         /*        if (
-          urlPath.endsWith(".html") ||
-          urlPath.endsWith(".htm") ||
-          urlPath.endsWith(".xhtml") ||
-          urlPath.endsWith(".shtml")
-        ) {
-          this.setData(details, "contentType", "text/html");
-          let template = serverErrorTemplate();
-          contentLength = template.length;
-          receiveUpdate(new TextEncoder().encode(template));
-          this.setData(details, "contentLength", contentLength);
-        }*/
+                  urlPath.endsWith(".html") ||
+                  urlPath.endsWith(".htm") ||
+                  urlPath.endsWith(".xhtml") ||
+                  urlPath.endsWith(".shtml")
+                ) {
+                  this.setData(details, "contentType", "text/html");
+                  let template = serverErrorTemplate();
+                  contentLength = template.length;
+                  receiveUpdate(new TextEncoder().encode(template));
+                  this.setData(details, "contentLength", contentLength);
+                }*/
         filterPromise.then(() => streamPromise).then(() => filter.close());
       });
 
@@ -294,11 +303,11 @@ export default class IpfsProvider extends BaseProvider {
     });
 
     /*    if (contentLength) {
-      headers.push({
-        name: "content-length",
-        value: contentLength,
-      });
-    }*/
+          headers.push({
+            name: "content-length",
+            value: contentLength,
+          });
+        }*/
 
     return {
       responseHeaders: headers,
