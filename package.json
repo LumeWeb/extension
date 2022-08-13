@@ -10,7 +10,7 @@
 		"eslint": "eslint src --fix",
 		"lint": "npm run deps && npm run prettier && npm run eslint",
 		"compile": "node build.js",
-		"build": "npm run compile && rimraf node_modules/@lumeweb/kernel-dns-client/node_modules && cpy \"assets/*\" dist"
+		"build": "npm run compile && rimraf node_modules/@lumeweb/kernel-dns-client/node_modules && rimraf node_modules/@lumeweb/kernel-ipfs-client/node_modules && cpy \"assets/*\" dist"
 	},
 	"author": "David Vorick",
 	"license": "MIT",
@@ -18,24 +18,36 @@
 		"@lumeweb/kernel-dns-client": "https://github.com/LumeWeb/kernel-dns-client.git",
 		"@lumeweb/webextension-polyfill": "https://github.com/LumeWeb/webextension-polyfill.git",
 		"@rollup/plugin-node-resolve": "^13.3.0",
+		"@types/ejs": "^3.1.1",
 		"@types/read": "^0.0.29",
 		"@types/webextension-polyfill": "^0.9.0",
 		"@typescript-eslint/eslint-plugin": "^5.18.0",
+		"browserify-fs": "^1.0.0",
 		"cpy-cli": "^4.1.0",
 		"esbuild": "^0.14.51",
 		"eslint": "^8.13.0",
+		"events": "^3.3.0",
+		"path-browserify": "^1.0.1",
 		"prettier": "^2.6.2",
+		"process": "^0.11.10",
 		"rimraf": "^3.0.2",
 		"rollup": "^2.75.6",
+		"stream": "^0.0.2",
 		"typescript": "^4.6.3",
+		"util": "^0.12.4",
 		"webextension-polyfill": "^0.9.0"
 	},
 	"dependencies": {
+		"@lumeweb/kernel-ipfs-client": "https://github.com/LumeWeb/kernel-ipfs-client.git",
 		"@lumeweb/tld-enum": "https://github.com/LumeWeb/list-of-top-level-domains.git",
+		"ejs": "^3.1.8",
+		"is-ipfs": "^6.0.2",
 		"libkernel": "https://github.com/LumeWeb/libextension.git",
 		"libskynet": "^0.0.62"
 	},
 	"browser": {
-		"libkmodule": false
+		"libkmodule": false,
+		"path": "path-browserify",
+		"fs": "browserify-fs"
 	}
 }
