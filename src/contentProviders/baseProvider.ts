@@ -1,6 +1,7 @@
 import {
   BlockingResponse,
   OnBeforeRequestDetailsType,
+  OnBeforeSendHeadersDetailsType,
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
 } from "../types";
@@ -23,6 +24,12 @@ export default abstract class BaseProvider {
 
   async handleRequest(
     details: OnBeforeRequestDetailsType
+  ): Promise<BlockingResponse | boolean> {
+    return false;
+  }
+
+  async handleReqHeaders(
+    details: OnBeforeSendHeadersDetailsType
   ): Promise<BlockingResponse | boolean> {
     return false;
   }

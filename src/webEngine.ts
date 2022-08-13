@@ -4,6 +4,7 @@ import BaseProvider from "./contentProviders/baseProvider.js";
 import {
   BlockingResponse,
   OnBeforeRequestDetailsType,
+  OnBeforeSendHeadersDetailsType,
   OnCompletedDetailsType,
   OnErrorOccurredDetailsType,
   OnHeadersReceivedDetailsType,
@@ -12,7 +13,7 @@ import {
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
-  private requests: Map<string, OnBeforeRequestDetailsType> = new Map();
+  private requests: Map<string, BaseProvider> = new Map();
   private requestData: Map<string, {}> = new Map();
 
   constructor() {
@@ -28,6 +29,12 @@ export default class WebEngine {
       this.requestHandler.bind(this),
       { urls: ["<all_urls>"] },
       ["blocking"]
+    );
+
+    browser.webRequest.onBeforeSendHeaders.addListener(
+      this.reqHeaderHandler.bind(this),
+      { urls: ["<all_urls>"] },
+      ["requestHeaders", "blocking"]
     );
 
     browser.webRequest.onCompleted.addListener(
@@ -47,26 +54,16 @@ export default class WebEngine {
   private async headerHandler(
     details: OnHeadersReceivedDetailsType
   ): Promise<BlockingResponse> {
-    const def = { responseHeaders: details.responseHeaders };
-    if (!this.requests.has(details.requestId)) {
-      return def;
-    }
-
-    for (const provider of this.contentProviders) {
-      const response = await provider.handleHeaders(details);
-      if (response !== false) {
-        return response as BlockingResponse;
-      }
-    }
-
-    return def;
+    return this.processHandler(details, "handleHeaders", {
+      responseHeaders: details.responseHeaders,
+    });
   }
 
   private async proxyHandler(details: OnRequestDetailsType): Promise<any> {
-    let handle = false;
+    let handle = null;
     for (const provider of this.contentProviders) {
       if (await provider.shouldHandleRequest(details)) {
-        handle = true;
+        handle = provider;
         break;
       }
     }
@@ -75,35 +72,22 @@ export default class WebEngine {
       return {};
     }
 
-    this.requests.set(details.requestId, details);
+    this.requests.set(details.requestId, handle);
 
-    for (const provider of this.contentProviders) {
-      const response = await provider.handleProxy(details);
-      if (response !== false) {
-        return response as any;
-      }
-    }
-
-    return {};
+    return this.processHandler(details, "handleProxy");
   }
 
   private async requestHandler(
     details: OnBeforeRequestDetailsType
   ): Promise<BlockingResponse> {
-    if (!this.requests.has(details.requestId)) {
-      return {};
-    }
-
-    for (const provider of this.contentProviders) {
-      const response = await provider.handleRequest(details);
-      if (response !== false) {
-        return response as BlockingResponse;
-      }
-    }
-
-    return {};
+    return this.processHandler(details, "handleRequest");
   }
 
+  private async reqHeaderHandler(
+    details: OnBeforeSendHeadersDetailsType
+  ): Promise<BlockingResponse> {
+    return this.processHandler(details, "handleReqHeaders");
+  }
   private async onCompletedHandler(
     details: OnCompletedDetailsType
   ): Promise<void> {
@@ -156,5 +140,26 @@ export default class WebEngine {
     store[key] = value;
 
     this.requestData.set(requestId, store);
+  }
+
+  private async processHandler(
+    details: any,
+    method: string,
+    def = {}
+  ): Promise<BlockingResponse> {
+    const provider = this.requests.get(details.requestId) as unknown as {
+      [index: string]: Function;
+    };
+
+    if (!provider) {
+      return def;
+    }
+    const response = await provider[method](details);
+
+    if (response !== false) {
+      return response as BlockingResponse;
+    }
+
+    return def;
   }
 }
