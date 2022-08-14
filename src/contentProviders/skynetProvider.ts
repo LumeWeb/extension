@@ -31,8 +31,15 @@ export default class SkynetProvider extends BaseProvider {
     details: OnBeforeRequestDetailsType
   ): Promise<BlockingResponse | boolean> {
     const dns = await this.resolveDns(details);
-    let path = new URL(details.url).pathname;
+    let urlObj = new URL(details.url);
+    let path = urlObj.pathname;
     let fileData: any, err;
+
+    if (urlObj.protocol == "https") {
+      urlObj.protocol = "http";
+      return { redirectUrl: urlObj.toString() };
+    }
+
     try {
       [fileData, err] = await downloadSkylink(dns, path);
     } catch (e: any) {

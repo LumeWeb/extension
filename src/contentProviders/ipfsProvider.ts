@@ -121,11 +121,18 @@ export default class IpfsProvider extends BaseProvider {
   async handleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<BlockingResponse | boolean> {
-    let urlPath = new URL(details.url).pathname;
+    let urlObj = new URL(details.url);
+    let urlPath = urlObj.pathname;
     let hash = this.getData(details, "hash");
     let resp: StatFileResponse | null = null;
     let fetchMethod: typeof fetchIpfs | typeof fetchIpns;
     let err;
+
+    if (urlObj.protocol == "https") {
+      urlObj.protocol = "http";
+      return { redirectUrl: urlObj.toString() };
+    }
+
     try {
       if (ipfsPath(hash)) {
         hash = hash.replace("/ipfs/", "");
@@ -264,6 +271,23 @@ export default class IpfsProvider extends BaseProvider {
               );
               data = new TextEncoder().encode(data);
             }
+            /*            if (contentType === "text/html") {
+              data = new TextDecoder("utf-8", { fatal: true }).decode(data);
+              let htmlDoc = new DOMParser().parseFromString(
+                data as string,
+                contentType
+              );
+              let found = htmlDoc.documentElement.querySelectorAll(
+                'meta[http-equiv="Content-Security-Policy"]'
+              );
+
+              if (found.length) {
+                found.forEach((item) => item.remove());
+                data = htmlDoc.documentElement.outerHTML;
+              }
+
+              data = new TextEncoder().encode(data);
+            }*/
             filter.write(data);
           } else if (mode == CONTENT_MODE_CHUNKED) {
             buffer.forEach((data) => filter.write(data));
