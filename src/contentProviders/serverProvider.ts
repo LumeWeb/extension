@@ -1,14 +1,6 @@
 import BaseProvider from "./baseProvider.js";
-import {
-  BlockingResponse,
-  HttpHeaders,
-  OnBeforeRequestDetailsType,
-  OnHeadersReceivedDetailsType,
-  OnRequestDetailsType,
-} from "../types.js";
-import { validSkylink } from "libskynet";
-import { downloadSkylink, isDomain, isIp, requestProxies } from "../util.js";
-import browser from "@lumeweb/webextension-polyfill";
+import { OnBeforeRequestDetailsType, OnRequestDetailsType } from "../types.js";
+import { isDomain, isIp } from "../util.js";
 
 export default class ServerProvider extends BaseProvider {
   async shouldHandleRequest(
