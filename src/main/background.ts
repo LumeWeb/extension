@@ -7,39 +7,48 @@ import ServerProvider from "../contentProviders/serverProvider.js";
 import { init } from "libkernel";
 import IpfsProvider from "../contentProviders/ipfsProvider.js";
 import { ready as dnsReady } from "@lumeweb/kernel-dns-client";
-
-declare var browser: any; // tsc
-let queriesNonce = 1;
-let queries: any = {};
-let portsNonce = 0;
-let openPorts = {} as any;
-let timer = 20000;
+import {
+  addQuery,
+  authStatusResolve,
+  blockForBootloader,
+  blockForBridge,
+  bridgeLoadedResolve,
+  clearOpenPorts,
+  deleteOpenPort,
+  deleteQuery,
+  getAuthStatus,
+  getAuthStatusKnown,
+  getKernelIframe,
+  getOpenPorts,
+  getPortsNonce,
+  getQueries,
+  getQueriesNonce,
+  getQuery,
+  getTimer,
+  increasePortsNonce,
+  increaseQueriesNonce,
+  kernelFrame,
+  setAuthStatus,
+  setAuthStatusKnown,
+  setKernelIframe,
+  setOpenPort,
+  setTimer,
+} from "./vars.js";
+import browser from "@lumeweb/webextension-polyfill";
 
 function logLargeObjects() {
-  let queriesLen = Object.keys(queries).length;
-  let portsLen = Object.keys(openPorts).length;
+  let queriesLen = Object.keys(getQueries()).length;
+  let portsLen = Object.keys(getOpenPorts()).length;
   if (queriesLen > 500) {
     console.error("queries appears to be leaking:", queriesLen);
   }
   if (portsLen > 50) {
     console.error("ports appears to be leaking:", portsLen);
   }
-  timer *= 1.25;
-  setTimeout(logLargeObjects, timer);
+  setTimer(getTimer() * 1.25);
+  setTimeout(logLargeObjects, getTimer());
 }
-setTimeout(logLargeObjects, timer);
-
-export let authStatus: KernelAuthStatus;
-let authStatusKnown = false;
-let authStatusResolve: DataFn;
-let bridgeLoadedResolve: DataFn;
-let blockForBootloader = new Promise((resolve) => {
-  authStatusResolve = resolve;
-});
-let blockForBridge = new Promise((resolve) => {
-  bridgeLoadedResolve = resolve;
-});
-let kernelFrame: HTMLIFrameElement;
+setTimeout(logLargeObjects, getTimer());
 
 export function queryKernel(query: any): Promise<any> {
   return new Promise((resolve) => {
@@ -48,10 +57,10 @@ export function queryKernel(query: any): Promise<any> {
     };
 
     blockForBootloader.then(() => {
-      let nonce = queriesNonce;
-      queriesNonce += 1;
+      let nonce = getQueriesNonce();
+      increaseQueriesNonce();
       query.nonce = nonce;
-      queries[nonce] = receiveResponse;
+      addQuery(nonce, receiveResponse);
       if (kernelFrame.contentWindow !== null) {
         kernelFrame.contentWindow.postMessage(query, "http://kernel.skynet");
       } else {
@@ -67,7 +76,7 @@ function handleKernelMessage(event: MessageEvent) {
 
   if (event.data.method === "kernelBridgeVersion") {
     blockForBridge.then(() => {
-      for (let [, port] of Object.entries(openPorts)) {
+      for (let [, port] of Object.entries(getOpenPorts())) {
         try {
           (port as any).postMessage(event.data);
         } catch {}
@@ -91,17 +100,17 @@ function handleKernelMessage(event: MessageEvent) {
   }
 
   if (event.data.method === "kernelAuthStatus") {
-    authStatus = data;
-    if (authStatusKnown === false) {
+    setAuthStatus(data);
+    if (getAuthStatusKnown() === false) {
       authStatusResolve();
-      authStatusKnown = true;
+      setAuthStatusKnown(true);
       console.log("bootloader is now initialized");
-      if (authStatus.loginComplete !== true) {
+      if (getAuthStatus().loginComplete !== true) {
         console.log("user is not logged in: waiting until login is confirmed");
       }
     }
 
-    for (let [, port] of Object.entries(openPorts)) {
+    for (let [, port] of Object.entries(getOpenPorts())) {
       try {
         (port as any).postMessage(event.data);
       } catch {}
@@ -110,24 +119,24 @@ function handleKernelMessage(event: MessageEvent) {
     if (data.logoutComplete === true) {
       console.log("received logout signal, clearing all ports");
 
-      for (let [, port] of Object.entries(openPorts)) {
+      for (let [, port] of Object.entries(getOpenPorts())) {
         try {
           (port as any).disconnect();
         } catch {}
       }
-      openPorts = {};
+      clearOpenPorts();
     }
 
     return;
   }
 
-  if (!(event.data.nonce in queries)) {
+  if (!(event.data.nonce in getQueries())) {
     return;
   }
 
-  let receiveResult = queries[event.data.nonce];
+  let receiveResult = getQuery(event.data.nonce);
   if (event.data.method === "response") {
-    delete queries[event.data.nonce];
+    deleteQuery(event.data.nonce);
   }
 
   receiveResult(event.data);
@@ -154,22 +163,22 @@ function handleBridgeMessage(
   }
 
   if (data.method !== "queryUpdate") {
-    queries[data.nonce] = (response: any) => {
-      if (portNonce in openPorts) {
+    addQuery(data.nonce, (response: any) => {
+      if (portNonce in getOpenPorts()) {
         port.postMessage(response);
       }
-    };
+    });
     data["domain"] = domain;
   }
   kernelFrame.contentWindow!.postMessage(data, "http://kernel.skynet");
 }
 function bridgeListener(port: any) {
-  let portNonce = portsNonce;
-  portsNonce++;
-  openPorts[portNonce] = port;
+  let portNonce = getPortsNonce();
+  increasePortsNonce();
+  setOpenPort(portNonce, port);
 
   port.onDisconnect.addListener(() => {
-    delete openPorts[portNonce];
+    deleteOpenPort(portNonce);
   });
 
   let domain = new URL(port.sender.url).hostname;
@@ -181,7 +190,7 @@ function bridgeListener(port: any) {
   blockForBootloader.then(() => {
     port.postMessage({
       method: "kernelAuthStatus",
-      data: authStatus,
+      data: getAuthStatus(),
     });
   });
 }
@@ -198,10 +207,10 @@ async function boot() {
   engine.registerContentProvider(new IpfsProvider(engine));
 
   // @ts-ignore
-  kernelFrame = document.createElement("iframe");
-  kernelFrame.src = "http://kernel.skynet";
-  kernelFrame.onload = init;
-  document.body.appendChild(kernelFrame);
+  setKernelIframe(document.createElement("iframe"));
+  getKernelIframe().src = "http://kernel.skynet";
+  getKernelIframe().onload = init;
+  document.body.appendChild(getKernelIframe());
 
   await dnsReady();
 }
