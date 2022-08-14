@@ -3,6 +3,7 @@ import browser from "@lumeweb/webextension-polyfill";
 import BaseProvider from "./contentProviders/baseProvider.js";
 import {
   BlockingResponse,
+  OnBeforeNavigateDetailsType,
   OnBeforeRequestDetailsType,
   OnBeforeSendHeadersDetailsType,
   OnCompletedDetailsType,
@@ -10,11 +11,16 @@ import {
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
 } from "./types";
+import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
+import tldEnum from "@lumeweb/tld-enum";
+import { resolve } from "@lumeweb/kernel-dns-client";
+import { blake2b, bufToHex } from "libskynet";
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
   private requests: Map<string, BaseProvider> = new Map();
   private requestData: Map<string, {}> = new Map();
+  private navigations: Map<string, Promise<any>> = new Map();
 
   constructor() {
     browser.webRequest.onHeadersReceived.addListener(
@@ -49,6 +55,9 @@ export default class WebEngine {
         urls: ["<all_urls>"],
       }
     );
+    browser.webNavigation.onBeforeNavigate.addListener(
+      this.handleNavigationRequest.bind(this)
+    );
   }
 
   private async headerHandler(
@@ -80,6 +89,20 @@ export default class WebEngine {
   private async requestHandler(
     details: OnBeforeRequestDetailsType
   ): Promise<BlockingResponse> {
+    const navId = this.getNavigationId(details);
+    let navRedirect: boolean | string = false;
+    if (this.navigations.has(navId)) {
+      try {
+        await this.navigations.get(navId);
+      } catch (e: any) {
+        navRedirect = e;
+      }
+    }
+
+    if (navRedirect && navRedirect !== details.url) {
+      return { redirectUrl: navRedirect as string };
+    }
+
     return this.processHandler(details, "handleRequest");
   }
 
@@ -161,5 +184,106 @@ export default class WebEngine {
     }
 
     return def;
+  }
+
+  private async handleNavigationRequest(details: OnBeforeNavigateDetailsType) {
+    if (!details.url) {
+      return;
+    }
+
+    if (!isDomain(details.url) || isIp(details.url)) {
+      return;
+    }
+
+    const originalUrl = new URL(details.url);
+    const hostname = normalizeDomain(originalUrl.hostname);
+
+    if (["chrome:"].includes(originalUrl.protocol)) {
+      return;
+    }
+
+    if ("google.com" === hostname) {
+      if (
+        !(
+          originalUrl.searchParams.has("client") &&
+          originalUrl.searchParams.get("client")?.includes("firefox")
+        )
+      ) {
+        return;
+      }
+    }
+
+    let resolveRequest: any, rejectRequest: any;
+
+    let promise = new Promise((resolve, reject) => {
+      resolveRequest = resolve;
+      rejectRequest = reject;
+    });
+
+    this.navigations.set(this.getNavigationId(details), promise);
+
+    let queriedUrl = originalUrl.searchParams.get("q") as string;
+    let queriedHost = queriedUrl;
+    try {
+      let queriedUrlUbj = new URL(queriedUrl);
+      queriedHost = queriedUrlUbj.hostname;
+    } catch {}
+
+    if (tldEnum.list.includes(getTld(queriedHost))) {
+      resolveRequest();
+      return false;
+    }
+
+    if (isIp(queriedHost)) {
+      resolveRequest();
+      return;
+    }
+
+    if (/[\s_]/.test(queriedHost)) {
+      resolveRequest();
+      return;
+    }
+    let dns;
+
+    try {
+      dns = await resolve(queriedHost, {});
+    } catch (e) {
+      resolveRequest();
+      return;
+    }
+
+    if (!dns) {
+      resolveRequest();
+      return;
+    }
+
+    if (!queriedUrl.includes("://")) {
+      queriedUrl = `http://${queriedUrl}`;
+    }
+
+    rejectRequest(queriedUrl);
+  }
+
+  private getNavigationId(details: any) {
+    return `${details.tabId}_${bufToHex(
+      blake2b(new TextEncoder().encode(details.url))
+    )}`;
+  }
+
+  public static cancelRequest(tabId: number) {
+    const handler = (details: OnBeforeRequestDetailsType): BlockingResponse => {
+      if (details.tabId !== tabId) {
+        return {};
+      }
+      browser.webRequest.onBeforeRequest.removeListener(handler);
+
+      return { cancel: true };
+    };
+
+    browser.webRequest.onBeforeRequest.addListener(
+      handler,
+      { urls: ["<all_urls>"] },
+      ["blocking"]
+    );
   }
 }

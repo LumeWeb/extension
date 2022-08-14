@@ -1,4 +1,4 @@
-import { WebRequest, Proxy } from "webextension-polyfill";
+import { WebRequest, Proxy, Tabs, WebNavigation } from "webextension-polyfill";
 import OnHeadersReceivedDetailsType = WebRequest.OnHeadersReceivedDetailsType;
 import OnBeforeRequestDetailsType = WebRequest.OnBeforeRequestDetailsType;
 import OnBeforeSendHeadersDetailsType = WebRequest.OnBeforeSendHeadersDetailsType;
@@ -9,6 +9,7 @@ import OnRequestDetailsType = Proxy.OnRequestDetailsType;
 import HttpHeaders = WebRequest.HttpHeaders;
 import StreamFilter = WebRequest.StreamFilter;
 import HttpHeadersItemType = WebRequest.HttpHeadersItemType;
+import OnBeforeNavigateDetailsType = WebNavigation.OnBeforeNavigateDetailsType;
 
 export {
   OnHeadersReceivedDetailsType,
@@ -21,4 +22,6 @@ export {
   HttpHeaders,
   StreamFilter,
   HttpHeadersItemType,
+  Tabs,
+  OnBeforeNavigateDetailsType,
 };
