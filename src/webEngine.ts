@@ -203,13 +203,7 @@ export default class WebEngine {
       return;
     }
 
-    if ("kernel.skynet" === hostname) {
-      return;
-    }
-    if (getAuthStatus().loginComplete !== true) {
-      return;
-    }
-    if ("google.com" !== hostname) {
+    if (!["google.com", "www.google.com"].includes(hostname)) {
       return;
     }
     if (
@@ -222,6 +216,9 @@ export default class WebEngine {
     }
 
     let queriedUrl = originalUrl.searchParams.get("q") as string;
+    if (!queriedUrl.includes("://")) {
+      queriedUrl = `http://${queriedUrl}`;
+    }
     let queriedHost = queriedUrl;
     try {
       let queriedUrlUbj = new URL(queriedUrl);
@@ -249,6 +246,19 @@ export default class WebEngine {
     });
 
     this.navigations.set(this.getNavigationId(details), promise);
+
+    if ("kernel.skynet" === queriedHost) {
+      if (!queriedUrl.includes("://")) {
+        queriedUrl = `http://${queriedUrl}`;
+      }
+      rejectRequest(queriedUrl);
+      return;
+    }
+
+    if (getAuthStatus().loginComplete !== true) {
+      resolveRequest();
+      return;
+    }
 
     try {
       dns = await resolve(queriedHost, {});

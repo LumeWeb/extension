@@ -206,7 +206,6 @@ async function boot() {
   engine.registerContentProvider(new SkynetProvider(engine));
   engine.registerContentProvider(new IpfsProvider(engine));
 
-  // @ts-ignore
   setKernelIframe(document.createElement("iframe"));
   getKernelIframe().src = "http://kernel.skynet";
   getKernelIframe().onload = init;
