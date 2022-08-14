@@ -29,7 +29,7 @@ function logLargeObjects() {
 }
 setTimeout(logLargeObjects, timer);
 
-let authStatus: KernelAuthStatus;
+export let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
 let authStatusResolve: DataFn;
 let bridgeLoadedResolve: DataFn;
