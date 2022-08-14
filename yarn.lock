@@ -52,9 +52,19 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
+"@lumeweb/kernel-dht-client@https://github.com/LumeWeb/kernel-dht-client.git":
+  version "0.1.0"
+  resolved "https://github.com/LumeWeb/kernel-dht-client.git#4799cf4a989afd2ef63a38abd5fbff250576885b"
+  dependencies:
+    buffer "^6.0.3"
+    events "^3.3.0"
+    libkernel "^0.1.43"
+    libkmodule "^0.2.44"
+    libskynet "^0.0.62"
+
 "@lumeweb/kernel-dns-client@https://github.com/LumeWeb/kernel-dns-client.git":
   version "0.1.0"
-  resolved "https://github.com/LumeWeb/kernel-dns-client.git#ac9cc4cf0dc58a5047a7b0c3bcc70705f51ae65f"
+  resolved "https://github.com/LumeWeb/kernel-dns-client.git#1ba24bee76ab7f746252a21fc48d34044924feb8"
   dependencies:
     buffer "^6.0.3"
     libkernel "^0.1.43"

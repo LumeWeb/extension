@@ -7,7 +7,7 @@ import {
   OnRequestDetailsType,
 } from "../types.js";
 import { validSkylink } from "libskynet";
-import { downloadSkylink, requestProxies } from "../util.js";
+import { downloadSkylink, getRelayProxies } from "../util.js";
 import browser from "@lumeweb/webextension-polyfill";
 
 export default class SkynetProvider extends BaseProvider {
@@ -24,7 +24,7 @@ export default class SkynetProvider extends BaseProvider {
   }
 
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
-    return requestProxies;
+    return getRelayProxies();
   }
 
   async handleRequest(

@@ -9,6 +9,9 @@ import {
   validSkylink,
   verifyDownloadResponse,
 } from "libskynet";
+import { DHT } from "@lumeweb/kernel-dht-client";
+
+const relayDht = new DHT();
 
 export function isIp(ip: string) {
   return /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
@@ -24,6 +27,17 @@ export function isDomain(domain: string) {
 
 export function normalizeDomain(domain: string): string {
   return domain.replace(/^\.+|\.+$/g, "").replace(/^\/+|\/+$/g, "");
+}
+
+export async function getRelayProxies() {
+  let relays: string[] = await relayDht.getRelayServers();
+  let proxies = [{ type: "http", host: "localhost", port: 25252 }];
+
+  for (const relay of relays) {
+    proxies.push({ type: "http", host: new URL(relay).hostname, port: 25252 });
+  }
+
+  return proxies;
 }
 
 export const requestProxies = [

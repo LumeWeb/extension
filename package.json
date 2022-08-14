@@ -10,7 +10,7 @@
 		"eslint": "eslint src --fix",
 		"lint": "npm run deps && npm run prettier && npm run eslint",
 		"compile": "node build.js",
-		"build": "npm run compile && rimraf node_modules/@lumeweb/kernel-dns-client/node_modules && rimraf node_modules/@lumeweb/kernel-ipfs-client/node_modules && cpy \"assets/*\" dist"
+		"build": "rimraf node_modules/@lumeweb/kernel-dns-client/node_modules node_modules/@lumeweb/kernel-dht-client/node_modules node_modules/@lumeweb/kernel-ipfs-client/node_modules && npm run compile &&  cpy \"assets/*\" dist"
 	},
 	"author": "David Vorick",
 	"license": "MIT",
@@ -38,6 +38,7 @@
 		"webextension-polyfill": "^0.9.0"
 	},
 	"dependencies": {
+		"@lumeweb/kernel-dht-client": "https://github.com/LumeWeb/kernel-dht-client.git",
 		"@lumeweb/kernel-ipfs-client": "https://github.com/LumeWeb/kernel-ipfs-client.git",
 		"@lumeweb/tld-enum": "https://github.com/LumeWeb/list-of-top-level-domains.git",
 		"ejs": "^3.1.8",

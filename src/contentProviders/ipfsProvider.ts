@@ -7,7 +7,7 @@ import {
   OnRequestDetailsType,
   StreamFilter,
 } from "../types.js";
-import { requestProxies } from "../util.js";
+import { getRelayProxies } from "../util.js";
 import browser from "@lumeweb/webextension-polyfill";
 import { ipfsPath, ipnsPath, path } from "is-ipfs";
 import {
@@ -105,7 +105,7 @@ export default class IpfsProvider extends BaseProvider {
   }
 
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
-    return requestProxies;
+    return getRelayProxies();
   }
 
   async handleReqHeaders(
