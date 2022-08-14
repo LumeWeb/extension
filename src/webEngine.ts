@@ -221,15 +221,6 @@ export default class WebEngine {
       return;
     }
 
-    let resolveRequest: any, rejectRequest: any;
-
-    let promise = new Promise((resolve, reject) => {
-      resolveRequest = resolve;
-      rejectRequest = reject;
-    });
-
-    this.navigations.set(this.getNavigationId(details), promise);
-
     let queriedUrl = originalUrl.searchParams.get("q") as string;
     let queriedHost = queriedUrl;
     try {
@@ -238,20 +229,26 @@ export default class WebEngine {
     } catch {}
 
     if (tldEnum.list.includes(getTld(queriedHost))) {
-      resolveRequest();
       return false;
     }
 
     if (isIp(queriedHost)) {
-      resolveRequest();
       return;
     }
 
     if (/[\s_]/.test(queriedHost)) {
-      resolveRequest();
       return;
     }
     let dns;
+
+    let resolveRequest: any, rejectRequest: any;
+
+    let promise = new Promise((resolve, reject) => {
+      resolveRequest = resolve;
+      rejectRequest = reject;
+    });
+
+    this.navigations.set(this.getNavigationId(details), promise);
 
     try {
       dns = await resolve(queriedHost, {});
