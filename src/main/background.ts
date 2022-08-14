@@ -6,6 +6,7 @@ import SkynetProvider from "../contentProviders/skynetProvider.js";
 import ServerProvider from "../contentProviders/serverProvider.js";
 import { init } from "libkernel";
 import IpfsProvider from "../contentProviders/ipfsProvider.js";
+import { ready as dnsReady } from "@lumeweb/kernel-dns-client";
 
 declare var browser: any; // tsc
 let queriesNonce = 1;
@@ -38,8 +39,7 @@ let blockForBootloader = new Promise((resolve) => {
 let blockForBridge = new Promise((resolve) => {
   bridgeLoadedResolve = resolve;
 });
-
-tldEnum.list.push("localhost");
+let kernelFrame: HTMLIFrameElement;
 
 export function queryKernel(query: any): Promise<any> {
   return new Promise((resolve) => {
@@ -132,7 +132,6 @@ function handleKernelMessage(event: MessageEvent) {
 
   receiveResult(event.data);
 }
-window.addEventListener("message", handleKernelMessage);
 
 function handleBridgeMessage(
   port: any,
@@ -186,16 +185,25 @@ function bridgeListener(port: any) {
     });
   });
 }
-browser.runtime.onConnect.addListener(bridgeListener);
 
-const engine = new WebEngine();
-engine.registerContentProvider(new InternalProvider(engine));
-engine.registerContentProvider(new ServerProvider(engine));
-engine.registerContentProvider(new SkynetProvider(engine));
-engine.registerContentProvider(new IpfsProvider(engine));
+async function boot() {
+  tldEnum.list.push("localhost");
+  window.addEventListener("message", handleKernelMessage);
+  browser.runtime.onConnect.addListener(bridgeListener);
 
-// @ts-ignore
-let kernelFrame: HTMLIFrameElement = document.createElement("iframe");
-kernelFrame.src = "http://kernel.skynet";
-kernelFrame.onload = init;
-document.body.appendChild(kernelFrame);
+  const engine = new WebEngine();
+  engine.registerContentProvider(new InternalProvider(engine));
+  engine.registerContentProvider(new ServerProvider(engine));
+  engine.registerContentProvider(new SkynetProvider(engine));
+  engine.registerContentProvider(new IpfsProvider(engine));
+
+  // @ts-ignore
+  kernelFrame = document.createElement("iframe");
+  kernelFrame.src = "http://kernel.skynet";
+  kernelFrame.onload = init;
+  document.body.appendChild(kernelFrame);
+
+  await dnsReady();
+}
+
+boot();
