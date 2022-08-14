@@ -15,7 +15,7 @@ import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { resolve } from "@lumeweb/kernel-dns-client";
 import { blake2b, bufToHex } from "libskynet";
-import { authStatus } from "./main/background.js";
+import { getAuthStatus } from "./main/vars.js";
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
@@ -70,9 +70,6 @@ export default class WebEngine {
   }
 
   private async proxyHandler(details: OnRequestDetailsType): Promise<any> {
-    if (authStatus.loginComplete !== true) {
-      return {};
-    }
     let handle = null;
     for (const provider of this.contentProviders) {
       if (await provider.shouldHandleRequest(details)) {
@@ -215,6 +212,13 @@ export default class WebEngine {
       ) {
         return;
       }
+    }
+
+    if ("kernel.skynet" === hostname) {
+      return;
+    }
+    if (getAuthStatus().loginComplete !== true) {
+      return;
     }
 
     let resolveRequest: any, rejectRequest: any;

@@ -9,6 +9,7 @@ import WebEngine from "../webEngine.js";
 import { getTld, isDomain, isIp, normalizeDomain } from "../util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { resolve } from "@lumeweb/kernel-dns-client";
+import { getAuthStatus } from "../main/vars.js";
 
 export default abstract class BaseProvider {
   private engine: WebEngine;
@@ -47,6 +48,10 @@ export default abstract class BaseProvider {
   protected async resolveDns(details: OnBeforeRequestDetailsType) {
     const originalUrl = new URL(details.url);
     const hostname = normalizeDomain(originalUrl.hostname);
+
+    if (getAuthStatus().loginComplete !== true) {
+      return false;
+    }
 
     if (tldEnum.list.includes(getTld(hostname))) {
       return false;
