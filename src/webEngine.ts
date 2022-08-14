@@ -203,21 +203,21 @@ export default class WebEngine {
       return;
     }
 
-    if ("google.com" === hostname) {
-      if (
-        !(
-          originalUrl.searchParams.has("client") &&
-          originalUrl.searchParams.get("client")?.includes("firefox")
-        )
-      ) {
-        return;
-      }
-    }
-
     if ("kernel.skynet" === hostname) {
       return;
     }
     if (getAuthStatus().loginComplete !== true) {
+      return;
+    }
+    if ("google.com" !== hostname) {
+      return;
+    }
+    if (
+      !(
+        originalUrl.searchParams.has("client") &&
+        originalUrl.searchParams.get("client")?.includes("firefox")
+      )
+    ) {
       return;
     }
 
