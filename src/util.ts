@@ -11,6 +11,9 @@ import {
 } from "libskynet";
 import { DHT } from "@lumeweb/kernel-dht-client";
 
+defaultPortalList.unshift("https://web3portal.com");
+defaultPortalList.pop();
+
 const relayDht = new DHT();
 
 export function isIp(ip: string) {
