@@ -13,7 +13,7 @@ import {
 } from "./types";
 import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
 import tldEnum from "@lumeweb/tld-enum";
-import { resolve } from "@lumeweb/kernel-dns-client";
+import { resolve } from "./dns.js";
 import { blake2b, bufToHex } from "libskynet";
 import { getAuthStatus } from "./main/vars.js";
 

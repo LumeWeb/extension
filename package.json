@@ -44,7 +44,8 @@
 		"ejs": "^3.1.8",
 		"is-ipfs": "^6.0.2",
 		"libkernel": "https://github.com/LumeWeb/libextension.git",
-		"libskynet": "^0.0.62"
+		"libskynet": "^0.0.62",
+		"node-cache": "^5.1.2"
 	},
 	"browser": {
 		"libkmodule": false,
