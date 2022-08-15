@@ -22,6 +22,7 @@ import {
   CONTENT_MODE_CHUNKED,
   contentModes,
 } from "../mimes.js";
+import Dexie from "dexie";
 
 const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
 
@@ -86,6 +87,14 @@ interface StatFileSubfile {
   size: number;
 }
 
+const cacheDb = new Dexie("LumeWebIFSCache");
+
+cacheDb.version(1).stores({
+  items: `url,contentType,data,timestamp`,
+});
+
+const MAX_CACHE_SIZE = 1024 * 1024 * 1024 * 50;
+
 export default class IpfsProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
@@ -127,36 +136,45 @@ export default class IpfsProvider extends BaseProvider {
     let resp: StatFileResponse | null = null;
     let fetchMethod: typeof fetchIpfs | typeof fetchIpns;
     let err;
-
+    let contentType: string;
     if (urlObj.protocol == "https") {
       urlObj.protocol = "http";
       return { redirectUrl: urlObj.toString() };
     }
 
-    try {
-      if (ipfsPath(hash)) {
-        hash = hash.replace("/ipfs/", "");
-        resp = await statIpfs(hash.replace("/ipfs/", ""), urlPath);
-        fetchMethod = fetchIpfs;
-      } else if (ipnsPath(hash)) {
-        hash = hash.replace("/ipns/", "");
-        resp = await statIpns(hash.replace("/ipns/", ""), urlPath);
-        fetchMethod = fetchIpns;
-      } else {
-        err = "invalid content";
-      }
-    } catch (e: any) {
-      err = (e as Error).message;
-    }
+    let cachedPage: { contentType: string; data: Blob } | null = null;
 
-    let contentType = resp?.contentType;
-    let contentLength = resp?.size;
+    try {
+      // @ts-ignore
+      cachedPage = await cacheDb.items.where("url").equals(details.url).first();
+    } catch {}
+
+    if (!cachedPage) {
+      try {
+        if (ipfsPath(hash)) {
+          hash = hash.replace("/ipfs/", "");
+          resp = await statIpfs(hash.replace("/ipfs/", ""), urlPath);
+          fetchMethod = fetchIpfs;
+        } else if (ipnsPath(hash)) {
+          hash = hash.replace("/ipns/", "");
+          resp = await statIpns(hash.replace("/ipns/", ""), urlPath);
+          fetchMethod = fetchIpns;
+        } else {
+          err = "invalid content";
+        }
+      } catch (e: any) {
+        err = (e as Error).message;
+      }
+
+      contentType = resp?.contentType as string;
+      if (contentType?.includes(";")) {
+        contentType = contentType?.split(";").shift() as string;
+      }
+    } else {
+      contentType = cachedPage.contentType;
+    }
 
     let status = "200";
-
-    if (contentType?.includes(";")) {
-      contentType = contentType?.split(";").shift();
-    }
 
     if (resp) {
       if (!resp.exists) {
@@ -188,7 +206,6 @@ export default class IpfsProvider extends BaseProvider {
     }
 
     this.setData(details, "status", status);
-    this.setData(details, "contentLength", contentLength);
 
     let filterPromiseResolve: any;
     let filterPromise = new Promise((resolve) => {
@@ -203,9 +220,13 @@ export default class IpfsProvider extends BaseProvider {
       filterPromiseResolve();
     };
 
-    const buffer: Uint8Array[] = [];
+    let buffer: Uint8Array[] = [];
+    let cacheBuffer: Uint8Array[] | Uint8Array = [];
 
     const receiveUpdate = (chunk: Uint8Array) => {
+      if (!chunk.length && !chunk.byteLength) {
+        return filterPromise;
+      }
       if (
         Object.keys(contentModes).includes(contentType as string) &&
         [CONTENT_MODE_CHUNKED, CONTENT_MODE_BUFFERED].includes(
@@ -213,12 +234,20 @@ export default class IpfsProvider extends BaseProvider {
         )
       ) {
         buffer.push(chunk);
-        return;
+        resp = resp as StatFileResponse;
+        cacheBuffer = cacheBuffer as Uint8Array[];
+        if (!cachedPage && resp.size <= MAX_CACHE_SIZE) {
+          cacheBuffer.push(chunk);
+        }
+
+        return filterPromise;
       }
 
-      filterPromise.then(() => {
+      return filterPromise.then(() => {
         streamPromise = streamPromise.then(() => {
           filter.write(chunk);
+          cacheBuffer = cacheBuffer as Uint8Array[];
+          cacheBuffer.push(chunk);
         });
       });
     };
@@ -238,62 +267,92 @@ export default class IpfsProvider extends BaseProvider {
         urlPath += `/${indexFiles[0].name}`;
       } else {
         const renderedDirectory = DIRECTORY_TEMPLATE(resp?.files);
-        contentLength = renderedDirectory.length;
         receiveUpdate(new TextEncoder().encode(renderedDirectory));
         filterPromise
           .then(() => streamPromise)
           .then(() => {
             filter.close();
           });
-        this.setData(details, "contentLength", contentLength);
         return {};
       }
     }
+
+    const handleBuffer = () => {
+      if (buffer.length) {
+        let mode = contentModes[contentType as string];
+        buffer = buffer.map((item: Uint8Array | ArrayBuffer) => {
+          if (item instanceof ArrayBuffer) {
+            return new Uint8Array(item);
+          }
+          return item;
+        });
+        if (mode === CONTENT_MODE_BUFFERED) {
+          let data: string | Uint8Array = Uint8Array.from(
+            buffer.reduce(
+              (previousValue: Uint8Array, currentValue: Uint8Array) => {
+                return Uint8Array.from([...previousValue, ...currentValue]);
+              }
+            )
+          );
+          /*            if (contentType === "text/html") {
+                  data = new TextDecoder("utf-8", { fatal: true }).decode(data);
+                  let htmlDoc = new DOMParser().parseFromString(
+                    data as string,
+                    contentType
+                  );
+                  let found = htmlDoc.documentElement.querySelectorAll(
+                    'meta[http-equiv="Content-Security-Policy"]'
+                  );
+
+                  if (found.length) {
+                    found.forEach((item) => item.remove());
+                    data = htmlDoc.documentElement.outerHTML;
+                  }
+
+                  data = new TextEncoder().encode(data);
+                }*/
+          filter.write(data);
+        } else if (mode == CONTENT_MODE_CHUNKED) {
+          buffer.forEach((data) => filter.write(data));
+        }
+      }
+    };
+    if (cachedPage) {
+      // @ts-ignore
+      cachedPage.data.arrayBuffer().then((data: ArrayBuffer) => {
+        // @ts-ignore
+        receiveUpdate(data)?.then(() => {
+          handleBuffer();
+          filterPromise.then(() => filter.close());
+        });
+      });
+
+      return {};
+    }
+
     // @ts-ignore
     fetchMethod?.(hash, urlPath, receiveUpdate)
       .then(() => streamPromise)
       .then(() => {
-        if (buffer.length) {
-          let mode = contentModes[contentType as string];
-          if (mode === CONTENT_MODE_BUFFERED) {
-            let data: string | Uint8Array = Uint8Array.from(
-              buffer.reduce(
-                (previousValue: Uint8Array, currentValue: Uint8Array) => {
-                  return Uint8Array.from([...previousValue, ...currentValue]);
-                }
-              )
-            );
-            if (contentType === "application/javascript") {
-              data = new TextDecoder("utf-8", { fatal: true }).decode(data);
-              data = data.replace(
-                /\/\/#\s*sourceMappingURL=([^\.]+)\.js.map/,
-                ""
-              );
-              data = new TextEncoder().encode(data);
-            }
-            /*            if (contentType === "text/html") {
-              data = new TextDecoder("utf-8", { fatal: true }).decode(data);
-              let htmlDoc = new DOMParser().parseFromString(
-                data as string,
-                contentType
-              );
-              let found = htmlDoc.documentElement.querySelectorAll(
-                'meta[http-equiv="Content-Security-Policy"]'
-              );
-
-              if (found.length) {
-                found.forEach((item) => item.remove());
-                data = htmlDoc.documentElement.outerHTML;
+        handleBuffer();
+        resp = resp as StatFileResponse;
+        if (resp.size <= MAX_CACHE_SIZE) {
+          cacheBuffer = Uint8Array.from(
+            (cacheBuffer as Uint8Array[]).reduce(
+              (previousValue: Uint8Array, currentValue: Uint8Array) => {
+                return Uint8Array.from([...previousValue, ...currentValue]);
               }
+            )
+          );
 
-              data = new TextEncoder().encode(data);
-            }*/
-            filter.write(data);
-          } else if (mode == CONTENT_MODE_CHUNKED) {
-            buffer.forEach((data) => filter.write(data));
-          }
+          // @ts-ignore
+          return cacheDb.items.put({
+            url: details.url,
+            contentType,
+            data: new Blob([cacheBuffer.buffer], { type: contentType }),
+            timestamp: Date.now(),
+          });
         }
-        filter.close();
       })
       .catch((e) => {
         console.error("page error", urlPath, e.message);
