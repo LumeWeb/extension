@@ -329,6 +329,7 @@ export default class IpfsProvider extends BaseProvider {
       .then(() => streamPromise)
       .then(() => {
         handleBuffer();
+        filterPromise.then(() => streamPromise).then(() => filter.close());
         resp = resp as StatFileResponse;
         if (resp.size <= MAX_CACHE_SIZE) {
           cacheBuffer = Uint8Array.from(
