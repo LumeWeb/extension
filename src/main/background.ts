@@ -35,6 +35,7 @@ import {
   setTimer,
 } from "./vars.js";
 import browser from "@lumeweb/webextension-polyfill";
+import setupContextMenus from "../contextMenu.js";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;
@@ -211,6 +212,7 @@ async function boot() {
   getKernelIframe().onload = init;
   document.body.appendChild(getKernelIframe());
 
+  setupContextMenus(engine);
   await dnsReady();
 }
 

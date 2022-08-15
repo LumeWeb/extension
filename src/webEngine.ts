@@ -22,6 +22,7 @@ export default class WebEngine {
   private requests: Map<string, BaseProvider> = new Map();
   private requestData: Map<string, {}> = new Map();
   private navigations: Map<string, Promise<any>> = new Map();
+  private domainContentProvider: Map<string, BaseProvider> = new Map();
 
   constructor() {
     browser.webRequest.onHeadersReceived.addListener(
@@ -83,6 +84,7 @@ export default class WebEngine {
     }
 
     this.requests.set(details.requestId, handle);
+    this.domainContentProvider.set(new URL(details.url).hostname, handle);
 
     return this.processHandler(details, "handleProxy");
   }
@@ -285,20 +287,7 @@ export default class WebEngine {
     )}`;
   }
 
-  public static cancelRequest(tabId: number) {
-    const handler = (details: OnBeforeRequestDetailsType): BlockingResponse => {
-      if (details.tabId !== tabId) {
-        return {};
-      }
-      browser.webRequest.onBeforeRequest.removeListener(handler);
-
-      return { cancel: true };
-    };
-
-    browser.webRequest.onBeforeRequest.addListener(
-      handler,
-      { urls: ["<all_urls>"] },
-      ["blocking"]
-    );
+  public getDomainContentProvider(domain: string): BaseProvider | null {
+    return this.domainContentProvider.get(domain) ?? null;
   }
 }

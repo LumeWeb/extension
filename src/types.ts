@@ -1,4 +1,10 @@
-import { WebRequest, Proxy, Tabs, WebNavigation } from "webextension-polyfill";
+import {
+  WebRequest,
+  Proxy,
+  Tabs,
+  WebNavigation,
+  Menus,
+} from "webextension-polyfill";
 import OnHeadersReceivedDetailsType = WebRequest.OnHeadersReceivedDetailsType;
 import OnBeforeRequestDetailsType = WebRequest.OnBeforeRequestDetailsType;
 import OnBeforeSendHeadersDetailsType = WebRequest.OnBeforeSendHeadersDetailsType;
@@ -24,4 +30,5 @@ export {
   HttpHeadersItemType,
   Tabs,
   OnBeforeNavigateDetailsType,
+  Menus,
 };

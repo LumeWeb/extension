@@ -8,7 +8,7 @@
 		"48": "icon.png",
 		"96": "icon@2x.png"
 	},
-	"permissions": ["proxy", "webRequest", "webRequestBlocking", "webNavigation", "<all_urls>"],
+	"permissions": ["proxy", "webRequest", "webRequestBlocking", "webNavigation","menus", "<all_urls>"],
 	"background": {
 		"scripts": ["background.js"]
 	},
