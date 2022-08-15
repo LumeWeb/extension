@@ -22,7 +22,7 @@ import {
   CONTENT_MODE_CHUNKED,
   contentModes,
 } from "../mimes.js";
-import Dexie from "dexie";
+import { cacheDb } from "../databases.js";
 
 const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
 
@@ -86,12 +86,6 @@ interface StatFileSubfile {
   name: string;
   size: number;
 }
-
-const cacheDb = new Dexie("LumeWebIFSCache");
-
-cacheDb.version(1).stores({
-  items: `url,contentType,data,timestamp`,
-});
 
 const MAX_CACHE_SIZE = 1024 * 1024 * 1024 * 50;
 
