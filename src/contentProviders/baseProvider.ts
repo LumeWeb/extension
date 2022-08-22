@@ -75,7 +75,7 @@ export default abstract class BaseProvider {
       DNS_RECORD_TYPE.A,
       DNS_RECORD_TYPE.CNAME,
     ]) {
-      let result = await resolve(hostname);
+      let result = await resolve(hostname, { type });
 
       if (result instanceof Error) {
         continue;
