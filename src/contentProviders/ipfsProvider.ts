@@ -282,7 +282,7 @@ export default class IpfsProvider extends BaseProvider {
 
     const handleBuffer = () => {
       if (buffer.length) {
-        filterPromise.then(() => {
+        return filterPromise.then(() => {
           streamPromise = streamPromise.then(() => {
             let mode = contentModes[contentType as string];
             buffer = buffer.map((item: Uint8Array | ArrayBuffer) => {
@@ -307,15 +307,20 @@ export default class IpfsProvider extends BaseProvider {
           });
         });
       }
+
+      return Promise.resolve();
     };
     if (cachedPage) {
       // @ts-ignore
       cachedPage.data.arrayBuffer().then((data: ArrayBuffer) => {
         // @ts-ignore
-        receiveUpdate(new Uint8Array(data))?.then(() => {
-          handleBuffer();
-          filterPromise.then(() => filter.close());
-        });
+        receiveUpdate(new Uint8Array(data))
+          ?.then(() => {
+            return handleBuffer();
+          })
+          .then(() => {
+            return filterPromise.then(() => filter.close());
+          });
       });
 
       return {};
@@ -324,8 +329,8 @@ export default class IpfsProvider extends BaseProvider {
     // @ts-ignore
     fetchMethod?.(hash, urlPath, receiveUpdate)
       .then(() => streamPromise)
+      .then(() => handleBuffer())
       .then(() => {
-        handleBuffer();
         filterPromise.then(() => streamPromise).then(() => filter.close());
         resp = resp as StatFileResponse;
         if (resp.size <= MAX_CACHE_SIZE) {
