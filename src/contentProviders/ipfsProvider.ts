@@ -222,7 +222,7 @@ export default class IpfsProvider extends BaseProvider {
     let cacheBuffer: Uint8Array[] | Uint8Array = [];
 
     const receiveUpdate = (chunk: Uint8Array) => {
-      if (!chunk.length && !chunk.byteLength) {
+      if (!chunk.buffer.byteLength && chunk.byteOffset === 0) {
         return filterPromise;
       }
       if (
