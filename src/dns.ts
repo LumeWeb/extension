@@ -1,5 +1,8 @@
 import NodeCache from "node-cache";
-import { resolve as resolveDns } from "@lumeweb/kernel-dns-client";
+import {
+  ready as dnsReady,
+  resolve as resolveDns,
+} from "@lumeweb/kernel-dns-client";
 import {
   DNS_RECORD_TYPE,
   DNSRecord,
@@ -23,6 +26,8 @@ export async function resolve(
     cache.ttl(cacheId);
     return cache.get(cacheId) as DNSResult;
   }
+
+  await dnsReady();
 
   let res;
   try {
