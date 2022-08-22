@@ -21,6 +21,9 @@ export default function setup(engine: WebEngine) {
   });
 
   browser.menus.onShown.addListener((details: Menus.OnShownInfoType) => {
+    if (!details.pageUrl) {
+      return;
+    }
     const provider = engine.getDomainContentProvider(
       new URL(details.pageUrl as string).hostname
     );
