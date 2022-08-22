@@ -216,11 +216,10 @@ async function boot() {
   document.body.appendChild(getKernelIframe());
 
   setupContextMenus(engine);
-  await registerResolvers();
-  await dnsReady();
+  setDnsSetupPromise(dnsSetup());
 }
 
-async function registerResolvers() {
+async function dnsSetup() {
   const resolvers = [
     "AQBXtVkPDbZ5Qmjl8dzJ0siSYaFcS3XbDZHapxmZCLfwfg", // icann
     "AQAI3TbarrXRxWtrb_5XO-gMYg-UsjVAChue5JEoqywbAw", // eip137
@@ -234,6 +233,8 @@ async function registerResolvers() {
   for (const resolver of resolvers) {
     await callModule(resolver, "register");
   }
+
+  await dnsReady();
 }
 
 boot();

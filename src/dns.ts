@@ -10,6 +10,7 @@ import {
   ResolverOptions,
 } from "@lumeweb/libresolver";
 import { blake2b, bufToHex, Err } from "libskynet/dist";
+import { getDnsSetupPromise } from "./main/vars.js";
 
 const cache = new NodeCache({ stdTTL: 60 });
 
@@ -27,7 +28,7 @@ export async function resolve(
     return cache.get(cacheId) as DNSResult;
   }
 
-  await dnsReady();
+  await getDnsSetupPromise();
 
   let res;
   try {

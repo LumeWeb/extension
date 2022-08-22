@@ -17,6 +17,7 @@ let blockForBridge = new Promise((resolve) => {
   bridgeLoadedResolve = resolve;
 });
 let kernelFrame: HTMLIFrameElement;
+let blockForDnsSetup: Promise<void>;
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
@@ -94,6 +95,12 @@ export function setKernelIframe(iframe: HTMLIFrameElement) {
   kernelFrame = iframe;
 }
 
+export function setDnsSetupPromise(p: Promise<void>) {
+  blockForDnsSetup = p;
+}
+export function getDnsSetupPromise(): Promise<void> {
+  return blockForDnsSetup;
+}
 export function getAuthStatusResolve(): DataFn {
   return authStatusResolve;
 }
