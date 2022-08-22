@@ -35,3 +35,26 @@ esbuild.buildSync({
     global: "self",
   },
 });
+esbuild.buildSync({
+    entryPoints: ["src/main/crypto.ts"],
+    outfile: "dist/crypto.js",
+    format: "iife",
+    bundle: true,
+    legalComments: "external",
+    //  minify: true
+    define: {
+        global: "window",
+    },
+    inject: ["./polyfill.js"],
+});
+esbuild.buildSync({
+    entryPoints: ["src/main/cryptoLoader.ts"],
+    outfile: "dist/cryptoLoader.js",
+    format: "iife",
+    bundle: true,
+    legalComments: "external",
+    //  minify: true
+    define: {
+        global: "window",
+    }
+});
