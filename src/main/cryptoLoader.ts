@@ -1,4 +1,4 @@
-(async function () {
+document.addEventListener("DOMContentLoaded", async function () {
   if (!window.crypto.subtle) {
     let el = document.createElement("script");
     // @ts-ignore
@@ -10,4 +10,4 @@
     };
     document.head.appendChild(el);
   }
-})();
+});
