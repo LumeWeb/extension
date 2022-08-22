@@ -8,15 +8,15 @@ export let timer = 20000;
 
 let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
-export let authStatusResolve: DataFn;
-export let bridgeLoadedResolve: DataFn;
-export let blockForBootloader = new Promise((resolve) => {
+let authStatusResolve: DataFn;
+let bridgeLoadedResolve: DataFn;
+let blockForBootloader = new Promise((resolve) => {
   authStatusResolve = resolve;
 });
-export let blockForBridge = new Promise((resolve) => {
+let blockForBridge = new Promise((resolve) => {
   bridgeLoadedResolve = resolve;
 });
-export let kernelFrame: HTMLIFrameElement;
+let kernelFrame: HTMLIFrameElement;
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
@@ -92,4 +92,18 @@ export function getKernelIframe(): HTMLIFrameElement {
 
 export function setKernelIframe(iframe: HTMLIFrameElement) {
   kernelFrame = iframe;
+}
+
+export function getAuthStatusResolve(): DataFn {
+  return authStatusResolve;
+}
+
+export function getBlockForBootloader(): Promise<unknown> {
+  return blockForBootloader;
+}
+export function getBlockForBridge(): Promise<unknown> {
+  return blockForBridge;
+}
+export function getBridgeLoadedResolve(): DataFn {
+  return bridgeLoadedResolve;
 }

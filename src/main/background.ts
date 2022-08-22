@@ -1,4 +1,3 @@
-import type { DataFn, KernelAuthStatus } from "libskynet";
 import tldEnum from "@lumeweb/tld-enum";
 import WebEngine from "../webEngine.js";
 import InternalProvider from "../contentProviders/internalProvider.js";
@@ -9,10 +8,10 @@ import IpfsProvider from "../contentProviders/ipfsProvider.js";
 import { ready as dnsReady } from "@lumeweb/kernel-dns-client";
 import {
   addQuery,
-  authStatusResolve,
-  blockForBootloader,
-  blockForBridge,
-  bridgeLoadedResolve,
+  getAuthStatusResolve,
+  getBlockForBootloader,
+  getBlockForBridge,
+  getBridgeLoadedResolve,
   clearOpenPorts,
   deleteOpenPort,
   deleteQuery,
@@ -27,9 +26,9 @@ import {
   getTimer,
   increasePortsNonce,
   increaseQueriesNonce,
-  kernelFrame,
   setAuthStatus,
   setAuthStatusKnown,
+  setDnsSetupPromise,
   setKernelIframe,
   setOpenPort,
   setTimer,
@@ -58,13 +57,16 @@ export function queryKernel(query: any): Promise<any> {
       resolve(data.data);
     };
 
-    blockForBootloader.then(() => {
+    getBlockForBootloader().then(() => {
       let nonce = getQueriesNonce();
       increaseQueriesNonce();
       query.nonce = nonce;
       addQuery(nonce, receiveResponse);
-      if (kernelFrame.contentWindow !== null) {
-        kernelFrame.contentWindow.postMessage(query, "http://kernel.skynet");
+      if (getKernelIframe().contentWindow !== null) {
+        (getKernelIframe() as any).contentWindow.postMessage(
+          query,
+          "http://kernel.skynet"
+        );
       } else {
         console.error(
           "kernelFrame.contentWindow was null, cannot send message!"
@@ -77,7 +79,7 @@ function handleKernelMessage(event: MessageEvent) {
   let data = event.data.data;
 
   if (event.data.method === "kernelBridgeVersion") {
-    blockForBridge.then(() => {
+    getBlockForBridge().then(() => {
       for (let [, port] of Object.entries(getOpenPorts())) {
         try {
           (port as any).postMessage(event.data);
@@ -104,7 +106,7 @@ function handleKernelMessage(event: MessageEvent) {
   if (event.data.method === "kernelAuthStatus") {
     setAuthStatus(data);
     if (getAuthStatusKnown() === false) {
-      authStatusResolve();
+      getAuthStatusResolve()();
       setAuthStatusKnown(true);
       console.log("bootloader is now initialized");
       if (getAuthStatus().loginComplete !== true) {
@@ -151,7 +153,7 @@ function handleBridgeMessage(
   domain: string
 ) {
   if (data.method === "bridgeLoaded") {
-    bridgeLoadedResolve();
+    getBridgeLoadedResolve()();
     return;
   }
 
@@ -172,7 +174,7 @@ function handleBridgeMessage(
     });
     data["domain"] = domain;
   }
-  kernelFrame.contentWindow!.postMessage(data, "http://kernel.skynet");
+  getKernelIframe().contentWindow!.postMessage(data, "http://kernel.skynet");
 }
 function bridgeListener(port: any) {
   let portNonce = getPortsNonce();
@@ -189,7 +191,7 @@ function bridgeListener(port: any) {
     handleBridgeMessage(port, portNonce, data, domain);
   });
 
-  blockForBootloader.then(() => {
+  getBlockForBootloader().then(() => {
     port.postMessage({
       method: "kernelAuthStatus",
       data: getAuthStatus(),
