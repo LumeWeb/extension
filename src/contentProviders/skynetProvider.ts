@@ -1,7 +1,6 @@
 import BaseProvider from "./baseProvider.js";
 import {
   BlockingResponse,
-  HttpHeaders,
   OnBeforeRequestDetailsType,
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
@@ -9,24 +8,38 @@ import {
 import { validSkylink } from "libskynet";
 import { downloadSkylink, getRelayProxies } from "../util.js";
 import browser from "@lumeweb/webextension-polyfill";
-import { DNSRecord } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
 
 export default class SkynetProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
-    let dns: DNSRecord | boolean = await this.resolveDns(details);
-    if (!dns) {
+    let dnsResult: DNSResult | boolean | string = await this.resolveDns(
+      details,
+      [DNS_RECORD_TYPE.CONTENT, DNS_RECORD_TYPE.TEXT]
+    );
+    if (!dnsResult) {
+      return false;
+    }
+    let contentRecords = (dnsResult as DNSResult).records
+      .map((item) => {
+        item.value = item.value.replace("sia://", "");
+        return item;
+      })
+      .filter((item) => {
+        try {
+          return validSkylink(item.value);
+        } catch (e) {
+          return false;
+        }
+      });
+    if (!contentRecords.length) {
       return false;
     }
 
-    dns = dns as DNSRecord;
+    this.setData(details, "hash", contentRecords.shift()?.value);
 
-    if (dns && validSkylink(dns.value)) {
-      return true;
-    }
-
-    return false;
+    return true;
   }
 
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
@@ -36,7 +49,7 @@ export default class SkynetProvider extends BaseProvider {
   async handleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<BlockingResponse | boolean> {
-    const dns = await this.resolveDns(details);
+    const hash = this.getData(details, "hash");
     let urlObj = new URL(details.url);
     let path = urlObj.pathname;
     let fileData: any, err;
@@ -47,7 +60,7 @@ export default class SkynetProvider extends BaseProvider {
     }
 
     try {
-      [fileData, err] = await downloadSkylink(dns, path);
+      [fileData, err] = await downloadSkylink(hash, path);
     } catch (e: any) {
       debugger;
       this.setData(details, "error", (e as Error).message);

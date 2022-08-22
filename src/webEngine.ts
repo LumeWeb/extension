@@ -13,9 +13,10 @@ import {
 } from "./types";
 import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
 import tldEnum from "@lumeweb/tld-enum";
-import { resolve } from "./dns.js";
+import { scanRecords } from "./dns.js";
 import { blake2b, bufToHex } from "libskynet";
 import { getAuthStatus } from "./main/vars.js";
+import { DNSResult } from "@lumeweb/libresolver";
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
@@ -238,7 +239,7 @@ export default class WebEngine {
     if (/[\s_]/.test(queriedHost)) {
       return;
     }
-    let dns;
+    let dnsResult: boolean | DNSResult = false;
 
     let resolveRequest: any, rejectRequest: any;
 
@@ -263,13 +264,13 @@ export default class WebEngine {
     }
 
     try {
-      dns = await resolve(queriedHost, {});
+      dnsResult = await scanRecords(queriedHost);
     } catch (e) {
       resolveRequest();
       return;
     }
 
-    if (!dns) {
+    if (!dnsResult) {
       resolveRequest();
       return;
     }

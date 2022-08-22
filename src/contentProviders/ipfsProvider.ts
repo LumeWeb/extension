@@ -23,7 +23,7 @@ import {
   contentModes,
 } from "../mimes.js";
 import { cacheDb } from "../databases.js";
-import { DNSRecord } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
 
 const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
 
@@ -94,21 +94,26 @@ export default class IpfsProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
-    let dns: DNSRecord | boolean | string = await this.resolveDns(details);
-    if (!dns) {
+    let dnsResult: DNSResult | boolean | string = await this.resolveDns(
+      details,
+      [DNS_RECORD_TYPE.CONTENT, DNS_RECORD_TYPE.TEXT]
+    );
+    if (!dnsResult) {
       return false;
     }
 
-    dns = (dns as DNSRecord).value;
-    dns = dns = "/" + dns.replace("://", "/");
-    dns = dns.replace(/^\+/, "/");
+    let contentRecords = (dnsResult as DNSResult).records.map(
+      (item) => "/" + item.value.replace("://", "/").replace(/^\+/, "/")
+    );
 
-    if (dns && path(dns)) {
-      this.setData(details, "hash", dns);
-      return true;
+    contentRecords.filter((item) => path(item));
+    if (!contentRecords.length) {
+      return false;
     }
 
-    return false;
+    this.setData(details, "hash", contentRecords.shift());
+
+    return true;
   }
 
   async handleProxy(details: OnRequestDetailsType): Promise<any> {

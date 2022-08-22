@@ -9,8 +9,7 @@ import WebEngine from "../webEngine.js";
 import { getTld, isDomain, isIp, normalizeDomain } from "../util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { getAuthStatus } from "../main/vars.js";
-import { resolve } from "../dns.js";
-import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
+import { scanRecords } from "../dns.js";
 
 export default abstract class BaseProvider {
   private engine: WebEngine;
@@ -46,9 +45,16 @@ export default abstract class BaseProvider {
     return false;
   }
 
-  protected async resolveDns(details: OnBeforeRequestDetailsType) {
+  protected async resolveDns(
+    details: OnBeforeRequestDetailsType,
+    recordTypes?: string[]
+  ) {
     const originalUrl = new URL(details.url);
     const hostname = normalizeDomain(originalUrl.hostname);
+
+    if (typeof getAuthStatus === "undefined") {
+      debugger;
+    }
 
     if (getAuthStatus().loginComplete !== true) {
       return false;
@@ -62,38 +68,7 @@ export default abstract class BaseProvider {
       return false;
     }
 
-    const cached = this.getData(details, "dns");
-
-    if (cached !== undefined) {
-      return cached;
-    }
-
-    let dnsResult;
-
-    for (const type of [
-      DNS_RECORD_TYPE.CONTENT,
-      DNS_RECORD_TYPE.A,
-      DNS_RECORD_TYPE.CNAME,
-    ]) {
-      let result = await resolve(hostname, { type });
-
-      if (result instanceof Error) {
-        continue;
-      }
-
-      if (0 < result.records.length) {
-        dnsResult = result.records.shift();
-        break;
-      }
-    }
-
-    if (!dnsResult) {
-      dnsResult = false;
-    }
-
-    this.setData(details, "dns", dnsResult);
-
-    return dnsResult;
+    return await scanRecords(hostname, recordTypes);
   }
 
   protected getData(details: OnBeforeRequestDetailsType, key: string) {
