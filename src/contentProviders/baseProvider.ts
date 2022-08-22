@@ -10,6 +10,7 @@ import { getTld, isDomain, isIp, normalizeDomain } from "../util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { getAuthStatus } from "../main/vars.js";
 import { resolve } from "../dns.js";
+import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 
 export default abstract class BaseProvider {
   private engine: WebEngine;
@@ -67,21 +68,32 @@ export default abstract class BaseProvider {
       return cached;
     }
 
-    let result;
+    let dnsResult;
 
-    try {
-      result = await resolve(hostname, {});
-    } catch (e) {
-      debugger;
+    for (const type of [
+      DNS_RECORD_TYPE.CONTENT,
+      DNS_RECORD_TYPE.A,
+      DNS_RECORD_TYPE.CNAME,
+    ]) {
+      let result = await resolve(hostname);
+
+      if (result instanceof Error) {
+        continue;
+      }
+
+      if (0 < result.records.length) {
+        dnsResult = result.records.shift();
+        break;
+      }
     }
-    if (!result) {
-      this.setData(details, "dns", false);
-      return false;
+
+    if (!dnsResult) {
+      dnsResult = false;
     }
 
-    this.setData(details, "dns", result);
+    this.setData(details, "dns", dnsResult);
 
-    return result;
+    return dnsResult;
   }
 
   protected getData(details: OnBeforeRequestDetailsType, key: string) {

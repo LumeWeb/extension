@@ -79,6 +79,10 @@
     libkernel "^0.1.43"
     libkmodule "^0.2.44"
 
+"@lumeweb/libresolver@https://github.com/LumeWeb/libresolver.git":
+  version "0.1.0"
+  resolved "https://github.com/LumeWeb/libresolver.git#1cdfd12ce9a0e49af59095d395159811ef1cfd59"
+
 "@lumeweb/tld-enum@https://github.com/LumeWeb/list-of-top-level-domains.git":
   version "2.0.7"
   resolved "https://github.com/LumeWeb/list-of-top-level-domains.git#ae60882496bb6e12896fe25436370a3bf02df249"

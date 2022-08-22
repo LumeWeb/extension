@@ -9,14 +9,20 @@ import {
 import { validSkylink } from "libskynet";
 import { downloadSkylink, getRelayProxies } from "../util.js";
 import browser from "@lumeweb/webextension-polyfill";
+import { DNSRecord } from "@lumeweb/libresolver";
 
 export default class SkynetProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
-    const dns = await this.resolveDns(details);
+    let dns: DNSRecord | boolean = await this.resolveDns(details);
+    if (!dns) {
+      return false;
+    }
 
-    if (dns && validSkylink(dns)) {
+    dns = dns as DNSRecord;
+
+    if (dns && validSkylink(dns.value)) {
       return true;
     }
 

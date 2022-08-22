@@ -23,6 +23,7 @@ import {
   contentModes,
 } from "../mimes.js";
 import { cacheDb } from "../databases.js";
+import { DNSRecord } from "@lumeweb/libresolver";
 
 const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
 
@@ -93,11 +94,14 @@ export default class IpfsProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
-    let dns = await this.resolveDns(details);
-    if (dns) {
-      dns = "/" + dns.replace("://", "/");
-      dns = dns.replace(/^\+/, "/");
+    let dns: DNSRecord | boolean | string = await this.resolveDns(details);
+    if (!dns) {
+      return false;
     }
+
+    dns = (dns as DNSRecord).value;
+    dns = dns = "/" + dns.replace("://", "/");
+    dns = dns.replace(/^\+/, "/");
 
     if (dns && path(dns)) {
       this.setData(details, "hash", dns);

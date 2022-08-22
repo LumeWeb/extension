@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@lumeweb/kernel-dht-client": "https://github.com/LumeWeb/kernel-dht-client.git",
 		"@lumeweb/kernel-ipfs-client": "https://github.com/LumeWeb/kernel-ipfs-client.git",
+		"@lumeweb/libresolver": "https://github.com/LumeWeb/libresolver.git",
 		"@lumeweb/tld-enum": "https://github.com/LumeWeb/list-of-top-level-domains.git",
 		"dexie": "^3.2.2",
 		"ejs": "^3.1.8",

@@ -36,6 +36,7 @@ import {
 } from "./vars.js";
 import browser from "@lumeweb/webextension-polyfill";
 import setupContextMenus from "../contextMenu.js";
+import { callModule } from "libkernel";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;
@@ -213,7 +214,24 @@ async function boot() {
   document.body.appendChild(getKernelIframe());
 
   setupContextMenus(engine);
+  await registerResolvers();
   await dnsReady();
+}
+
+async function registerResolvers() {
+  const resolvers = [
+    "AQBXtVkPDbZ5Qmjl8dzJ0siSYaFcS3XbDZHapxmZCLfwfg", // icann
+    "AQAI3TbarrXRxWtrb_5XO-gMYg-UsjVAChue5JEoqywbAw", // eip137
+    "AQD0s0wZNpZCVg_iO96E6Ff66WxGa2CZst_DCYR_DoQPxw", // solana
+    "AQDtYcJGbquAHA-idtZ-gPOlNBgEVeCZtZUtsyL_J5ZiUA", // algorand
+    "AQDkqoCzCR6s5MP_k6Ee9QWfEwaH5-7XleCKFL1CdxExxQ", // avax
+    "AQC7ALr-OtkFT7qZby2BdMMNbTRXHNMGlpV6r96b35Z79Q", // evmos
+    "AQAmQoZLu1DqIiZaRWRpomvMarQ8Uc3kdHJQBo0r-9uYtg", // handshake
+  ];
+
+  for (const resolver of resolvers) {
+    await callModule(resolver, "register");
+  }
 }
 
 boot();
