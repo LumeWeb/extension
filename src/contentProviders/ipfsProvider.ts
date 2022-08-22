@@ -319,7 +319,7 @@ export default class IpfsProvider extends BaseProvider {
       // @ts-ignore
       cachedPage.data.arrayBuffer().then((data: ArrayBuffer) => {
         // @ts-ignore
-        receiveUpdate(data)?.then(() => {
+        receiveUpdate(new Uint8Array(data))?.then(() => {
           handleBuffer();
           filterPromise.then(() => filter.close());
         });
