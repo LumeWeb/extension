@@ -106,7 +106,7 @@ export default class IpfsProvider extends BaseProvider {
       (item) => "/" + item.value.replace("://", "/").replace(/^\+/, "/")
     );
 
-    contentRecords.filter((item) => path(item));
+    contentRecords = contentRecords.filter((item) => path(item));
     if (!contentRecords.length) {
       return false;
     }
