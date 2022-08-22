@@ -377,19 +377,11 @@ export default class IpfsProvider extends BaseProvider {
     details: OnHeadersReceivedDetailsType
   ): Promise<BlockingResponse | boolean> {
     let headers = [];
-    //   const contentLength = this.getData(details, "contentLength");
 
     headers.push({
       name: "Content-Type",
       value: this.getData(details, "contentType"),
     });
-
-    /*    if (contentLength) {
-          headers.push({
-            name: "content-length",
-            value: contentLength,
-          });
-        }*/
 
     return {
       responseHeaders: headers,
