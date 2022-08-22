@@ -282,42 +282,30 @@ export default class IpfsProvider extends BaseProvider {
 
     const handleBuffer = () => {
       if (buffer.length) {
-        let mode = contentModes[contentType as string];
-        buffer = buffer.map((item: Uint8Array | ArrayBuffer) => {
-          if (item instanceof ArrayBuffer) {
-            return new Uint8Array(item);
-          }
-          return item;
-        });
-        if (mode === CONTENT_MODE_BUFFERED) {
-          let data: string | Uint8Array = Uint8Array.from(
-            buffer.reduce(
-              (previousValue: Uint8Array, currentValue: Uint8Array) => {
-                return Uint8Array.from([...previousValue, ...currentValue]);
+        filterPromise.then(() => {
+          streamPromise = streamPromise.then(() => {
+            let mode = contentModes[contentType as string];
+            buffer = buffer.map((item: Uint8Array | ArrayBuffer) => {
+              if (item instanceof ArrayBuffer) {
+                return new Uint8Array(item);
               }
-            )
-          );
-          /*            if (contentType === "text/html") {
-                  data = new TextDecoder("utf-8", { fatal: true }).decode(data);
-                  let htmlDoc = new DOMParser().parseFromString(
-                    data as string,
-                    contentType
-                  );
-                  let found = htmlDoc.documentElement.querySelectorAll(
-                    'meta[http-equiv="Content-Security-Policy"]'
-                  );
-
-                  if (found.length) {
-                    found.forEach((item) => item.remove());
-                    data = htmlDoc.documentElement.outerHTML;
-                  }
-
-                  data = new TextEncoder().encode(data);
-                }*/
-          filter.write(data);
-        } else if (mode == CONTENT_MODE_CHUNKED) {
-          buffer.forEach((data) => filter.write(data));
-        }
+              return item;
+            });
+            if (mode === CONTENT_MODE_BUFFERED) {
+              let data: string | Uint8Array = Uint8Array.from(
+                buffer.reduce(
+                  (previousValue: Uint8Array, currentValue: Uint8Array) => {
+                    return Uint8Array.from([...previousValue, ...currentValue]);
+                  },
+                  new Uint8Array()
+                )
+              );
+              filter.write(data);
+            } else if (mode == CONTENT_MODE_CHUNKED) {
+              buffer.forEach((data) => filter.write(data));
+            }
+          });
+        });
       }
     };
     if (cachedPage) {
@@ -345,7 +333,8 @@ export default class IpfsProvider extends BaseProvider {
             (cacheBuffer as Uint8Array[]).reduce(
               (previousValue: Uint8Array, currentValue: Uint8Array) => {
                 return Uint8Array.from([...previousValue, ...currentValue]);
-              }
+              },
+              new Uint8Array()
             )
           );
 
