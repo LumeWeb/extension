@@ -15,8 +15,8 @@ export async function resolve(
   options?: ResolverOptions,
   bypassCache = false
 ): Promise<DNSResult | Error> {
-  let cacheId = `${domain}:{${blake2b(
-    new TextEncoder().encode(JSON.stringify(options))
+  let cacheId = `${domain}:${bufToHex(
+    blake2b(new TextEncoder().encode(JSON.stringify(options)))
   )}`;
 
   if (cache.has(cacheId)) {
