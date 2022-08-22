@@ -195,12 +195,12 @@ export default class WebEngine {
       return;
     }
 
-    if (!isDomain(details.url) || isIp(details.url)) {
-      return;
-    }
-
     const originalUrl = new URL(details.url);
     const hostname = normalizeDomain(originalUrl.hostname);
+
+    if (!isDomain(hostname) || isIp(hostname)) {
+      return;
+    }
 
     if (["chrome:"].includes(originalUrl.protocol)) {
       return;
