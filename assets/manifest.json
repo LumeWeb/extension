@@ -30,7 +30,8 @@
     "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self';",
     "browser_specific_settings": {
         "gecko": {
-            "id": "contact@lumeweb.com"
+            "id": "contact@lumeweb.com",
+            "strict_min_version": "91.1.0"
         }
     }
 }
