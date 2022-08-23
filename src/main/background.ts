@@ -206,9 +206,9 @@ async function boot() {
 
   const engine = new WebEngine();
   engine.registerContentProvider(new InternalProvider(engine));
-  engine.registerContentProvider(new ServerProvider(engine));
   engine.registerContentProvider(new SkynetProvider(engine));
   engine.registerContentProvider(new IpfsProvider(engine));
+  engine.registerContentProvider(new ServerProvider(engine));
 
   setKernelIframe(document.createElement("iframe"));
   getKernelIframe().src = "http://kernel.skynet";
