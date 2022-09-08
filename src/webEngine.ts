@@ -108,6 +108,21 @@ export default class WebEngine {
       return { redirectUrl: navRedirect as string };
     }
 
+    const domainPatterns = {
+      "eth.link": "eth",
+      "eth.limo": "eth",
+      "hns.is": "",
+      "hns.to": "",
+    } as { [pattern: string]: string };
+
+    for (const pattern of Object.keys(domainPatterns)) {
+      if (details.url.includes(pattern)) {
+        return {
+          redirectUrl: details.url.replace(pattern, domainPatterns[pattern]),
+        };
+      }
+    }
+
     const provider = this.getRequestProvider(details.requestId);
     if (provider) {
       let urlObj = new URL(details.url);
