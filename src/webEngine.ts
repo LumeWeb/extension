@@ -175,9 +175,7 @@ export default class WebEngine {
     method: string,
     def = {}
   ): Promise<BlockingResponse> {
-    const provider = this.requests.get(details.requestId) as unknown as {
-      [index: string]: Function;
-    };
+    const provider = this.getRequestProvider(details.requestId);
 
     if (!provider) {
       return def;
@@ -291,5 +289,14 @@ export default class WebEngine {
 
   public getDomainContentProvider(domain: string): BaseProvider | null {
     return this.domainContentProvider.get(domain) ?? null;
+  }
+
+  private getRequestProvider(
+    requestId: string
+  ): { [p: string]: Function } | null {
+    const provider = this.requests.get(requestId) as unknown as {
+      [index: string]: Function;
+    };
+    return provider ?? null;
   }
 }
