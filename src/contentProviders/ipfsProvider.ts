@@ -136,10 +136,6 @@ export default class IpfsProvider extends BaseProvider {
     let fetchMethod: typeof fetchIpfs | typeof fetchIpns;
     let err;
     let contentType: string;
-    if (urlObj.protocol == "https") {
-      urlObj.protocol = "http";
-      return { redirectUrl: urlObj.toString() };
-    }
     let contentSize = 0;
 
     let cachedPage: { contentType: string; data: Blob } | null = null;

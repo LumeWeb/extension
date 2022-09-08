@@ -108,6 +108,15 @@ export default class WebEngine {
       return { redirectUrl: navRedirect as string };
     }
 
+    const provider = this.getRequestProvider(details.requestId);
+    if (provider) {
+      let urlObj = new URL(details.url);
+      if (urlObj.protocol == "https") {
+        urlObj.protocol = "http";
+        return { redirectUrl: urlObj.toString() };
+      }
+    }
+
     return this.processHandler(details, "handleRequest");
   }
 
