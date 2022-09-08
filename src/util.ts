@@ -129,3 +129,30 @@ export function downloadSkylink(
     });
   });
 }
+
+export async function* iterateStream(
+  stream: ReadableStream<any>
+): AsyncGenerator<Uint8Array> {
+  let chunk;
+  const reader = stream.getReader();
+  do {
+    chunk = await reader.read();
+    if (chunk.value) {
+      yield chunk.value;
+    }
+  } while (!chunk.done);
+
+  reader.releaseLock();
+}
+
+export async function streamToArray(
+  stream: ReadableStream<Uint8Array>
+): Promise<Uint8Array> {
+  let buffer = new Uint8Array();
+
+  for await (const chunk of iterateStream(stream)) {
+    buffer = Uint8Array.from([...buffer, ...chunk]);
+  }
+
+  return buffer;
+}

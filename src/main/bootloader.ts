@@ -22,7 +22,7 @@ import {
 var browser: any; // tsc
 
 const defaultKernelResolverLink =
-  "AQBFjXpEBwbMwkBwYg0gdkeAM-yy9vlajfLtZSee9f-MDg";
+  "AQDJDoXMJiiEMBxXodQvUV89qtQHsnXWyV1ViQ9M1pMjUg";
 
 document.title = "kernel.skynet";
 let header = document.createElement("h1");
@@ -400,7 +400,7 @@ function loadKernel() {
     }
 
     try {
-      window.eval(kernelCode);
+      eval(kernelCode);
       kernelLoaded = "success";
       sendAuthUpdate();
       log("kernel successfully loaded");

@@ -7,8 +7,7 @@ import {
   OnRequestDetailsType,
   StreamFilter,
 } from "../types.js";
-import { getRelayProxies } from "../util.js";
-import browser from "@lumeweb/webextension-polyfill";
+import { getRelayProxies, streamToArray } from "../util.js";
 import { ipfsPath, ipnsPath, path } from "is-ipfs";
 import {
   fetchIpfs,
@@ -17,13 +16,10 @@ import {
   statIpns,
 } from "@lumeweb/kernel-ipfs-client";
 import ejs from "ejs";
-import {
-  CONTENT_MODE_BUFFERED,
-  CONTENT_MODE_CHUNKED,
-  contentModes,
-} from "../mimes.js";
 import { cacheDb } from "../databases.js";
 import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
+import RequestStream from "../requestStream.js";
+import ContentFilterRegistry from "../contentFilterRegistry.js";
 
 const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
 
@@ -144,6 +140,7 @@ export default class IpfsProvider extends BaseProvider {
       urlObj.protocol = "http";
       return { redirectUrl: urlObj.toString() };
     }
+    let contentSize = 0;
 
     let cachedPage: { contentType: string; data: Blob } | null = null;
 
@@ -173,11 +170,11 @@ export default class IpfsProvider extends BaseProvider {
       if (contentType?.includes(";")) {
         contentType = contentType?.split(";").shift() as string;
       }
+      contentSize = resp?.size as number;
     } else {
       contentType = cachedPage.contentType;
+      contentSize = cachedPage.data.size;
     }
-
-    let status = "200";
 
     if (resp) {
       if (!resp.exists) {
@@ -190,77 +187,26 @@ export default class IpfsProvider extends BaseProvider {
 
     this.setData(details, "contentType", contentType);
 
-    if (err) {
-      if (err === "NOT_FOUND") {
-        err = "404";
-      }
-      if (err === "timeout") {
-        err = "408";
-      }
-      if (err.includes("no link")) {
-        err = "404";
-      }
-
-      this.setData(details, "error", err);
-
-      if (!isNaN(parseInt(err))) {
-        status = err;
-      }
-    }
-
-    this.setData(details, "status", status);
-
-    let filterPromiseResolve: any;
-    let filterPromise = new Promise((resolve) => {
-      filterPromiseResolve = resolve;
-    });
-    let streamPromise = Promise.resolve();
-    const filter: StreamFilter = browser.webRequest.filterResponseData(
-      details.requestId
+    const isSmallFile = contentSize <= MAX_CACHE_SIZE;
+    const reqStream = new RequestStream(
+      details,
+      isSmallFile && ContentFilterRegistry.hasFilters(contentType)
+        ? ContentFilterRegistry.filter(contentType)
+        : undefined
     );
-    filter.ondata = () => {};
-    filter.onstop = () => {
-      filterPromiseResolve();
-    };
-
-    let buffer: Uint8Array[] = [];
-    let cacheBuffer: Uint8Array[] | Uint8Array = [];
-
-    const receiveUpdate = (chunk: Uint8Array) => {
-      if (!chunk.buffer.byteLength && chunk.byteOffset === 0) {
-        return filterPromise;
-      }
-      if (
-        Object.keys(contentModes).includes(contentType as string) &&
-        [CONTENT_MODE_CHUNKED, CONTENT_MODE_BUFFERED].includes(
-          contentModes[contentType as string]
-        )
-      ) {
-        buffer.push(chunk);
-        resp = resp as StatFileResponse;
-        cacheBuffer = cacheBuffer as Uint8Array[];
-        if (!cachedPage && resp.size <= MAX_CACHE_SIZE) {
-          cacheBuffer.push(chunk);
-        }
-
-        return filterPromise;
-      }
-
-      return filterPromise.then(() => {
-        streamPromise = streamPromise.then(() => {
-          filter.write(chunk);
-          cacheBuffer = cacheBuffer as Uint8Array[];
-          cacheBuffer.push(chunk);
-        });
-      });
-    };
+    reqStream.start();
 
     if (err) {
-      //  receiveUpdate(new TextEncoder().encode(serverErrorTemplate()));
-      filterPromise.then(() => streamPromise).then(() => filter.close());
+      reqStream.close();
       return {};
     }
 
+    if (cachedPage) {
+      (
+        cachedPage?.data.stream() as unknown as ReadableStream<Uint8Array>
+      ).pipeThrough(reqStream.stream);
+      return {};
+    }
     if (resp?.directory) {
       let indexFiles =
         resp?.files.filter((item) => INDEX_HTML_FILES.includes(item.name)) ||
@@ -268,106 +214,30 @@ export default class IpfsProvider extends BaseProvider {
 
       if (indexFiles.length > 0) {
         urlPath += `/${indexFiles[0].name}`;
-      } else {
-        const renderedDirectory = DIRECTORY_TEMPLATE(resp?.files);
-        receiveUpdate(new TextEncoder().encode(renderedDirectory));
-        filterPromise
-          .then(() => streamPromise)
-          .then(() => {
-            filter.close();
-          });
-        return {};
       }
     }
 
-    const handleBuffer = () => {
-      if (buffer.length) {
-        return filterPromise.then(() => {
-          streamPromise = streamPromise.then(() => {
-            let mode = contentModes[contentType as string];
-            buffer = buffer.map((item: Uint8Array | ArrayBuffer) => {
-              if (item instanceof ArrayBuffer) {
-                return new Uint8Array(item);
-              }
-              return item;
-            });
-            if (mode === CONTENT_MODE_BUFFERED) {
-              let data: string | Uint8Array = Uint8Array.from(
-                buffer.reduce(
-                  (previousValue: Uint8Array, currentValue: Uint8Array) => {
-                    return Uint8Array.from([...previousValue, ...currentValue]);
-                  },
-                  new Uint8Array()
-                )
-              );
-              filter.write(data);
-            } else if (mode == CONTENT_MODE_CHUNKED) {
-              buffer.forEach((data) => filter.write(data));
-            }
-          });
-        });
-      }
-
-      return Promise.resolve();
-    };
-    if (cachedPage) {
-      // @ts-ignore
-      cachedPage.data.arrayBuffer().then((data: ArrayBuffer) => {
+    if (isSmallFile) {
+      streamToArray(reqStream.readableStream).then((data: Uint8Array) => {
         // @ts-ignore
-        receiveUpdate(new Uint8Array(data))
-          ?.then(() => {
-            return handleBuffer();
-          })
-          .then(() => {
-            return filterPromise.then(() => filter.close());
-          });
+        return cacheDb.items.put({
+          url: details.url,
+          contentType,
+          data: new Blob([data.buffer], { type: contentType }),
+          timestamp: Date.now(),
+        });
       });
-
-      return {};
     }
+
+    const streamWriter = reqStream.stream.writable.getWriter();
 
     // @ts-ignore
-    fetchMethod?.(hash, urlPath, receiveUpdate)
-      .then(() => streamPromise)
-      .then(() => handleBuffer())
-      .then(() => {
-        filterPromise.then(() => streamPromise).then(() => filter.close());
-        resp = resp as StatFileResponse;
-        if (resp.size <= MAX_CACHE_SIZE) {
-          cacheBuffer = Uint8Array.from(
-            (cacheBuffer as Uint8Array[]).reduce(
-              (previousValue: Uint8Array, currentValue: Uint8Array) => {
-                return Uint8Array.from([...previousValue, ...currentValue]);
-              },
-              new Uint8Array()
-            )
-          );
-
-          // @ts-ignore
-          return cacheDb.items.put({
-            url: details.url,
-            contentType,
-            data: new Blob([cacheBuffer.buffer], { type: contentType }),
-            timestamp: Date.now(),
-          });
-        }
-      })
-      .catch((e) => {
-        console.error("page error", urlPath, e.message);
-        /*        if (
-                  urlPath.endsWith(".html") ||
-                  urlPath.endsWith(".htm") ||
-                  urlPath.endsWith(".xhtml") ||
-                  urlPath.endsWith(".shtml")
-                ) {
-                  this.setData(details, "contentType", "text/html");
-                  let template = serverErrorTemplate();
-                  contentLength = template.length;
-                  receiveUpdate(new TextEncoder().encode(template));
-                  this.setData(details, "contentLength", contentLength);
-                }*/
-        filterPromise.then(() => streamPromise).then(() => filter.close());
-      });
+    fetchMethod?.(hash, urlPath, (data: Buffer) => {
+      streamWriter.write(data);
+    }).then(() => {
+      streamWriter.releaseLock();
+      return reqStream.close();
+    });
 
     return {};
   }

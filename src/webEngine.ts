@@ -1,5 +1,4 @@
 import browser from "@lumeweb/webextension-polyfill";
-
 import BaseProvider from "./contentProviders/baseProvider.js";
 import {
   BlockingResponse,
@@ -17,6 +16,8 @@ import { scanRecords } from "./dns.js";
 import { blake2b, bufToHex } from "libskynet";
 import { getAuthStatus } from "./main/vars.js";
 import { DNSResult } from "@lumeweb/libresolver";
+
+import "./contentFilters/index.js";
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
