@@ -230,10 +230,15 @@ export default class IpfsProvider extends BaseProvider {
     // @ts-ignore
     fetchMethod?.(hash, urlPath, (data: Buffer) => {
       streamWriter.write(data);
-    }).then(() => {
-      streamWriter.releaseLock();
-      return reqStream.close();
-    });
+    })
+      .then(() => {
+        streamWriter.releaseLock();
+        return reqStream.close();
+      })
+      .catch((e: any) => {
+        streamWriter.releaseLock();
+        reqStream.close();
+      });
 
     return {};
   }
