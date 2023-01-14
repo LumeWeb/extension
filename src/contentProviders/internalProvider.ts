@@ -15,9 +15,9 @@ export default class InternalProvider extends BaseProvider {
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
     return [
-      "http://kernel.skynet/",
-      "http://kernel.skynet/auth.html",
-      "http://kernel.skynet/favicon.ico",
+      "http://kernel.lume/",
+      "http://kernel.lume/auth.html",
+      "http://kernel.lume/favicon.ico",
     ].includes(details.url);
   }
 
@@ -26,7 +26,7 @@ export default class InternalProvider extends BaseProvider {
   ): Promise<BlockingResponse | boolean> {
     // For the kernel, we swallow the entire page. The 'bootloader' content
     // script will everything that we need.
-    if (details.url === "http://kernel.skynet/") {
+    if (details.url === "http://kernel.lume/") {
       // Get the filter and swallow any response from the server.
       let filter = browser.webRequest.filterResponseData(details.requestId);
       filter.onstart = () => {
@@ -37,7 +37,7 @@ export default class InternalProvider extends BaseProvider {
 
     // For the favicon, we make a request to a content script that has access
     // to the favicon.
-    if (details.url === "http://kernel.skynet/favicon.ico") {
+    if (details.url === "http://kernel.lume/favicon.ico") {
       // Send a message to the kernel requesting an override for the
       // favicon.ico. The kernel is itself loading this favicon from the
       // browser, I just wasn't certain how to get binary objects directly to
@@ -68,7 +68,7 @@ export default class InternalProvider extends BaseProvider {
 
     // For the favicon, we make a request to a content script that has access
     // to the favicon.
-    if (details.url === "http://kernel.skynet/auth.html") {
+    if (details.url === "http://kernel.lume/auth.html") {
       // Send a message to the kernel requesting an override for the auth
       // page. The kernel is itself loading the auth page from the browser, I
       // just wasn't certain how to get binary objects directly to the
@@ -105,8 +105,8 @@ export default class InternalProvider extends BaseProvider {
     details: OnHeadersReceivedDetailsType
   ): Promise<OnRequestDetailsType | boolean> {
     if (
-      details.url === "http://kernel.skynet/" ||
-      details.url === "http://kernel.skynet/auth.html"
+      details.url === "http://kernel.lume/" ||
+      details.url === "http://kernel.lume/auth.html"
     ) {
       let headers = [
         {
@@ -118,7 +118,7 @@ export default class InternalProvider extends BaseProvider {
     }
 
     // For the favicon, replace the headers with png headers.
-    if (details.url === "http://kernel.skynet/favicon.ico") {
+    if (details.url === "http://kernel.lume/favicon.ico") {
       let headers = [
         {
           name: "content-type",
@@ -133,7 +133,7 @@ export default class InternalProvider extends BaseProvider {
 
   async handleProxy(details: OnRequestDetailsType): Promise<any> {
     const hostname = new URL(details.url).hostname;
-    if (hostname === "kernel.skynet") {
+    if (hostname === "kernel.lume") {
       return requestProxies;
     }
 

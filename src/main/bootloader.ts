@@ -24,7 +24,7 @@ var browser: any; // tsc
 const defaultKernelResolverLink =
   "AQDJDoXMJiiEMBxXodQvUV89qtQHsnXWyV1ViQ9M1pMjUg";
 
-document.title = "kernel.skynet";
+document.title = "kernel.lume";
 let header = document.createElement("h1");
 header.textContent =
   "Something went wrong! You should not be visiting this page, this page should only be accessed via an invisible iframe.";
@@ -170,7 +170,7 @@ function handleSkynetKernelRequestOverride(event: MessageEvent) {
     );
   };
 
-  if (event.data.data.url === "http://kernel.skynet/favicon.ico") {
+  if (event.data.data.url === "http://kernel.lume/favicon.ico") {
     blockForFavicon.then(() => {
       let headers = [
         {
@@ -183,7 +183,7 @@ function handleSkynetKernelRequestOverride(event: MessageEvent) {
     return;
   }
 
-  if (event.data.data.url === "http://kernel.skynet/auth.html") {
+  if (event.data.data.url === "http://kernel.lume/auth.html") {
     blockForAuthPage.then(() => {
       let headers = [
         {
@@ -457,21 +457,4 @@ function checkForLoadKernel() {
   loadKernel();
 }
 
-let accessFailedStr =
-  "unable to get access to localStorage, user may need to reduce their privacy settings";
-if (
-  Object.prototype.hasOwnProperty.call(document, "requestStorageAccess") &&
-  window.origin === "https://skt.us"
-) {
-  document
-    .requestStorageAccess()
-    .then(() => {
-      checkForLoadKernel();
-    })
-    .catch((err) => {
-      log(addContextToErr(err, accessFailedStr));
-      sendAuthUpdate();
-    });
-} else {
-  checkForLoadKernel();
-}
+checkForLoadKernel();

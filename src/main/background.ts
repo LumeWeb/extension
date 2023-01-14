@@ -65,7 +65,7 @@ export function queryKernel(query: any): Promise<any> {
       if (getKernelIframe().contentWindow !== null) {
         (getKernelIframe() as any).contentWindow.postMessage(
           query,
-          "http://kernel.skynet"
+          "http://kernel.lume"
         );
       } else {
         console.error(
@@ -90,7 +90,7 @@ function handleKernelMessage(event: MessageEvent) {
     return;
   }
 
-  if (event.origin !== "http://kernel.skynet") {
+  if (event.origin !== "http://kernel.lume") {
     return;
   }
 
@@ -174,7 +174,7 @@ function handleBridgeMessage(
     });
     data["domain"] = domain;
   }
-  getKernelIframe().contentWindow!.postMessage(data, "http://kernel.skynet");
+  getKernelIframe().contentWindow!.postMessage(data, "http://kernel.lume");
 }
 function bridgeListener(port: any) {
   let portNonce = getPortsNonce();
@@ -211,7 +211,7 @@ async function boot() {
   engine.registerContentProvider(new ServerProvider(engine));
 
   setKernelIframe(document.createElement("iframe"));
-  getKernelIframe().src = "http://kernel.skynet";
+  getKernelIframe().src = "http://kernel.lume";
   getKernelIframe().onload = init;
   document.body.appendChild(getKernelIframe());
 

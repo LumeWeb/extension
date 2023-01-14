@@ -273,7 +273,7 @@ export default class WebEngine {
 
     this.navigations.set(this.getNavigationId(details), promise);
 
-    if ("kernel.skynet" === queriedHost) {
+    if ("kernel.lume" === queriedHost) {
       if (!queriedUrl.includes("://")) {
         queriedUrl = `http://${queriedUrl}`;
       }
