@@ -1,28 +1,14 @@
 import {
   addContextToErr,
-  b64ToBuf,
-  bufToHex,
   bufToStr,
-  computeRegistrySignature,
-  defaultPortalList,
-  deriveChildSeed,
-  deriveRegistryEntryID,
-  downloadSkylink,
-  Ed25519Keypair,
-  entryIDToSkylink,
   Err,
   hexToBuf,
-  progressiveFetch,
-  progressiveFetchResult,
-  taggedRegistryEntryKeys,
   objAsString,
-  verifyRegistryWriteResponse,
-} from "libskynet";
+} from "@siaweb/libweb";
 
-var browser: any; // tsc
+declare var browser: any; // tsc
 
-const defaultKernelResolverLink =
-  "AQDJDoXMJiiEMBxXodQvUV89qtQHsnXWyV1ViQ9M1pMjUg";
+const defaultKernelLink = "RAAdkljTc2ZmgSNV5EKr-fJZSEEz8irbf2QEqBw9hoEIKA";
 
 document.title = "kernel.lume";
 let header = document.createElement("h1");
@@ -254,175 +240,75 @@ function downloadKernel(
   kernelSkylink: string
 ): Promise<[kernelCode: string, err: Err]> {
   return new Promise((resolve) => {
-    downloadSkylink(kernelSkylink).then(([fileData, err]) => {
-      if (err === "404") {
-        resolve(["", err]);
+    fetch(`https://web3portal.com/${kernelSkylink}`).then((result) => {
+      if (result.status === 404) {
+        resolve(["", result.status.toString()]);
         return;
       }
+      if (!result.ok) {
+        resolve(["", result.statusText]);
+        return;
+      }
+      result
+        .blob()
+        .then((blob) => {
+          return blob.arrayBuffer();
+        })
+        .then((data) => {
+          let [kernelCode, errBBTS] = bufToStr(data);
 
-      if (err !== null) {
-        resolve([
-          "",
-          addContextToErr(err, "unable to download the default kernel"),
-        ]);
-        return;
-      }
+          if (errBBTS !== null) {
+            resolve([
+              "",
+              addContextToErr(null, "unable to decode the default kernel"),
+            ]);
+            return;
+          }
 
-      let [kernelCode, errBBTS] = bufToStr(fileData);
-      if (errBBTS !== null) {
-        resolve([
-          "",
-          addContextToErr(err, "unable to decode the default kernel"),
-        ]);
-        return;
-      }
-      resolve([kernelCode, null]);
+          resolve([kernelCode, null]);
+        });
     });
   });
 }
 
 function downloadDefaultKernel(): Promise<[kernelCode: string, err: Err]> {
-  return downloadKernel(defaultKernelResolverLink);
+  return downloadKernel(defaultKernelLink);
 }
 
-function setUserKernelAsDefault(keypair: Ed25519Keypair, dataKey: Uint8Array) {
-  log(
-    "user kernel not found, setting user kernel to " + defaultKernelResolverLink
-  );
+async function loadKernel() {
+  let [kernelCode, err] = await downloadDefaultKernel();
 
-  let [defaultKernelSkylink, err64] = b64ToBuf(defaultKernelResolverLink);
-  if (err64 !== null) {
-    log("unable to convert default kernel link to a Uint8Array");
+  if (err !== null) {
+    let extErr = addContextToErr(err, "unable to download kernel");
+    kernelLoaded = extErr;
+    logErr(extErr);
+    sendAuthUpdate();
     return;
   }
 
-  let [sig, errCRS] = computeRegistrySignature(
-    keypair.secretKey,
-    dataKey,
-    defaultKernelSkylink,
-    0n
-  );
-  if (errCRS !== null) {
-    log(
-      addContextToErr(
-        errCRS,
-        "unable to compute registry signature to set user kernel"
-      )
-    );
+  try {
+    eval(kernelCode);
+    kernelLoaded = "success";
+    sendAuthUpdate();
+    log("kernel successfully loaded");
+    return;
+  } catch (err: any) {
+    let extErr = addContextToErr(err, "unable to eval kernel");
+    kernelLoaded = extErr;
+    logErr(extErr);
+    logErr(err.toString());
+    console.error(extErr);
+    console.error(err);
+    sendAuthUpdate();
     return;
   }
-
-  let dataKeyHex = bufToHex(dataKey);
-  let endpoint = "/skynet/registry";
-  let postBody = {
-    publickey: {
-      algorithm: "ed25519",
-      key: Array.from(keypair.publicKey),
-    },
-    datakey: dataKeyHex,
-    revision: 0,
-    data: Array.from(defaultKernelSkylink),
-    signature: Array.from(sig),
-  };
-  let fetchOpts = {
-    method: "post",
-    body: JSON.stringify(postBody),
-  };
-
-  progressiveFetch(
-    endpoint,
-    fetchOpts,
-    defaultPortalList,
-    verifyRegistryWriteResponse
-  ).then((result: progressiveFetchResult) => {
-    if (result.success !== true) {
-      log("unable to update the user kernel registry entry\n", result.logs);
-      return;
-    }
-    log(
-      "successfully updated the user kernel registry entry to the default kernel"
-    );
-  });
-}
-
-function downloadUserKernel(): Promise<[kernelCode: string, err: Err]> {
-  return new Promise((resolve) => {
-    let kernelEntrySeed = deriveChildSeed(userSeed, "userPreferredKernel2");
-
-    let [keypair, dataKey, errTREK] = taggedRegistryEntryKeys(
-      kernelEntrySeed,
-      "user kernel"
-    );
-    if (errTREK !== null) {
-      resolve([
-        "",
-        addContextToErr(errTREK, "unable to create user kernel registry keys"),
-      ]);
-      return;
-    }
-
-    let [entryID, errREID] = deriveRegistryEntryID(keypair.publicKey, dataKey);
-    if (errREID !== null) {
-      resolve([
-        "",
-        addContextToErr(errREID, "unable to derive registry entry id"),
-      ]);
-      return;
-    }
-    let userKernelSkylink = entryIDToSkylink(entryID);
-
-    downloadKernel(userKernelSkylink).then(([kernelCode, err]) => {
-      if (err === "404") {
-        downloadDefaultKernel().then(([defaultCode, errDefault]) => {
-          if (errDefault === null) {
-            setUserKernelAsDefault(keypair, dataKey);
-          }
-          resolve([defaultCode, errDefault]);
-          return;
-        });
-        return;
-      }
-      log("found user kernel, using: " + userKernelSkylink);
-
-      resolve([kernelCode, err]);
-    });
-  });
-}
-
-function loadKernel() {
-  downloadUserKernel().then(([kernelCode, err]) => {
-    if (err !== null) {
-      let extErr = addContextToErr(err, "unable to download kernel");
-      kernelLoaded = extErr;
-      logErr(extErr);
-      sendAuthUpdate();
-      return;
-    }
-
-    try {
-      eval(kernelCode);
-      kernelLoaded = "success";
-      sendAuthUpdate();
-      log("kernel successfully loaded");
-      return;
-    } catch (err: any) {
-      let extErr = addContextToErr(err, "unable to eval kernel");
-      kernelLoaded = extErr;
-      logErr(extErr);
-      logErr(err.toString());
-      console.error(extErr);
-      console.error(err);
-      sendAuthUpdate();
-      return;
-    }
-  });
 }
 
 let loginComplete = false;
 let logoutComplete = false;
 let kernelLoaded = "not yet";
 function sendAuthUpdate() {
-  window.parent.postMessage(
+  /*  window.parent.postMessage(
     {
       method: "kernelAuthStatus",
       data: {
@@ -432,13 +318,13 @@ function sendAuthUpdate() {
       },
     },
     "*"
-  );
+  );*/
 }
 sendAuthUpdate();
 
-let userSeed: Uint8Array;
+var userSeed: Uint8Array;
 function checkForLoadKernel() {
-  let userSeedString = window.localStorage.getItem("v1-seed");
+  let userSeedString = window.localStorage.getItem("v1-key");
   if (userSeedString === null) {
     sendAuthUpdate();
     return;

@@ -7,86 +7,17 @@ import {
   OnRequestDetailsType,
   StreamFilter,
 } from "../types.js";
-import { getRelayProxies, streamToArray } from "../util.js";
-import { ipfsPath, ipnsPath, path } from "is-ipfs";
-import {
-  fetchIpfs,
-  fetchIpns,
-  statIpfs,
-  statIpns,
-} from "@lumeweb/kernel-ipfs-client";
-import ejs from "ejs";
-import { cacheDb } from "../databases.js";
+import { getRelayProxies } from "../util.js";
+import { ipfsPath, ipnsPath, path as checkPath } from "is-ipfs";
+import { createClient } from "@lumeweb/kernel-ipfs-client";
 import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
 import RequestStream from "../requestStream.js";
 import ContentFilterRegistry from "../contentFilterRegistry.js";
-
-const INDEX_HTML_FILES = ["index.html", "index.htm", "index.shtml"];
-
-const DIRECTORY_TEMPLATE = ejs.compile(`
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title><%= path %></title>
-  <style></style>
-</head>
-<body>
-  <div id="header" class="row">
-    <div class="col-xs-2">
-      <div id="logo" class="ipfs-logo"></div>
-    </div>
-  </div>
-  <br>
-  <div class="col-xs-12">
-    <div class="panel panel-default">
-      <div class="panel-heading">
-        <strong>Index of <%= path %></strong>
-      </div>
-      <table class="table table-striped">
-        <tbody>
-          <tr>
-            <td class="narrow">
-              <div class="ipfs-icon ipfs-_blank">&nbsp;</div>
-            </td>
-            <td class="padding">
-              <a href="<%= parentHref %>">..</a>
-            </td>
-            <td></td>
-          </tr>
-          <% links.forEach(function (link) { %>
-          <tr>
-            <td><div class="ipfs-icon ipfs-_blank">&nbsp;</div></td>
-            <td><a href="<%= link.link %>"><%= link.name %></a></t>
-            <td><%= link.size %></td>
-          </td>
-          </tr>
-          <% }) %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</body>
-</html>`);
-
-interface StatFileResponse {
-  exists: boolean;
-  contentType: string | null;
-  error: any;
-  directory: boolean;
-  files: StatFileSubfile[];
-  timeout: boolean;
-  size: number;
-}
-
-interface StatFileSubfile {
-  name: string;
-  size: number;
-}
-
-const MAX_CACHE_SIZE = 1024 * 1024 * 1024 * 50;
+import { UnixFSStats } from "@helia/unixfs";
+import * as path from "path";
 
 export default class IpfsProvider extends BaseProvider {
+  private _client = createClient();
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
@@ -99,15 +30,16 @@ export default class IpfsProvider extends BaseProvider {
     }
 
     let contentRecords = (dnsResult as DNSResult).records.map(
-      (item) => "/" + item.value.replace("://", "/").replace(/^\+/, "/")
+      (item: { value: string }) =>
+        "/" + item.value.replace("://", "/").replace(/^\+/, "/")
     );
 
-    contentRecords = contentRecords.filter((item) => path(item));
+    contentRecords = contentRecords.filter((item) => checkPath(item));
     if (!contentRecords.length) {
       return false;
     }
 
-    this.setData(details, "hash", contentRecords.shift());
+    this.setData(details, "cid", contentRecords.shift());
 
     return true;
   }
@@ -131,64 +63,35 @@ export default class IpfsProvider extends BaseProvider {
   ): Promise<BlockingResponse | boolean> {
     let urlObj = new URL(details.url);
     let urlPath = urlObj.pathname;
-    let hash = this.getData(details, "hash");
-    let resp: StatFileResponse | null = null;
-    let fetchMethod: typeof fetchIpfs | typeof fetchIpns;
+    const cid = this.getData(details, "cid");
     let err;
-    let contentType: string;
-    let contentSize = 0;
+    let stat: UnixFSStats | null = null;
 
-    let cachedPage: { contentType: string; data: Blob } | null = null;
+    let parsedPath = path.parse(urlPath);
+    let contentSize;
 
     try {
-      // @ts-ignore
-      cachedPage = await cacheDb.items.where("url").equals(details.url).first();
-    } catch {}
-
-    if (!cachedPage) {
-      try {
-        if (ipfsPath(hash)) {
-          hash = hash.replace("/ipfs/", "");
-          resp = await statIpfs(hash.replace("/ipfs/", ""), urlPath);
-          fetchMethod = fetchIpfs;
-        } else if (ipnsPath(hash)) {
-          hash = hash.replace("/ipns/", "");
-          resp = await statIpns(hash.replace("/ipns/", ""), urlPath);
-          fetchMethod = fetchIpns;
-        } else {
-          err = "invalid content";
-        }
-      } catch (e: any) {
-        err = (e as Error).message;
+      if (ipnsPath(parsedPath.root)) {
+        let ipnsLookup = await this._client.ipns(cid);
+        stat = await this._client.stat(ipnsLookup);
+      } else if (ipfsPath(parsedPath.root)) {
+        stat = await this._client.stat(cid);
       }
-
-      contentType = resp?.contentType as string;
-      if (contentType?.includes(";")) {
-        contentType = contentType?.split(";").shift() as string;
-      }
-      contentSize = resp?.size as number;
-    } else {
-      contentType = cachedPage.contentType;
-      contentSize = cachedPage.data.size;
+    } catch (e) {
+      err = (e as Error).message;
     }
 
-    if (resp) {
-      if (!resp.exists) {
-        err = "404";
-      }
-      if (resp.directory) {
-        contentType = "text/html";
-      }
+    if (err) {
+      err = "404";
     }
 
-    this.setData(details, "contentType", contentType);
+    // this.setData(details, "contentType", contentType);
 
-    const isSmallFile = contentSize <= MAX_CACHE_SIZE;
     const reqStream = new RequestStream(
-      details,
-      isSmallFile && ContentFilterRegistry.hasFilters(contentType)
+      details
+      /* ContentFilterRegistry.hasFilters(contentType)
         ? ContentFilterRegistry.filter(contentType)
-        : undefined
+        : undefined*/
     );
     reqStream.start();
 
@@ -196,49 +99,20 @@ export default class IpfsProvider extends BaseProvider {
       reqStream.close();
       return {};
     }
-
-    if (cachedPage) {
-      (
-        cachedPage?.data.stream() as unknown as ReadableStream<Uint8Array>
-      ).pipeThrough(reqStream.stream);
-      return {};
-    }
-    if (resp?.directory) {
-      let indexFiles =
-        resp?.files.filter((item) => INDEX_HTML_FILES.includes(item.name)) ||
-        [];
-
-      if (indexFiles.length > 0) {
-        urlPath += `/${indexFiles[0].name}`;
-      }
-    }
-
-    if (isSmallFile) {
-      streamToArray(reqStream.readableStream).then((data: Uint8Array) => {
-        // @ts-ignore
-        return cacheDb.items.put({
-          url: details.url,
-          contentType,
-          data: new Blob([data.buffer], { type: contentType }),
-          timestamp: Date.now(),
-        });
-      });
-    }
-
     const streamWriter = reqStream.stream.writable.getWriter();
 
-    // @ts-ignore
-    fetchMethod?.(hash, urlPath, (data: Buffer) => {
-      streamWriter.write(data);
-    })
-      .then(() => {
-        streamWriter.releaseLock();
-        return reqStream.close();
-      })
-      .catch((e: any) => {
+    const reader = this._client.cat(parsedPath.root, { path: parsedPath.dir });
+
+    (async function () {
+      try {
+        for await (const chunk of reader.iterable) {
+          streamWriter.write(chunk);
+        }
+      } catch {
         streamWriter.releaseLock();
         reqStream.close();
-      });
+      }
+    })();
 
     return {};
   }

@@ -36,6 +36,11 @@ function handleBackgroundMessage(data: any) {
     }
   }
 
+  /*  port.postMessage({
+    method: "log1",
+    data: data,
+  });*/
+
   // Pass the message through to the main page.
   window.postMessage(data);
 }
@@ -130,6 +135,12 @@ function handleMessage(event: MessageEvent) {
   // Everything else just gets ignored.
 }
 window.addEventListener("message", handleMessage);
+window.addEventListener("message", (event) => {
+  port.postMessage({
+    method: "log1",
+    data: [event.data, event.origin],
+  });
+});
 port.postMessage({
   method: "bridgeLoaded",
 });

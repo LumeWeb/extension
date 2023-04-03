@@ -2,7 +2,7 @@
     "description": "Lume Web is your decentralized gateway into the web3 internet, the web owned and controlled by its users",
     "manifest_version": 2,
     "name": "Lume Web",
-    "version": "0.3.0",
+    "version": "0.3.0.3",
     "homepage_url": "https://lumeweb.com",
     "icons": {
         "48": "icon.png",
@@ -24,7 +24,7 @@
     "content_scripts": [
         {
             "matches": [
-                "http://kernel.skynet/"
+                "http://kernel.lume/"
             ],
             "js": [
                 "bootloader.js"

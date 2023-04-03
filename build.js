@@ -16,7 +16,7 @@ esbuild.buildSync({
 esbuild.buildSync({
   entryPoints: ["src/main/bootloader.ts"],
   outfile: "dist/bootloader.js",
-  format: "esm",
+  format: "iife",
   bundle: true,
   legalComments: "external",
   //  minify: true
@@ -27,14 +27,14 @@ esbuild.buildSync({
 esbuild.buildSync({
   entryPoints: ["src/main/bridge.ts"],
   outfile: "dist/bridge.js",
-  format: "esm",
+  format: "iife",
   bundle: true,
   legalComments: "external",
   //  minify: true
   define: {
     global: "self",
   },
-});
+}); /*
 esbuild.buildSync({
     entryPoints: ["src/main/crypto.ts"],
     outfile: "dist/crypto.js",
@@ -58,3 +58,4 @@ esbuild.buildSync({
         global: "window",
     }
 });
+*/

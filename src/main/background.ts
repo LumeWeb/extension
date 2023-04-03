@@ -1,11 +1,9 @@
 import tldEnum from "@lumeweb/tld-enum";
 import WebEngine from "../webEngine.js";
 import InternalProvider from "../contentProviders/internalProvider.js";
-import SkynetProvider from "../contentProviders/skynetProvider.js";
 import ServerProvider from "../contentProviders/serverProvider.js";
-import { init } from "libkernel";
+import { init, kernelLoaded } from "libkernel";
 import IpfsProvider from "../contentProviders/ipfsProvider.js";
-import { ready as dnsReady } from "@lumeweb/kernel-dns-client";
 import {
   addQuery,
   getAuthStatusResolve,
@@ -33,9 +31,11 @@ import {
   setOpenPort,
   setTimer,
 } from "./vars.js";
+// @ts-ignore
 import browser from "@lumeweb/webextension-polyfill";
 import setupContextMenus from "../contextMenu.js";
 import { callModule } from "libkernel";
+import { ipfsClient } from "../clients.js";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;
@@ -49,6 +49,7 @@ function logLargeObjects() {
   setTimer(getTimer() * 1.25);
   setTimeout(logLargeObjects, getTimer());
 }
+
 setTimeout(logLargeObjects, getTimer());
 
 export function queryKernel(query: any): Promise<any> {
@@ -75,8 +76,11 @@ export function queryKernel(query: any): Promise<any> {
     });
   });
 }
+
 function handleKernelMessage(event: MessageEvent) {
   let data = event.data.data;
+
+  console.log("handleKernelMessage debug", event.data);
 
   if (event.data.method === "kernelBridgeVersion") {
     getBlockForBridge().then(() => {
@@ -152,6 +156,8 @@ function handleBridgeMessage(
   data: any,
   domain: string
 ) {
+  console.log("handleBridgeMessage debug", data.data);
+
   if (data.method === "bridgeLoaded") {
     getBridgeLoadedResolve()();
     return;
@@ -174,8 +180,10 @@ function handleBridgeMessage(
     });
     data["domain"] = domain;
   }
+
   getKernelIframe().contentWindow!.postMessage(data, "http://kernel.lume");
 }
+
 function bridgeListener(port: any) {
   let portNonce = getPortsNonce();
   increasePortsNonce();
@@ -206,14 +214,24 @@ async function boot() {
 
   const engine = new WebEngine();
   engine.registerContentProvider(new InternalProvider(engine));
-  engine.registerContentProvider(new SkynetProvider(engine));
+
   engine.registerContentProvider(new IpfsProvider(engine));
   engine.registerContentProvider(new ServerProvider(engine));
 
   setKernelIframe(document.createElement("iframe"));
   getKernelIframe().src = "http://kernel.lume";
-  getKernelIframe().onload = init;
-  document.body.appendChild(getKernelIframe());
+
+  await new Promise((resolve) => {
+    getKernelIframe().onload = () => {
+      init().then(resolve);
+    };
+    document.body.appendChild(getKernelIframe());
+  });
+
+  // @ts-ignore
+  window.callModule = callModule;
+  await kernelLoaded();
+  await ipfsClient.ready();
 
   setupContextMenus(engine);
   setDnsSetupPromise(dnsSetup());
@@ -222,19 +240,12 @@ async function boot() {
 async function dnsSetup() {
   const resolvers = [
     "AQBXtVkPDbZ5Qmjl8dzJ0siSYaFcS3XbDZHapxmZCLfwfg", // icann
-    "AQAI3TbarrXRxWtrb_5XO-gMYg-UsjVAChue5JEoqywbAw", // eip137
-    "AQD0s0wZNpZCVg_iO96E6Ff66WxGa2CZst_DCYR_DoQPxw", // solana
-    "AQDtYcJGbquAHA-idtZ-gPOlNBgEVeCZtZUtsyL_J5ZiUA", // algorand
-    "AQDkqoCzCR6s5MP_k6Ee9QWfEwaH5-7XleCKFL1CdxExxQ", // avax
-    "AQC7ALr-OtkFT7qZby2BdMMNbTRXHNMGlpV6r96b35Z79Q", // evmos
-    "AQAmQoZLu1DqIiZaRWRpomvMarQ8Uc3kdHJQBo0r-9uYtg", // handshake
+    "_B1zdE-P7e1csLVoT9w3DvgxWGdDdUj9tnkRGzXyYV-rkg", // ens
+    "vAN0mq5cLYOK2e2Wk1Is980LYSW3reHKrd-w2-vqWfwNUw", // hns
   ];
 
   for (const resolver of resolvers) {
     await callModule(resolver, "register");
   }
-
-  await dnsReady();
 }
-
 boot();

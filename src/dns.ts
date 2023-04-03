@@ -1,16 +1,13 @@
 import NodeCache from "node-cache";
 import {
-  ready as dnsReady,
-  resolve as resolveDns,
-} from "@lumeweb/kernel-dns-client";
-import {
   DNS_RECORD_TYPE,
-  DNSRecord,
   DNSResult,
   ResolverOptions,
 } from "@lumeweb/libresolver";
 import { blake2b, bufToHex, Err } from "libskynet/dist";
 import { getDnsSetupPromise } from "./main/vars.js";
+import { createClient, DnsClient } from "@lumeweb/kernel-dns-client";
+import { dnsClient } from "./clients.js";
 
 const cache = new NodeCache({ stdTTL: 60 });
 
@@ -32,7 +29,7 @@ export async function resolve(
 
   let res;
   try {
-    res = await resolveDns(domain, options, bypassCache);
+    res = await dnsClient.resolve(domain, options, bypassCache);
   } catch (e: any) {
     return e as Error;
   }
