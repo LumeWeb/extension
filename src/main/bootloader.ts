@@ -8,7 +8,7 @@ import {
 
 declare var browser: any; // tsc
 
-const defaultKernelLink = "RAAdkljTc2ZmgSNV5EKr-fJZSEEz8irbf2QEqBw9hoEIKA";
+const defaultKernelLink = "RAC1FocOb2bQw6uwjN0AX__MJ8F-h71F5kvIgQPTKo7fQA";
 
 document.title = "kernel.lume";
 let header = document.createElement("h1");
@@ -308,7 +308,7 @@ let loginComplete = false;
 let logoutComplete = false;
 let kernelLoaded = "not yet";
 function sendAuthUpdate() {
-  /*  window.parent.postMessage(
+  window.parent.postMessage(
     {
       method: "kernelAuthStatus",
       data: {
@@ -318,7 +318,7 @@ function sendAuthUpdate() {
       },
     },
     "*"
-  );*/
+  );
 }
 sendAuthUpdate();
 
