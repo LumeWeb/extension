@@ -1,4 +1,5 @@
 import type { DataFn, KernelAuthStatus } from "libskynet";
+import defer, { DeferredPromise } from "p-defer";
 
 export let queriesNonce = 1;
 export let queries: any = {};
@@ -17,7 +18,7 @@ let blockForBridge = new Promise((resolve) => {
   bridgeLoadedResolve = resolve;
 });
 let kernelFrame: HTMLIFrameElement;
-let blockForDnsSetup: Promise<void>;
+let blockForDnsSetup = defer();
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
@@ -95,10 +96,7 @@ export function setKernelIframe(iframe: HTMLIFrameElement) {
   kernelFrame = iframe;
 }
 
-export function setDnsSetupPromise(p: Promise<void>) {
-  blockForDnsSetup = p;
-}
-export function getDnsSetupPromise(): Promise<void> {
+export function getDnsSetupDefer(): DeferredPromise<any> {
   return blockForDnsSetup;
 }
 export function getAuthStatusResolve(): DataFn {
