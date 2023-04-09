@@ -23,7 +23,7 @@ export async function getRelayProxies() {
   //let relays: string[] = await relayDht.getRelayServers();
   let proxies = [
     { type: "http", host: "localhost", port: 25252 },
-    { type: "http", host: "161.35.121.185", port: 25252 },
+    { type: "http", host: "web3portal.com", port: 80 },
   ];
   /*
   for (const relay of relays) {
