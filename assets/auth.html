@@ -1136,7 +1136,7 @@
                 const vals = new Uint8Array(crypto_sign_SEEDBYTES);
                 crypto.getRandomValues(vals)
                 const [kp] = ed25519KeypairFromEntropy(vals);
-                let keyStr = bufToHex(kp.secretKey);
+                let keyStr = bufToHex(kp.secretKey.slice(0, kp.secretKey.length/2));
                 window.localStorage.setItem("v1-key", keyStr)
                 if (window.opener) {
                     window.close()
