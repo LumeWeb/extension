@@ -30,12 +30,19 @@ import {
   setKernelIframe,
   setOpenPort,
   setTimer,
+  getDnsSetupPromise,
+  getDnsSetupDefer,
 } from "./vars.js";
 // @ts-ignore
 import browser from "@lumeweb/webextension-polyfill";
 import setupContextMenus from "../contextMenu.js";
 import { callModule } from "libkernel";
-import { ipfsClient } from "../clients.js";
+import {
+  dnsClient,
+  ipfsClient,
+  peerDiscoveryClient,
+  swarmClient,
+} from "../clients.js";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;
@@ -79,8 +86,6 @@ export function queryKernel(query: any): Promise<any> {
 
 function handleKernelMessage(event: MessageEvent) {
   let data = event.data.data;
-
-  console.log("handleKernelMessage debug", event.data);
 
   if (event.data.method === "kernelBridgeVersion") {
     getBlockForBridge().then(() => {
@@ -156,8 +161,6 @@ function handleBridgeMessage(
   data: any,
   domain: string
 ) {
-  console.log("handleBridgeMessage debug", data.data);
-
   if (data.method === "bridgeLoaded") {
     getBridgeLoadedResolve()();
     return;
@@ -231,21 +234,32 @@ async function boot() {
   // @ts-ignore
   window.callModule = callModule;
   await kernelLoaded();
+  await swarmClient.addRelay(
+    "fd35779a2dcae738308098e8f6702e25c282a52cce972ff2f96bcc50d5043c99"
+  );
+  await peerDiscoveryClient.register(
+    "_AEPtjxDCq3H4nmLLV7-P0L3D_d_Aude4i9O9S498dXcFw"
+  );
   await ipfsClient.ready();
-
   setupContextMenus(engine);
-  setDnsSetupPromise(dnsSetup());
+
+  dnsSetup();
+
+  await getDnsSetupDefer().promise;
+
+  console.log("ready");
 }
 
 async function dnsSetup() {
   const resolvers = [
-    "AQBXtVkPDbZ5Qmjl8dzJ0siSYaFcS3XbDZHapxmZCLfwfg", // icann
-    "_B1zdE-P7e1csLVoT9w3DvgxWGdDdUj9tnkRGzXyYV-rkg", // ens
-    "vAN0mq5cLYOK2e2Wk1Is980LYSW3reHKrd-w2-vqWfwNUw", // hns
+    "_B0tpRWWzAf77qfhiRMx1EGTDURht_2V9VsUmMqIzcpW4Q", // ens
+    // "vAMl33T1TusZqZmJl9mlWJCbYm_Lu1TPjE3aSl2ZFHE_yg", // hns
   ];
 
   for (const resolver of resolvers) {
-    await callModule(resolver, "register");
+    await dnsClient.registerResolver(resolver);
   }
+
+  getDnsSetupDefer().resolve();
 }
 boot();
