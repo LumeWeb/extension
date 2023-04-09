@@ -52,10 +52,6 @@ export default abstract class BaseProvider {
     const originalUrl = new URL(details.url);
     const hostname = normalizeDomain(originalUrl.hostname);
 
-    if (typeof getAuthStatus === "undefined") {
-      debugger;
-    }
-
     if (getAuthStatus().loginComplete !== true) {
       return false;
     }
