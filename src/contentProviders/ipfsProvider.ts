@@ -12,12 +12,17 @@ import { ipfsPath, ipnsPath, path as checkPath } from "is-ipfs";
 import { createClient } from "@lumeweb/kernel-ipfs-client";
 import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
 import RequestStream from "../requestStream.js";
-import ContentFilterRegistry from "../contentFilterRegistry.js";
 import { UnixFSStats } from "@helia/unixfs";
 import * as path from "path";
+import { CID } from "multiformats/cid";
+import { fileTypeFromBuffer } from "file-type";
+import extToMimes from "../mimes.js";
+import NodeCache from "node-cache";
 
 export default class IpfsProvider extends BaseProvider {
+  private _ipnsCache = new NodeCache({ stdTTL: 60 * 60 * 24 });
   private _client = createClient();
+
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType
   ): Promise<boolean> {
@@ -28,7 +33,6 @@ export default class IpfsProvider extends BaseProvider {
     if (!dnsResult) {
       return false;
     }
-
     let contentRecords = (dnsResult as DNSResult).records.map(
       (item: { value: string }) =>
         "/" + item.value.replace("://", "/").replace(/^\+/, "/")
@@ -63,18 +67,25 @@ export default class IpfsProvider extends BaseProvider {
   ): Promise<BlockingResponse | boolean> {
     let urlObj = new URL(details.url);
     let urlPath = urlObj.pathname;
-    const cid = this.getData(details, "cid");
+    let cid = this.getData(details, "cid");
     let err;
     let stat: UnixFSStats | null = null;
-
-    let parsedPath = path.parse(urlPath);
-    let contentSize;
-
+    const parsedPath = path.parse(urlPath);
     try {
-      if (ipnsPath(parsedPath.root)) {
-        let ipnsLookup = await this._client.ipns(cid);
-        stat = await this._client.stat(ipnsLookup);
-      } else if (ipfsPath(parsedPath.root)) {
+      if (ipnsPath(cid)) {
+        const cidHash = cid.replace("/ipns/", "");
+        if (this._ipnsCache.has(cidHash)) {
+          cid = this._ipnsCache.get(cidHash);
+        } else {
+          cid = await this._client.ipns(cidHash);
+          this._ipnsCache.set(cidHash, cid);
+        }
+
+        cid = `/ipfs/${cid}`;
+      }
+
+      if (ipfsPath(cid)) {
+        cid = CID.parse(cid.replace("/ipfs/", "")).toV1().toString();
         stat = await this._client.stat(cid);
       }
     } catch (e) {
@@ -85,14 +96,27 @@ export default class IpfsProvider extends BaseProvider {
       err = "404";
     }
 
-    // this.setData(details, "contentType", contentType);
+    if (!err && stat?.type === "directory") {
+      if (!parsedPath.base.length || !parsedPath.ext.length) {
+        let found = false;
+        for (const indexFile of ["index.html", "index.htm"]) {
+          try {
+            const subPath = path.join(urlPath, indexFile);
+            await this._client.stat(cid, {
+              path: subPath,
+            });
+            urlPath = subPath;
+            found = true;
+            break;
+          } catch {}
+        }
 
-    const reqStream = new RequestStream(
-      details
-      /* ContentFilterRegistry.hasFilters(contentType)
-        ? ContentFilterRegistry.filter(contentType)
-        : undefined*/
-    );
+        if (!found) {
+          err = "404";
+        }
+      }
+    }
+    const reqStream = new RequestStream(details);
     reqStream.start();
 
     if (err) {
@@ -100,18 +124,63 @@ export default class IpfsProvider extends BaseProvider {
       return {};
     }
     const streamWriter = reqStream.stream.writable.getWriter();
+    const reader = await this._client.cat(cid, { path: urlPath });
 
-    const reader = this._client.cat(parsedPath.root, { path: parsedPath.dir });
+    const provider = this;
 
-    (async function () {
+    let streaming = (async function () {
+      let bufferRead = 0;
+      const fileTypeBufferLength = 4100;
+      const mimeBuffer = [];
+      let checkMime = false;
+
       try {
-        for await (const chunk of reader.iterable) {
+        // @ts-ignore
+        for await (const chunk of reader.iterable()) {
           streamWriter.write(chunk);
+          if (bufferRead < fileTypeBufferLength) {
+            if (chunk.length >= fileTypeBufferLength) {
+              mimeBuffer.push(chunk.slice(0, fileTypeBufferLength));
+              bufferRead += fileTypeBufferLength;
+            } else {
+              mimeBuffer.push(chunk);
+              bufferRead += chunk.length;
+            }
+
+            if (bufferRead >= fileTypeBufferLength) {
+              checkMime = true;
+            }
+          } else {
+            checkMime = true;
+          }
         }
-      } catch {
+      } catch (e) {
         streamWriter.releaseLock();
         reqStream.close();
+        return;
       }
+
+      if (checkMime) {
+        const mime = await fileTypeFromBuffer(
+          mimeBuffer.reduce((acc, val) => {
+            return new Uint8Array([...acc, ...val]);
+          }, new Uint8Array())
+        );
+
+        if (mime) {
+          provider.setData(details, "contentType", mime.mime);
+        }
+
+        if (!mime) {
+          const ext = path.parse(urlPath).ext.replace(".", "");
+          if (extToMimes.has(ext)) {
+            provider.setData(details, "contentType", extToMimes.get(ext));
+          }
+        }
+      }
+
+      streamWriter.releaseLock();
+      reqStream.close();
     })();
 
     return {};
@@ -121,7 +190,6 @@ export default class IpfsProvider extends BaseProvider {
     details: OnHeadersReceivedDetailsType
   ): Promise<BlockingResponse | boolean> {
     let headers = [];
-
     headers.push({
       name: "Content-Type",
       value: this.getData(details, "contentType"),
