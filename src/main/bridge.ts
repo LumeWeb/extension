@@ -36,11 +36,6 @@ function handleBackgroundMessage(data: any) {
     }
   }
 
-  /*  port.postMessage({
-    method: "log1",
-    data: data,
-  });*/
-
   // Pass the message through to the main page.
   window.postMessage(data);
 }
