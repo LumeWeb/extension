@@ -4,9 +4,8 @@ import {
   DNSResult,
   ResolverOptions,
 } from "@lumeweb/libresolver";
-import { blake2b, bufToHex, Err } from "libskynet/dist";
-import { getDnsSetupPromise } from "./main/vars.js";
-import { createClient, DnsClient } from "@lumeweb/kernel-dns-client";
+import { blake2b, bufToHex } from "libskynet/dist";
+import { getDnsSetupDefer } from "./main/vars.js";
 import { dnsClient } from "./clients.js";
 
 const cache = new NodeCache({ stdTTL: 60 });
@@ -25,7 +24,7 @@ export async function resolve(
     return cache.get(cacheId) as DNSResult;
   }
 
-  await getDnsSetupPromise();
+  await getDnsSetupDefer().promise;
 
   let res;
   try {
