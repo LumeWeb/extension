@@ -11,6 +11,7 @@ esbuild.buildSync({
     global: "self",
   },
   inject: ["./polyfill.js"],
+  external: ["node:stream"],
 });
 
 esbuild.buildSync({
