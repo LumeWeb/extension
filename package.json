@@ -20,11 +20,11 @@
 		"@types/ejs": "^3.1.2",
 		"@types/read": "^0.0.29",
 		"@types/webextension-polyfill": "^0.9.2",
-		"@typescript-eslint/eslint-plugin": "^5.57.0",
+		"@typescript-eslint/eslint-plugin": "^5.57.1",
 		"browserify-fs": "^1.0.0",
 		"cpy-cli": "^4.2.0",
 		"esbuild": "^0.14.54",
-		"eslint": "^8.37.0",
+		"eslint": "^8.38.0",
 		"events": "^3.3.0",
 		"path-browserify": "^1.0.1",
 		"prettier": "^2.8.7",
@@ -39,21 +39,32 @@
 	"dependencies": {
 		"@lumeweb/kernel-dns-client": "git+https://git.lumeweb.com/LumeWeb/kernel-dns-client.git",
 		"@lumeweb/kernel-ipfs-client": "git+https://git.lumeweb.com/LumeWeb/kernel-ipfs-client.git",
+		"@lumeweb/kernel-peer-discovery-client": "git+https://git.lumeweb.com/LumeWeb/kernel-peer-discovery-client.git",
+		"@lumeweb/kernel-swarm-client": "git+https://git.lumeweb.com/LumeWeb/kernel-swarm-client.git",
 		"@lumeweb/libresolver": "git+https://git.lumeweb.com/LumeWeb/libresolver.git",
 		"@lumeweb/tld-enum": "git+https://git.lumeweb.com/LumeWeb/list-of-top-level-domains.git",
 		"@lumeweb/webextension-polyfill": "git+https://git.lumeweb.com/LumeWeb/webextension-polyfill.git",
 		"@peculiar/webcrypto": "^1.4.3",
 		"@siaweb/libweb": "git+https://git.lumeweb.com/LumeWeb/libsiaweb.git",
 		"buffer": "^6.0.3",
+		"file-type": "^18.2.1",
 		"is-ipfs": "^6.0.2",
-		"libkernel": "^0.1.48",
+		"libkernel": "github:LumeWeb/libextension",
 		"libskynet": "^0.0.62",
-		"node-cache": "^5.1.2"
+		"multiformats": "^11.0.2",
+		"node-cache": "^5.1.2",
+		"p-defer": "^4.0.0"
 	},
 	"browser": {
 		"crypto": "crypto-browserify",
 		"fs": "browserify-fs",
 		"libkmodule": false,
-		"path": "path-browserify"
+		"path": "path-browserify",
+		"node:buffer": "buffer"
+	},
+	"pnpm": {
+		"overrides": {
+			"libkernel": "github:LumeWeb/libextension"
+		}
 	}
 }
