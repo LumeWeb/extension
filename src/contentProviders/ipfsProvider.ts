@@ -71,6 +71,8 @@ export default class IpfsProvider extends BaseProvider {
     let err;
     let stat: UnixFSStats | null = null;
     const parsedPath = path.parse(urlPath);
+    cid = cid.replace("ipns://", "/ipns/");
+    cid = cid.replace("ipfs://", "/ipfs/");
     try {
       if (ipnsPath(cid)) {
         const cidHash = cid.replace("/ipns/", "");
