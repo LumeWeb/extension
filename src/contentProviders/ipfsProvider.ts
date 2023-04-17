@@ -179,45 +179,11 @@ export default class IpfsProvider extends BaseProvider {
         // @ts-ignore
         for await (const chunk of reader.iterable()) {
           streamWriter.write(chunk);
-          if (bufferRead < fileTypeBufferLength) {
-            if (chunk.length >= fileTypeBufferLength) {
-              mimeBuffer.push(chunk.slice(0, fileTypeBufferLength));
-              bufferRead += fileTypeBufferLength;
-            } else {
-              mimeBuffer.push(chunk);
-              bufferRead += chunk.length;
-            }
-
-            if (bufferRead >= fileTypeBufferLength) {
-              checkMime = true;
-            }
-          } else {
-            checkMime = true;
-          }
         }
       } catch (e) {
         streamWriter.releaseLock();
         reqStream.close();
         return;
-      }
-
-      if (checkMime) {
-        const mime = await fileTypeFromBuffer(
-          mimeBuffer.reduce((acc, val) => {
-            return new Uint8Array([...acc, ...val]);
-          }, new Uint8Array())
-        );
-
-        if (mime) {
-          provider.setData(details, "contentType", mime.mime);
-        }
-
-        if (!mime) {
-          const ext = path.parse(urlPath).ext.replace(".", "");
-          if (extToMimes.has(ext)) {
-            provider.setData(details, "contentType", extToMimes.get(ext));
-          }
-        }
       }
 
       streamWriter.releaseLock();
