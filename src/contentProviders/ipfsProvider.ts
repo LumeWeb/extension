@@ -125,17 +125,56 @@ export default class IpfsProvider extends BaseProvider {
       reqStream.close();
       return {};
     }
-    const streamWriter = reqStream.stream.writable.getWriter();
-    const reader = await this._client.cat(cid, { path: urlPath });
 
-    const provider = this;
+    let reader = await this._client.cat(cid, { path: urlPath });
+
+    let bufferRead = 0;
+    const fileTypeBufferLength = 4100;
+    const mimeBuffer = [];
+
+    for await (const chunk of reader.iterable()) {
+      if (bufferRead < fileTypeBufferLength) {
+        if (chunk.length >= fileTypeBufferLength) {
+          mimeBuffer.push(chunk.slice(0, fileTypeBufferLength));
+          bufferRead += fileTypeBufferLength;
+        } else {
+          mimeBuffer.push(chunk);
+          bufferRead += chunk.length;
+        }
+
+        if (bufferRead >= fileTypeBufferLength) {
+          reader.abort();
+          break;
+        }
+      } else {
+        reader.abort();
+        break;
+      }
+    }
+
+    if (bufferRead >= fileTypeBufferLength) {
+      const mime = await fileTypeFromBuffer(
+        mimeBuffer.reduce((acc, val) => {
+          return new Uint8Array([...acc, ...val]);
+        }, new Uint8Array())
+      );
+
+      if (mime) {
+        this.setData(details, "contentType", mime.mime);
+      }
+
+      if (!mime) {
+        const ext = path.parse(urlPath).ext.replace(".", "");
+        if (extToMimes.has(ext)) {
+          this.setData(details, "contentType", extToMimes.get(ext));
+        }
+      }
+    }
+
+    reader = await this._client.cat(cid, { path: urlPath });
+    const streamWriter = reqStream.stream.writable.getWriter();
 
     let streaming = (async function () {
-      let bufferRead = 0;
-      const fileTypeBufferLength = 4100;
-      const mimeBuffer = [];
-      let checkMime = false;
-
       try {
         // @ts-ignore
         for await (const chunk of reader.iterable()) {
