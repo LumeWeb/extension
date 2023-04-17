@@ -26,11 +26,9 @@ import {
   increaseQueriesNonce,
   setAuthStatus,
   setAuthStatusKnown,
-  setDnsSetupPromise,
   setKernelIframe,
   setOpenPort,
   setTimer,
-  getDnsSetupPromise,
   getDnsSetupDefer,
 } from "./vars.js";
 // @ts-ignore
