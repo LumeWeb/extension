@@ -231,8 +231,6 @@ async function boot() {
     document.body.appendChild(getKernelIframe());
   });
 
-  // @ts-ignore
-  window.callModule = callModule;
   await kernelLoaded();
   await swarmClient.addRelay(
     "fd35779a2dcae738308098e8f6702e25c282a52cce972ff2f96bcc50d5043c99"
