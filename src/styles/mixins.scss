@@ -135,3 +135,27 @@ $max-vw: 476rem; // 336rem, 616rem
     }
   }
 }
+
+@mixin fluid-position-left($offset, $width) {
+  $min-vw: 48rem;
+  $max-vw: 96rem;
+
+  $min-margin: 5em;
+  $max-margin: 5em;
+
+  & {
+    margin-left: min(calc($offset + $min-margin), max($min-margin, calc(100vw - $width - $min-margin)));
+    margin-right: $min-margin;
+
+    @media screen and (min-width: $min-vw) {
+      $margin: calc(#{$min-margin} + #{strip-unit($max-margin - $min-margin)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
+      margin-left: min(calc($offset + $margin), max($margin, calc(100vw - $width - $margin)));
+      margin-right: $margin;
+    }
+
+    @media screen and (min-width: $max-vw) {
+      margin-left: min(calc($offset + $max-margin), max($max-margin, calc(100vw - $width - $max-margin)));
+      margin-right: $max-margin;
+    }
+  }
+}

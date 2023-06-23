@@ -57,8 +57,20 @@ body {
   @include fluid-font-size(0.625rem);
 }
 
+header {
+  padding: 2.5em;
+  color: #fff;
+  background: #080808;
+  border-bottom: 0.1em solid #363636;
+
+  img {
+    @include fluid-width-height(7.875rem, 2.625rem);
+  }
+}
+
 main {
   flex-grow: 1;
+  overflow: hidden;
 }
 
 .btn-wrapper {

@@ -5,7 +5,7 @@
   import { wordlist } from '@scure/bip39/wordlists/english';
 
   import '/src/styles/global.scss';
-  import Header from '/src/components/Header.svelte';
+  import lumeLogo from '/src/assets/lume-logo.png';
 
   let action;
   let createAccountStep;
@@ -206,12 +206,14 @@
     // use key here
 
     window.setTimeout(() => {
-      alert('redirect to dashboard');
+      window.location.href = '/dashboard.html';
     }, 1000);
   };
 </script>
 
-<Header />
+<header>
+  <img src={lumeLogo} alt="Lume"/>
+</header>
 <main class:sign-in={action === 'sign-in'} class:create-account={action === 'create-account'} class:create-account-step-2={createAccountStep === 2} class:create-account-step-3={createAccountStep === 3} class:create-account-step-4={createAccountStep === 4} class:fade-out={fadeOut}>
   <div class="art">
     <div class="gradient-1"></div>

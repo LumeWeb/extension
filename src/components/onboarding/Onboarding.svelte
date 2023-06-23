@@ -1,6 +1,6 @@
 <script>
   import '/src/styles/global.scss';
-  import Header from '/src/components/Header.svelte';
+  import lumeLogo from '/src/assets/lume-logo.png';
 
   let started = false;
   let step = 1;
@@ -23,7 +23,9 @@
   };
 </script>
 
-<Header/>
+<header>
+  <img src={lumeLogo} alt="Lume"/>
+</header>
 <main class:started={started} class:step-2={step === 2} class:step-3={step === 3} class:step-4={step === 4}>
   <div class="art art-1"></div>
   <div class="art art-2"></div>
