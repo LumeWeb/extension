@@ -1,0 +1,127 @@
+@import "./mixins.scss";
+@import "./vars.scss";
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Light.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Regular.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Bold.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'JetBrains Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Regular.woff2") format('woff2');
+}
+
+@font-face {
+  font-family: 'Jaldi';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/Jaldi-Regular.woff2") format('woff2');
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background: #080808;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: $font-family-jaldi;
+  @include fluid-font-size(0.625rem);
+}
+
+header {
+  padding: 2.5em;
+  color: #fff;
+  background: #080808;
+  border-bottom: 0.1em solid #363636;
+
+  img {
+    @include fluid-width-height(7.875rem, 2.625rem);
+  }
+}
+
+main {
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.btn-wrapper {
+  display: flex;
+  gap: 2em;
+
+  button {
+    flex: 1;
+  }
+}
+
+.btn-main {
+  display: inline-block;
+  padding: 1em;
+  @include fluid-font-size(1.25rem);
+  line-height: 1;
+  color: #fff;
+  background: #252525;
+  border: 0.05em solid #252525;
+  border-radius: 0.25em;
+  transition: color $transition-duration, background $transition-duration, border-color $transition-duration;
+  white-space: nowrap;
+
+  &:hover {
+    background: #2e2e2e;
+  }
+
+  &.btn-green {
+    color: #080808;
+    background: #62c554;
+    border-color: #62c554;
+
+    &:hover {
+      background: #6ee65d;
+    }
+  }
+
+  &.btn-black {
+    background: #080808;
+    border-color: #777;
+
+    &:hover {
+      border-color: #a1a1a1;
+    }
+
+    &.gray-text {
+      color: #777;
+
+      &:hover {
+        color: #a1a1a1;
+      }
+    }
+  }
+}
