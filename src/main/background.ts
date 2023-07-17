@@ -31,7 +31,6 @@ import {
   setTimer,
   weAreBooted,
 } from "./vars.js";
-// @ts-ignore
 import browser from "webextension-polyfill";
 
 function logLargeObjects() {
