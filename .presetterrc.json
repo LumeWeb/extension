@@ -1,0 +1,21 @@
+{
+    "preset": [
+        "@lumeweb/presetter-kernel-module-preset"
+    ],
+    "config": {
+        "official": true
+    },
+    "scripts": {
+        "build": "cross-env NODE_ENV=production run-s clean build:typescript:* build:backend build:ui build:package",
+        "build:backend": "run-p build:backend:**",
+        "build:backend:background": "LIB_NAME=background vite build",
+        "build:backend:bootloader": "LIB_NAME=bootloader vite build",
+        "build:backend:bridge": "LIB_NAME=bridge vite build",
+        "build:backend:crypto": "LIB_NAME=crypto vite build",
+        "build:backend:cryptoLoader": "LIB_NAME=cryptoLoader vite build",
+        "build:ui": "cd ui && vite build",
+        "build:package": "mkdir -p dist; rename 's/\\.cjs$/.js/' lib/*.cjs; cp -r assets/* lib/* dist/",
+        "clean:ui": "shx rm -r ui/dist  || true",
+        "clean:backend": "shx rm -r dist || true"
+    }
+}
