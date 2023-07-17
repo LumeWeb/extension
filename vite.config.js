@@ -23,8 +23,6 @@ export default defineConfig({
   build: {
     outDir: "lib",
     lib: {
-      entry: "build/index.js",
-      name: "main",
       formats: ["cjs"],
       ...currentConfig,
     },
