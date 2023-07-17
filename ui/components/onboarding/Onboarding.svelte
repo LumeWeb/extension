@@ -138,7 +138,7 @@
     > div:first-child {
       flex-grow: 1;
       display: flex;
-      jusify-content: center;
+      justify-content: center;
       align-items: center;
       max-width: 43.2em;
     }
