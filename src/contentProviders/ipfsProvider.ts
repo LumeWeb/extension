@@ -17,10 +17,8 @@ import * as path from "path";
 import { CID } from "multiformats/cid";
 import { fileTypeFromBuffer } from "file-type";
 import extToMimes from "../mimes.js";
-import NodeCache from "node-cache";
 
 export default class IpfsProvider extends BaseProvider {
-  private _ipnsCache = new NodeCache({ stdTTL: 60 * 60 * 24 });
   private _client = createClient();
 
   async shouldHandleRequest(
@@ -76,13 +74,7 @@ export default class IpfsProvider extends BaseProvider {
     try {
       if (ipnsPath(cid)) {
         const cidHash = cid.replace("/ipns/", "");
-        if (this._ipnsCache.has(cidHash)) {
-          cid = this._ipnsCache.get(cidHash);
-        } else {
-          cid = await this._client.ipns(cidHash);
-          this._ipnsCache.set(cidHash, cid);
-        }
-
+        cid = await this._client.ipns(cidHash);
         cid = `/ipfs/${cid}`;
       }
 
