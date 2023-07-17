@@ -19,6 +19,7 @@ let blockForBridge = new Promise((resolve) => {
 });
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
+let booted = defer();
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
@@ -111,4 +112,12 @@ export function getBlockForBridge(): Promise<unknown> {
 }
 export function getBridgeLoadedResolve(): DataFn {
   return bridgeLoadedResolve;
+}
+
+export function getBooted(): Promise<unknown> {
+  return booted.promise;
+}
+
+export function weAreBooted(): void {
+  booted.resolve();
 }

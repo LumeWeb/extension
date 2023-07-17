@@ -221,33 +221,5 @@ async function boot() {
     document.body.appendChild(getKernelIframe());
   });
 
-  await kernelLoaded();
-  await swarmClient.addRelay(
-    "fd35779a2dcae738308098e8f6702e25c282a52cce972ff2f96bcc50d5043c99"
-  );
-  await peerDiscoveryClient.register(
-    "_AEPtjxDCq3H4nmLLV7-P0L3D_d_Aude4i9O9S498dXcFw"
-  );
-  await ipfsClient.ready();
-  setupContextMenus(engine);
-
-  dnsSetup();
-
-  await getDnsSetupDefer().promise;
-
-  console.log("ready");
+  weAreBooted();
 }
-
-async function dnsSetup() {
-  const resolvers = [
-    "_B0tpRWWzAf77qfhiRMx1EGTDURht_2V9VsUmMqIzcpW4Q", // ens
-    // "vAMl33T1TusZqZmJl9mlWJCbYm_Lu1TPjE3aSl2ZFHE_yg", // hns
-  ];
-
-  for (const resolver of resolvers) {
-    await dnsClient.registerResolver(resolver);
-  }
-
-  getDnsSetupDefer().resolve();
-}
-boot();
