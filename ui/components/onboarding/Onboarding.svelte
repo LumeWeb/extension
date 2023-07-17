@@ -1,6 +1,6 @@
 <script>
-  import '/src/styles/global.scss';
-  import lumeLogo from '/src/assets/lume-logo.png';
+  import '../../styles/global.scss';
+  import lumeLogo from '../../assets/lume-logo.png';
 
   let started = false;
   let step = 1;
@@ -72,8 +72,8 @@
 </main>
 
 <style lang="scss">
-  @import "/src/styles/mixins.scss";
-  @import "/src/styles/vars.scss";
+  @import "../../styles/mixins";
+  @import "../../styles/vars";
 
   main {
     position: relative;
@@ -89,7 +89,7 @@
 
   .art-1 {
     left: 0;
-    background-image: url("/src/assets/onboarding-1.jpg");
+    background-image: url("../../assets/onboarding-1.jpg");
     background-position: 50%;
     background-size: cover;
     border-right: 1px solid #363636;
@@ -97,7 +97,7 @@
 
   .art-2 {
     left: 50%;
-    background-image: url("/src/assets/onboarding-2.jpg");
+    background-image: url("../../assets/onboarding-2.jpg");
     background-position: 50%;
     background-size: cover;
     border-left: 1px solid #363636;
@@ -106,7 +106,7 @@
 
   .art-3 {
     left: 50%;
-    background-image: url("/src/assets/onboarding-3.jpg");
+    background-image: url("../../assets/onboarding-3.jpg");
     background-position: 50%;
     background-size: cover;
     border-left: 1px solid #363636;
@@ -116,7 +116,7 @@
 
   .art-4 {
     left: 50%;
-    background-image: url("/src/assets/onboarding-4.jpg");
+    background-image: url("../../assets/onboarding-4.jpg");
     background-position: 50%;
     background-size: cover;
     border-left: 1px solid #363636;

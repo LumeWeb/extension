@@ -1,4 +1,4 @@
-import Dashboard from '/src/components/dashboard/Dashboard.svelte'
+import Dashboard from './components/dashboard/Dashboard.svelte'
 
 const app = new Dashboard({
   target: document.getElementById('app'),

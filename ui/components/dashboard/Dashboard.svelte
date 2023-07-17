@@ -1,11 +1,11 @@
 <script>
-  import '/src/styles/global.scss';
-  import lumeLogo from '/src/assets/lume-logo.png';
+  import '../../styles/global.scss';
+  import lumeLogo from '../../assets/lume-logo.png';
 
-  import svgGithub from '/src/assets/icon/github.svg?raw';
-  import svgDiscord from '/src/assets/icon/discord.svg?raw';
-  import svgTwitter from '/src/assets/icon/twitter.svg?raw';
-  import svgFacebook from '/src/assets/icon/facebook.svg?raw';
+  import svgGithub from '../../assets/icon/github.svg?raw';
+  import svgDiscord from '../../assets/icon/discord.svg?raw';
+  import svgTwitter from '../../assets/icon/twitter.svg?raw';
+  import svgFacebook from '../../assets/icon/facebook.svg?raw';
 
   let step = 1;
   let userCount;
@@ -151,9 +151,9 @@
 </main>
 
 <style lang="scss">
-  @import "/src/styles/artwork.scss";
-  @import "/src/styles/mixins.scss";
-  @import "/src/styles/vars.scss";
+  @import "../../styles/artwork";
+  @import "../../styles/mixins";
+  @import "../../styles/vars";
 
   .icon {
     display: block;
@@ -171,14 +171,14 @@
     }
 
     &.icon-wait {
-      background-image: url("/src/assets/wait-icon-orange.png");
+      background-image: url("../../assets/wait-icon-orange.png");
       background-size: 1.125em 1.125em;
       background-repeat: no-repeat;
       background-position: 50%;
     }
 
     &.icon-wait-yellow {
-      background-image: url("/src/assets/wait-icon-yellow.png");
+      background-image: url("../../assets/wait-icon-yellow.png");
     }
 
     &.icon-error {

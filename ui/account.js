@@ -1,4 +1,4 @@
-import Account from '/src/components/account/Account.svelte'
+import Account from './components/account/Account.svelte'
 
 const app = new Account({
   target: document.getElementById('app'),

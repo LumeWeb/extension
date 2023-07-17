@@ -4,8 +4,8 @@
   import * as bip39 from '@scure/bip39';
   import { wordlist } from '@scure/bip39/wordlists/english';
 
-  import '/src/styles/global.scss';
-  import lumeLogo from '/src/assets/lume-logo.png';
+  import '../../styles/global.scss';
+  import lumeLogo from '../../assets/lume-logo.png';
 
   let action;
   let createAccountStep;
@@ -340,9 +340,9 @@
 </main>
 
 <style lang="scss">
-  @import "/src/styles/artwork.scss";
-  @import "/src/styles/mixins.scss";
-  @import "/src/styles/vars.scss";
+  @import "../../styles/artwork";
+  @import "../../styles/mixins";
+  @import "../../styles/vars";
 
   main {
     position: relative;
