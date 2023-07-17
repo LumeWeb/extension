@@ -196,7 +196,7 @@ function handleSkynetKernelRequestOverride(event: MessageEvent) {
 }
 
 var handleStorage = function (event: StorageEvent) {
-  if (event.key !== null && event.key !== "v1-seed") {
+  if (event.key !== null && event.key !== "key") {
     return;
   }
   if (logoutComplete === true) {
@@ -208,8 +208,8 @@ var handleStorage = function (event: StorageEvent) {
     return;
   }
 
-  if (event.key === "v1-seed" && loginComplete === false) {
-    let userSeedString = window.localStorage.getItem("v1-seed");
+  if (event.key === "key" && loginComplete === false) {
+    let userSeedString = window.localStorage.getItem("key");
     if (userSeedString === null) {
       sendAuthUpdate();
       return;
