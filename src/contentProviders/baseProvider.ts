@@ -4,7 +4,7 @@ import {
   OnBeforeSendHeadersDetailsType,
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
-} from "../types";
+} from "../types.js";
 import WebEngine from "../webEngine.js";
 import { getTld, isDomain, isIp, normalizeDomain } from "../util.js";
 import tldEnum from "@lumeweb/tld-enum";
@@ -18,19 +18,19 @@ export default abstract class BaseProvider {
   }
 
   async shouldHandleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<boolean> {
     return false;
   }
 
   async handleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<BlockingResponse | boolean> {
     return false;
   }
 
   async handleReqHeaders(
-    details: OnBeforeSendHeadersDetailsType
+    details: OnBeforeSendHeadersDetailsType,
   ): Promise<BlockingResponse | boolean> {
     return false;
   }
@@ -40,14 +40,14 @@ export default abstract class BaseProvider {
   }
 
   async handleHeaders(
-    details: OnHeadersReceivedDetailsType
+    details: OnHeadersReceivedDetailsType,
   ): Promise<BlockingResponse | boolean> {
     return false;
   }
 
   protected async resolveDns(
     details: OnBeforeRequestDetailsType,
-    recordTypes?: string[]
+    recordTypes?: string[],
   ) {
     const originalUrl = new URL(details.url);
     const hostname = normalizeDomain(originalUrl.hostname);
@@ -74,7 +74,7 @@ export default abstract class BaseProvider {
   protected setData(
     details: OnBeforeRequestDetailsType,
     key: string,
-    value: any
+    value: any,
   ) {
     return this.engine.setRequestData(details.requestId, key, value);
   }

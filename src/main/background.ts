@@ -6,15 +6,15 @@ import { init } from "@lumeweb/libkernel/kernel";
 import IpfsProvider from "../contentProviders/ipfsProvider.js";
 import {
   addQuery,
-  getAuthStatusResolve,
-  getBlockForBootloader,
-  getBlockForBridge,
-  getBridgeLoadedResolve,
   clearOpenPorts,
   deleteOpenPort,
   deleteQuery,
   getAuthStatus,
   getAuthStatusKnown,
+  getAuthStatusResolve,
+  getBlockForBootloader,
+  getBlockForBridge,
+  getBridgeLoadedResolve,
   getKernelIframe,
   getOpenPorts,
   getPortsNonce,
@@ -29,18 +29,10 @@ import {
   setKernelIframe,
   setOpenPort,
   setTimer,
-  getDnsSetupDefer,
+  weAreBooted,
 } from "./vars.js";
 // @ts-ignore
 import browser from "@lumeweb/webextension-polyfill";
-import setupContextMenus from "../contextMenu.js";
-import { callModule } from "libkernel";
-import {
-  dnsClient,
-  ipfsClient,
-  peerDiscoveryClient,
-  swarmClient,
-} from "../clients.js";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;
@@ -71,11 +63,11 @@ export function queryKernel(query: any): Promise<any> {
       if (getKernelIframe().contentWindow !== null) {
         (getKernelIframe() as any).contentWindow.postMessage(
           query,
-          "http://kernel.lume"
+          "http://kernel.lume",
         );
       } else {
         console.error(
-          "kernelFrame.contentWindow was null, cannot send message!"
+          "kernelFrame.contentWindow was null, cannot send message!",
         );
       }
     });
@@ -157,7 +149,7 @@ function handleBridgeMessage(
   port: any,
   portNonce: number,
   data: any,
-  domain: string
+  domain: string,
 ) {
   if (data.method === "bridgeLoaded") {
     getBridgeLoadedResolve()();

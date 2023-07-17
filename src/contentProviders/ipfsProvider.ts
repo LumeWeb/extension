@@ -24,18 +24,18 @@ export default class IpfsProvider extends BaseProvider {
   private _client = createClient();
 
   async shouldHandleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<boolean> {
     let dnsResult: DNSResult | boolean | string = await this.resolveDns(
       details,
-      [DNS_RECORD_TYPE.CONTENT, DNS_RECORD_TYPE.TEXT]
+      [DNS_RECORD_TYPE.CONTENT, DNS_RECORD_TYPE.TEXT],
     );
     if (!dnsResult) {
       return false;
     }
     let contentRecords = (dnsResult as DNSResult).records.map(
       (item: { value: string }) =>
-        "/" + item.value.replace("://", "/").replace(/^\+/, "/")
+        "/" + item.value.replace("://", "/").replace(/^\+/, "/"),
     );
 
     contentRecords = contentRecords.filter((item) => checkPath(item));
@@ -53,7 +53,7 @@ export default class IpfsProvider extends BaseProvider {
   }
 
   async handleReqHeaders(
-    details: OnBeforeSendHeadersDetailsType
+    details: OnBeforeSendHeadersDetailsType,
   ): Promise<BlockingResponse | boolean> {
     return {
       requestHeaders: [
@@ -63,7 +63,7 @@ export default class IpfsProvider extends BaseProvider {
   }
 
   async handleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<BlockingResponse | boolean> {
     let urlObj = new URL(details.url);
     let urlPath = urlObj.pathname;
@@ -130,7 +130,7 @@ export default class IpfsProvider extends BaseProvider {
 
     let bufferRead = 0;
     const fileTypeBufferLength = 4100;
-    const mimeBuffer = [];
+    const mimeBuffer: Uint8Array[] = [];
 
     for await (const chunk of reader.iterable()) {
       if (bufferRead < fileTypeBufferLength) {
@@ -156,7 +156,7 @@ export default class IpfsProvider extends BaseProvider {
       const mime = await fileTypeFromBuffer(
         mimeBuffer.reduce((acc, val) => {
           return new Uint8Array([...acc, ...val]);
-        }, new Uint8Array())
+        }, new Uint8Array()),
       );
 
       if (mime) {
@@ -194,9 +194,9 @@ export default class IpfsProvider extends BaseProvider {
   }
 
   async handleHeaders(
-    details: OnHeadersReceivedDetailsType
+    details: OnHeadersReceivedDetailsType,
   ): Promise<BlockingResponse | boolean> {
-    let headers = [];
+    let headers: any = [];
     headers.push({
       name: "Content-Type",
       value: this.getData(details, "contentType"),
