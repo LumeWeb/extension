@@ -5,11 +5,6 @@ import { resolve } from "path";
 
 const config = {};
 
-const currentConfig = config[process.env.LIB_NAME];
-if (currentConfig === undefined) {
-  throw new Error("LIB_NAME is not defined or is not valid");
-}
-
 ["background", "bootloader", "bridge", "crypto", "cryptoLoader"].forEach(
   (item) => {
     config[item] = {
@@ -18,6 +13,11 @@ if (currentConfig === undefined) {
     };
   },
 );
+
+const currentConfig = config[process.env.LIB_NAME];
+if (currentConfig === undefined) {
+  throw new Error("LIB_NAME is not defined or is not valid");
+}
 
 export default defineConfig({
   build: {
