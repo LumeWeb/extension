@@ -4,67 +4,30 @@
 	"description": "Lume Web is your decentralized gateway into the web3 internet, the web owned and controlled by its users",
 	"main": "index.js",
 	"type": "module",
+	"readme": "ERROR: No README data found!",
+	"_id": "@lumeweb/extension@0.3.0",
 	"scripts": {
-		"deps": "npm install libskynet@latest",
-		"prettier": "prettier --write .",
-		"eslint": "eslint src --fix",
-		"lint": "npm run deps && npm run prettier && npm run eslint",
-		"compile": "node build.js",
-		"build": "rimraf node_modules/@lumeweb/kernel-dns-client/node_modules node_modules/@lumeweb/kernel-dht-client/node_modules node_modules/@lumeweb/kernel-ipfs-client/node_modules && npm run compile &&  cpy \"assets/*\" dist"
+		"prepare": "presetter bootstrap",
+		"build": "run build",
+		"semantic-release": "semantic-release"
 	},
-	"author": "David Vorick",
-	"license": "MIT",
 	"devDependencies": {
-		"@helia/unixfs": "^1.2.1",
-		"@rollup/plugin-node-resolve": "^13.3.0",
-		"@types/ejs": "^3.1.2",
-		"@types/read": "^0.0.29",
-		"@types/webextension-polyfill": "^0.9.2",
-		"@typescript-eslint/eslint-plugin": "^5.57.1",
-		"browserify-fs": "^1.0.0",
-		"cpy-cli": "^4.2.0",
-		"esbuild": "^0.14.54",
-		"eslint": "^8.38.0",
-		"events": "^3.3.0",
-		"path-browserify": "^1.0.1",
-		"prettier": "^2.8.7",
-		"process": "^0.11.10",
-		"rimraf": "^3.0.2",
-		"rollup": "^2.79.1",
-		"stream": "^0.0.2",
-		"typescript": "^4.9.5",
-		"util": "^0.12.5",
-		"webextension-polyfill": "^0.9.0"
+		"@lumeweb/presetter-kernel-module-preset": "^0.1.0-develop.43",
+		"@sveltejs/vite-plugin-svelte": "^2.4.2",
+		"autoprefixer": "^10.4.14",
+		"sass": "^1.63.6",
+		"tailwindcss": "^3.3.3"
 	},
 	"dependencies": {
-		"@lumeweb/kernel-dns-client": "git+https://git.lumeweb.com/LumeWeb/kernel-dns-client.git",
-		"@lumeweb/kernel-ipfs-client": "git+https://git.lumeweb.com/LumeWeb/kernel-ipfs-client.git",
-		"@lumeweb/kernel-peer-discovery-client": "git+https://git.lumeweb.com/LumeWeb/kernel-peer-discovery-client.git",
-		"@lumeweb/kernel-swarm-client": "git+https://git.lumeweb.com/LumeWeb/kernel-swarm-client.git",
-		"@lumeweb/libresolver": "git+https://git.lumeweb.com/LumeWeb/libresolver.git",
-		"@lumeweb/tld-enum": "git+https://git.lumeweb.com/LumeWeb/list-of-top-level-domains.git",
-		"@lumeweb/webextension-polyfill": "git+https://git.lumeweb.com/LumeWeb/webextension-polyfill.git",
-		"@peculiar/webcrypto": "^1.4.3",
-		"@siaweb/libweb": "git+https://git.lumeweb.com/LumeWeb/libsiaweb.git",
-		"buffer": "^6.0.3",
-		"file-type": "^18.2.1",
-		"is-ipfs": "^6.0.2",
-		"libkernel": "github:LumeWeb/libextension",
-		"libskynet": "^0.0.62",
-		"multiformats": "^11.0.2",
-		"node-cache": "^5.1.2",
+		"@helia/unixfs": "^1.4.0",
+		"@lumeweb/kernel-ipfs-client": "^0.0.2-develop.1",
+		"@lumeweb/libkernel": "^0.1.0-develop.16",
+		"@lumeweb/libresolver": "^0.1.0-develop.1",
+		"@lumeweb/libweb": "^0.2.0-develop.22",
+		"@lumeweb/tld-enum": "^0.1.0-develop.1",
+		"@scure/bip39": "^1.2.1",
+		"file-type": "^18.5.0",
+		"is-ipfs": "^8.0.1",
 		"p-defer": "^4.0.0"
-	},
-	"browser": {
-		"crypto": "crypto-browserify",
-		"fs": "browserify-fs",
-		"libkmodule": false,
-		"path": "path-browserify",
-		"node:buffer": "buffer"
-	},
-	"pnpm": {
-		"overrides": {
-			"libkernel": "github:LumeWeb/libextension"
-		}
 	}
 }

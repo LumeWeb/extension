@@ -1,4 +1,4 @@
-import type { DataFn, KernelAuthStatus } from "libskynet";
+import type { DataFn, KernelAuthStatus } from "@lumeweb/libweb";
 import defer, { DeferredPromise } from "p-defer";
 
 export let queriesNonce = 1;

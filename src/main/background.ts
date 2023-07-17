@@ -2,7 +2,7 @@ import tldEnum from "@lumeweb/tld-enum";
 import WebEngine from "../webEngine.js";
 import InternalProvider from "../contentProviders/internalProvider.js";
 import ServerProvider from "../contentProviders/serverProvider.js";
-import { init, kernelLoaded } from "libkernel";
+import { init } from "@lumeweb/libkernel/kernel";
 import IpfsProvider from "../contentProviders/ipfsProvider.js";
 import {
   addQuery,
