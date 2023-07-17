@@ -8,7 +8,7 @@ import {
 import WebEngine from "../webEngine.js";
 import { getTld, isDomain, isIp, normalizeDomain } from "../util.js";
 import tldEnum from "@lumeweb/tld-enum";
-import { getAuthStatus } from "../main/vars.js";
+import { getAuthStatus } from "../vars.js";
 import { scanRecords } from "../dns.js";
 
 export default abstract class BaseProvider {

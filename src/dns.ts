@@ -5,7 +5,7 @@ import {
   ResolverOptions,
 } from "@lumeweb/libresolver";
 import { bufToHex } from "@lumeweb/libweb";
-import { getDnsSetupDefer } from "./main/vars.js";
+import { getDnsSetupDefer } from "./vars.js";
 import { dnsClient } from "./clients.js";
 import { blake3 } from "@noble/hashes/blake3";
 

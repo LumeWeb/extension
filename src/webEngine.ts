@@ -14,7 +14,7 @@ import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { scanRecords } from "./dns.js";
 import { bufToHex } from "@lumeweb/libweb";
-import { getAuthStatus } from "./main/vars.js";
+import { getAuthStatus } from "./vars.js";
 import { DNSResult } from "@lumeweb/libresolver";
 import { blake3 } from "@noble/hashes/blake3";
 
@@ -283,7 +283,7 @@ export default class WebEngine {
       return;
     }
 
-    if (getAuthStatus().loginComplete !== true) {
+    if (!getAuthStatus().loginComplete) {
       resolveRequest();
       return;
     }

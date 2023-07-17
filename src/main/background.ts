@@ -30,7 +30,7 @@ import {
   setOpenPort,
   setTimer,
   weAreBooted,
-} from "./vars.js";
+} from "../vars.js";
 import browser from "webextension-polyfill";
 
 function logLargeObjects() {
@@ -93,7 +93,7 @@ function handleKernelMessage(event: MessageEvent) {
   }
 
   if (event.data.method === "log") {
-    if (data.isErr === false) {
+    if (data.isErr !== null && !data.isErr) {
       console.log(data.message);
     } else {
       console.error(data.message);
@@ -103,11 +103,11 @@ function handleKernelMessage(event: MessageEvent) {
 
   if (event.data.method === "kernelAuthStatus") {
     setAuthStatus(data);
-    if (getAuthStatusKnown() === false) {
+    if (!getAuthStatusKnown()) {
       getAuthStatusResolve()();
       setAuthStatusKnown(true);
       console.log("bootloader is now initialized");
-      if (getAuthStatus().loginComplete !== true) {
+      if (!getAuthStatus().loginComplete) {
         console.log("user is not logged in: waiting until login is confirmed");
       }
     }
@@ -222,3 +222,12 @@ async function boot() {
 
   weAreBooted();
 }
+
+browser.runtime.onInstalled.addListener(() => {
+  browser.tabs.create({
+    url: browser.runtime.getURL("onboarding.html"),
+    active: true,
+  });
+});
+
+boot();
