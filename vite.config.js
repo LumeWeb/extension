@@ -9,7 +9,7 @@ const config = {};
   (item) => {
     config[item] = {
       entry: resolve(__dirname, `./src/main/${item}.ts`),
-      fileName: "math.js",
+      fileName: item,
     };
   },
 );
