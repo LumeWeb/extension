@@ -22,6 +22,7 @@ if (currentConfig === undefined) {
 export default defineConfig({
   build: {
     outDir: "lib",
+    emptyOutDir: false,
     lib: {
       formats: ["cjs"],
       ...currentConfig,
