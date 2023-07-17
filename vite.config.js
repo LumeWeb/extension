@@ -24,8 +24,9 @@ export default defineConfig({
     outDir: "lib",
     emptyOutDir: false,
     lib: {
-      formats: ["cjs"],
+      formats: ["iife"],
       ...currentConfig,
+      name: currentConfig.fileName,
     },
     minify: false,
     rollupOptions: { output: { inlineDynamicImports: true } },
