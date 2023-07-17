@@ -1,4 +1,4 @@
-import browser from "@lumeweb/webextension-polyfill";
+import browser from "webextension-polyfill";
 import BaseProvider from "./contentProviders/baseProvider.js";
 import {
   BlockingResponse,
@@ -9,13 +9,14 @@ import {
   OnErrorOccurredDetailsType,
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
-} from "./types";
+} from "./types.js";
 import { getTld, isDomain, isIp, normalizeDomain } from "./util.js";
 import tldEnum from "@lumeweb/tld-enum";
 import { scanRecords } from "./dns.js";
-import { blake2b, bufToHex } from "libskynet";
+import { bufToHex } from "@lumeweb/libweb";
 import { getAuthStatus } from "./main/vars.js";
 import { DNSResult } from "@lumeweb/libresolver";
+import { blake3 } from "@noble/hashes/blake3";
 
 import "./contentFilters/index.js";
 
@@ -30,7 +31,7 @@ export default class WebEngine {
     browser.webRequest.onHeadersReceived.addListener(
       this.headerHandler.bind(this),
       { urls: ["<all_urls>"] },
-      ["blocking", "responseHeaders"]
+      ["blocking", "responseHeaders"],
     );
     browser.proxy.onRequest.addListener(this.proxyHandler.bind(this), {
       urls: ["<all_urls>"],
@@ -38,34 +39,34 @@ export default class WebEngine {
     browser.webRequest.onBeforeRequest.addListener(
       this.requestHandler.bind(this),
       { urls: ["<all_urls>"] },
-      ["blocking"]
+      ["blocking"],
     );
 
     browser.webRequest.onBeforeSendHeaders.addListener(
       this.reqHeaderHandler.bind(this),
       { urls: ["<all_urls>"] },
-      ["requestHeaders", "blocking"]
+      ["requestHeaders", "blocking"],
     );
 
     browser.webRequest.onCompleted.addListener(
       this.onCompletedHandler.bind(this),
       {
         urls: ["<all_urls>"],
-      }
+      },
     );
     browser.webRequest.onErrorOccurred.addListener(
       this.onErrorHandler.bind(this),
       {
         urls: ["<all_urls>"],
-      }
+      },
     );
     browser.webNavigation.onBeforeNavigate.addListener(
-      this.handleNavigationRequest.bind(this)
+      this.handleNavigationRequest.bind(this),
     );
   }
 
   private async headerHandler(
-    details: OnHeadersReceivedDetailsType
+    details: OnHeadersReceivedDetailsType,
   ): Promise<BlockingResponse> {
     return this.processHandler(details, "handleHeaders", {
       responseHeaders: details.responseHeaders,
@@ -73,7 +74,7 @@ export default class WebEngine {
   }
 
   private async proxyHandler(details: OnRequestDetailsType): Promise<any> {
-    let handle = null;
+    let handle: BaseProvider | null = null;
     for (const provider of this.contentProviders) {
       if (await provider.shouldHandleRequest(details)) {
         handle = provider;
@@ -92,7 +93,7 @@ export default class WebEngine {
   }
 
   private async requestHandler(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<BlockingResponse> {
     const navId = this.getNavigationId(details);
     let navRedirect: boolean | string = false;
@@ -136,12 +137,13 @@ export default class WebEngine {
   }
 
   private async reqHeaderHandler(
-    details: OnBeforeSendHeadersDetailsType
+    details: OnBeforeSendHeadersDetailsType,
   ): Promise<BlockingResponse> {
     return this.processHandler(details, "handleReqHeaders");
   }
+
   private async onCompletedHandler(
-    details: OnCompletedDetailsType
+    details: OnCompletedDetailsType,
   ): Promise<void> {
     if (this.requests.has(details.requestId)) {
       this.requests.delete(details.requestId);
@@ -153,7 +155,7 @@ export default class WebEngine {
   }
 
   private async onErrorHandler(
-    details: OnErrorOccurredDetailsType
+    details: OnErrorOccurredDetailsType,
   ): Promise<void> {
     if (this.requests.has(details.requestId)) {
       this.requests.delete(details.requestId);
@@ -197,7 +199,7 @@ export default class WebEngine {
   private async processHandler(
     details: any,
     method: string,
-    def = {}
+    def = {},
   ): Promise<BlockingResponse> {
     const provider = this.getRequestProvider(details.requestId);
 
@@ -252,7 +254,7 @@ export default class WebEngine {
     } catch {}
 
     if (tldEnum.list.includes(getTld(queriedHost))) {
-      return false;
+      return;
     }
 
     if (isIp(queriedHost)) {
@@ -306,9 +308,7 @@ export default class WebEngine {
   }
 
   private getNavigationId(details: any) {
-    return `${details.tabId}_${bufToHex(
-      blake2b(new TextEncoder().encode(details.url))
-    )}`;
+    return `${details.tabId}_${bufToHex(blake3(details.url))}`;
   }
 
   public getDomainContentProvider(domain: string): BaseProvider | null {
@@ -316,7 +316,7 @@ export default class WebEngine {
   }
 
   private getRequestProvider(
-    requestId: string
+    requestId: string,
   ): { [p: string]: Function } | null {
     const provider = this.requests.get(requestId) as unknown as {
       [index: string]: Function;

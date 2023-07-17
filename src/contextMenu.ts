@@ -1,4 +1,4 @@
-import browser from "@lumeweb/webextension-polyfill";
+import browser from "webextension-polyfill";
 import type WebEngine from "./webEngine.js";
 import type { Menus, Tabs } from "./types.js";
 import IpfsProvider from "./contentProviders/ipfsProvider.js";
@@ -17,7 +17,7 @@ export default function setup(engine: WebEngine) {
       return;
     }
     const provider = engine.getDomainContentProvider(
-      new URL(details.pageUrl as string).hostname
+      new URL(details.pageUrl as string).hostname,
     );
     browser.menus.update("clear-cache", {
       visible: provider instanceof IpfsProvider,

@@ -1,17 +1,12 @@
-import { defaultPortalList } from "libskynet";
-
-defaultPortalList.unshift("https://web3portal.com");
-defaultPortalList.pop();
-
 export function isIp(ip: string) {
   return /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
-    ip
+    ip,
   );
 }
 
 export function isDomain(domain: string) {
   return /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/.test(
-    domain
+    domain,
   );
 }
 
@@ -44,7 +39,7 @@ export function getTld(hostname: string): string {
     : hostname;
 }
 export async function* iterateStream(
-  stream: ReadableStream<any>
+  stream: ReadableStream<any>,
 ): AsyncGenerator<Uint8Array> {
   let chunk;
   const reader = stream.getReader();
@@ -59,7 +54,7 @@ export async function* iterateStream(
 }
 
 export async function streamToArray(
-  stream: ReadableStream<Uint8Array>
+  stream: ReadableStream<Uint8Array>,
 ): Promise<Uint8Array> {
   let buffer = new Uint8Array();
 

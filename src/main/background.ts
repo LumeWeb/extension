@@ -32,7 +32,7 @@ import {
   weAreBooted,
 } from "./vars.js";
 // @ts-ignore
-import browser from "@lumeweb/webextension-polyfill";
+import browser from "webextension-polyfill";
 
 function logLargeObjects() {
   let queriesLen = Object.keys(getQueries()).length;

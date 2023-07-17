@@ -4,20 +4,19 @@ import {
   DNSResult,
   ResolverOptions,
 } from "@lumeweb/libresolver";
-import { blake2b, bufToHex } from "libskynet/dist";
+import { bufToHex } from "@lumeweb/libweb";
 import { getDnsSetupDefer } from "./main/vars.js";
 import { dnsClient } from "./clients.js";
+import { blake3 } from "@noble/hashes/blake3";
 
 const cache = new NodeCache({ stdTTL: 60 });
 
 export async function resolve(
   domain: string,
   options?: ResolverOptions,
-  bypassCache = false
+  bypassCache = false,
 ): Promise<DNSResult | Error> {
-  let cacheId = `${domain}:${bufToHex(
-    blake2b(new TextEncoder().encode(JSON.stringify(options)))
-  )}`;
+  let cacheId = `${domain}:${bufToHex(blake3(JSON.stringify(options)))}`;
 
   if (cache.has(cacheId)) {
     cache.ttl(cacheId);
@@ -43,7 +42,7 @@ export async function resolve(
 export async function scanRecords(
   domain: string,
   recordTypes?: string[],
-  bypassCache = false
+  bypassCache = false,
 ): Promise<boolean | DNSResult> {
   let dnsResult: boolean | DNSResult = false;
 

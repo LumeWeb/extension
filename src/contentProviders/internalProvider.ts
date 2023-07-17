@@ -5,14 +5,14 @@ import {
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
 } from "../types.js";
-import browser from "@lumeweb/webextension-polyfill";
-import { RequestOverrideResponse } from "libskynet";
+import browser from "webextension-polyfill";
+import { RequestOverrideResponse } from "@lumeweb/libweb";
 import { queryKernel } from "../main/background.js";
 import { requestProxies } from "../util.js";
 
 export default class InternalProvider extends BaseProvider {
   async shouldHandleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<boolean> {
     return [
       "http://kernel.lume/",
@@ -22,7 +22,7 @@ export default class InternalProvider extends BaseProvider {
   }
 
   async handleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<BlockingResponse | boolean> {
     // For the kernel, we swallow the entire page. The 'bootloader' content
     // script will everything that we need.
@@ -102,7 +102,7 @@ export default class InternalProvider extends BaseProvider {
   }
 
   async handleHeaders(
-    details: OnHeadersReceivedDetailsType
+    details: OnHeadersReceivedDetailsType,
   ): Promise<OnRequestDetailsType | boolean> {
     if (
       details.url === "http://kernel.lume/" ||

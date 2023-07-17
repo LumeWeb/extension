@@ -4,7 +4,7 @@ import {
   Err,
   hexToBuf,
   objAsString,
-} from "@siaweb/libweb";
+} from "@lumeweb/libweb";
 
 declare var browser: any; // tsc
 
@@ -34,7 +34,7 @@ function bootloaderWLog(isErr: boolean, ...inputs: any) {
         message,
       },
     },
-    "*"
+    "*",
   );
 }
 function log(...inputs: any) {
@@ -59,7 +59,7 @@ var handleIncomingMessage = function (event: MessageEvent) {
         method: "response",
         err: "message sent to kernel with no nonce",
       },
-      event.origin
+      event.origin,
     );
     return;
   }
@@ -71,7 +71,7 @@ var handleIncomingMessage = function (event: MessageEvent) {
         method: "response",
         err: "message sent to kernel with no method",
       },
-      event.origin
+      event.origin,
     );
     return;
   }
@@ -88,7 +88,7 @@ var handleIncomingMessage = function (event: MessageEvent) {
       err:
         "unrecognized method (user may need to log in): " + event.data.method,
     },
-    event.origin
+    event.origin,
   );
   return;
 };
@@ -123,7 +123,7 @@ let blockForAuthPage: Promise<void> = new Promise((resolve) => {
     });
   } catch (err: any) {
     kernelAuthPage = new TextEncoder().encode(
-      addContextToErr(err, "unable to load the kernel auth page")
+      addContextToErr(err, "unable to load the kernel auth page"),
     );
     resolve();
   }
@@ -152,7 +152,7 @@ function handleSkynetKernelRequestOverride(event: MessageEvent) {
           body,
         },
       },
-      event.origin
+      event.origin,
     );
   };
 
@@ -191,7 +191,7 @@ function handleSkynetKernelRequestOverride(event: MessageEvent) {
         override: false,
       },
     },
-    event.origin
+    event.origin,
   );
 }
 
@@ -237,7 +237,7 @@ var handleStorage = function (event: StorageEvent) {
 window.addEventListener("storage", (event) => handleStorage(event));
 
 function downloadKernel(
-  kernelSkylink: string
+  kernelSkylink: string,
 ): Promise<[kernelCode: string, err: Err]> {
   return new Promise((resolve) => {
     fetch(`https://web3portal.com/${kernelSkylink}`).then((result) => {
@@ -317,7 +317,7 @@ function sendAuthUpdate() {
         logoutComplete: logoutComplete,
       },
     },
-    "*"
+    "*",
   );
 }
 sendAuthUpdate();

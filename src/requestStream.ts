@@ -1,5 +1,5 @@
 import { OnBeforeRequestDetailsType, StreamFilter } from "./types.js";
-import browser from "@lumeweb/webextension-polyfill";
+import browser from "webextension-polyfill";
 import { iterateStream, streamToArray } from "./util.js";
 
 export default class RequestStream {
@@ -10,7 +10,7 @@ export default class RequestStream {
 
   constructor(
     request: OnBeforeRequestDetailsType,
-    contentFilter?: (data: Uint8Array) => Promise<Uint8Array>
+    contentFilter?: (data: Uint8Array) => Promise<Uint8Array>,
   ) {
     this._request = request;
     this._contentFilter = contentFilter;
@@ -36,7 +36,7 @@ export default class RequestStream {
     this._filter.onstop = async () => {
       if (this._contentFilter) {
         const data = await this._contentFilter(
-          await streamToArray(this._readableStream)
+          await streamToArray(this._readableStream),
         );
         this._filter.write(data);
         this._filter.close();

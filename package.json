@@ -20,14 +20,21 @@
 	},
 	"dependencies": {
 		"@helia/unixfs": "^1.4.0",
+		"@lumeweb/kernel-dns-client": "^0.1.0-develop.2",
 		"@lumeweb/kernel-ipfs-client": "^0.0.2-develop.1",
+		"@lumeweb/kernel-peer-discovery-client": "^0.0.2-develop.10",
+		"@lumeweb/kernel-swarm-client": "^0.0.2-develop.9",
 		"@lumeweb/libkernel": "^0.1.0-develop.16",
 		"@lumeweb/libresolver": "^0.1.0-develop.1",
 		"@lumeweb/libweb": "^0.2.0-develop.22",
 		"@lumeweb/tld-enum": "^0.1.0-develop.1",
+		"@peculiar/webcrypto": "^1.4.3",
 		"@scure/bip39": "^1.2.1",
+		"ejs": "^3.1.9",
 		"file-type": "^18.5.0",
 		"is-ipfs": "^8.0.1",
-		"p-defer": "^4.0.0"
+		"node-cache": "^5.1.2",
+		"p-defer": "^4.0.0",
+		"webextension-polyfill": "^0.10.0"
 	}
 }
