@@ -1,11 +1,22 @@
 <script>
   import { onMount } from "svelte";
 
-  import * as bip39 from '@scure/bip39';
-  import { wordlist } from '@scure/bip39/wordlists/english';
+  import * as bip39 from "@scure/bip39";
+  import { wordlist } from "@scure/bip39/wordlists/english";
+  import browser from "webextension-polyfill";
 
-  import '../../styles/global.scss';
-  import lumeLogo from '../../assets/lume-logo.png';
+  import "../../styles/global.scss";
+  import lumeLogo from "../../assets/lume-logo.png";
+  import {
+    bytesToHex,
+    ed25519,
+    hexToBytes,
+    randomBytes,
+  } from "@lumeweb/libweb";
+  import { x25519 } from "@noble/curves/ed25519";
+  import { secretbox } from "@noble/ciphers/salsa";
+  import { HDKey } from "ed25519-keygen/hdkey";
+  const BIP44_PATH = "m/44'/1627'/0'/0'/0'";
 
   let action;
   let createAccountStep;
@@ -201,23 +212,54 @@
   };
 
   const generatedKeySignIn = () => {
-    const key = generatedKey.join(' ');
+    const seed = generatedKey.join(" ");
 
-    if(!bip39.validateMnemonic(key, wordlist)) {
-      alert('invalid key');
+    if (!bip39.validateMnemonic(seed, wordlist)) {
+      alert("invalid key");
       return;
     }
 
-    processSignIn(key);
+    processSignIn(seed);
   };
 
-  const processSignIn = key => {
-    fadeOut = true;
+  const processSignIn = async (wordSeed) => {
+    const seed = await bip39.mnemonicToSeed(wordSeed);
+    const key = HDKey.fromMasterSeed(seed).derive(BIP44_PATH);
 
-    // use key here
+    let pubKey;
+    let privKey = x25519.utils.randomPrivateKey();
+
+    try {
+      pubKey = await browser.runtime.sendMessage({
+        method: "exchangeCommunicationKeys",
+        data: bytesToHex(x25519.getPublicKey(privKey)),
+      });
+    } catch (e) {
+      alert(`Failed to login: ${e.message}`);
+      return;
+    }
+
+    if (!pubKey) {
+      alert(`Failed to login: could not get communication key`);
+      return;
+    }
+    pubKey = hexToBytes(pubKey);
+
+    const secret = x25519.getSharedSecret(privKey, pubKey);
+    const nonce = randomBytes(24);
+    const box = secretbox(secret, nonce);
+    const ciphertext = box.seal(key.privateKey);
+
+    await browser.runtime.sendMessage({
+      method: "setLoginKey",
+      data: {
+        data: bytesToHex(ciphertext),
+        nonce: bytesToHex(nonce),
+      },
+    });
 
     window.setTimeout(() => {
-      window.location.href = '/dashboard.html';
+      window.location.href = "/dashboard.html";
     }, 1000);
   };
 </script>
