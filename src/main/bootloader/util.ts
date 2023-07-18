@@ -12,7 +12,7 @@ export function sendAuthUpdate() {
       data: {
         loginComplete: getLoginComplete(),
         kernelLoaded: getKernelLoaded(),
-        logoutComplete: getLogoutComplete,
+        logoutComplete: getLogoutComplete(),
       },
     },
     "*",
