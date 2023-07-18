@@ -11,7 +11,7 @@ let frontendCommunicationPubKey: Uint8Array;
 var userKey: Uint8Array;
 
 export const defaultKernelLink =
-  "RAC1FocOb2bQw6uwjN0AX__MJ8F-h71F5kvIgQPTKo7fQA";
+  "zduTNANa64PTCYQ7C3deppQCfcwg75cDTCRdKjWg1C6nWtNrz2PyHLkkcX";
 
 export function setLoginComplete(status: boolean) {
   loginComplete = status;
