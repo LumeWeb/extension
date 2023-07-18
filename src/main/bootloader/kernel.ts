@@ -40,6 +40,8 @@ export async function loadKernel() {
   if (portalLoadErr) {
     let err = addContextToErr(portalLoadErr, "unable to init portals");
     setKernelLoaded(err);
+    logErr(err);
+    sendAuthUpdate();
     return;
   }
 
