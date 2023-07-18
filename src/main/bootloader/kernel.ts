@@ -3,6 +3,8 @@ import {
   downloadObject,
   Err,
   getActivePortals,
+  maybeInitDefaultPortals,
+  setActivePortalMasterKey,
 } from "@lumeweb/libweb";
 import { log, logErr, sendAuthUpdate } from "./util.js";
 import {
@@ -26,13 +28,21 @@ export function boot() {
   }
 
   log("user is already logged in, attempting to load kernel");
-  setUserKey(userKey as Uint8Array);
+  setUserKey(userKey);
+  setActivePortalMasterKey(userKey);
   setLoginComplete(true);
   sendAuthUpdate();
   loadKernel();
 }
 
 export async function loadKernel() {
+  let [, portalLoadErr] = maybeInitDefaultPortals();
+  if (portalLoadErr) {
+    let err = addContextToErr(portalLoadErr, "unable to init portals");
+    setKernelLoaded(err);
+    return;
+  }
+
   let [kernelCode, err] = await downloadDefaultKernel();
 
   if (err !== null) {
