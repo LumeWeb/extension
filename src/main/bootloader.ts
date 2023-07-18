@@ -1,4 +1,6 @@
 import { boot } from "./bootloader/kernel.js";
+import exchangeCommunicationKeys from "./bootloader/messages/exchangeCommunicationKeys.js";
+import setLoginKey from "./bootloader/messages/setLoginKey.js";
 
 declare var browser: any; // tsc
 
@@ -8,7 +10,12 @@ header.textContent =
   "Something went wrong! You should not be visiting this page, this page should only be accessed via an invisible iframe.";
 document.body.appendChild(header);
 
-function handleIncomingMessage(event: MessageEvent) {
+const kernelMessageHandlers = {
+  exchangeCommunicationKeys,
+  setLoginKey,
+};
+
+async function handleIncomingMessage(event: MessageEvent) {
   if (event.source === null) {
     return;
   }
@@ -39,6 +46,28 @@ function handleIncomingMessage(event: MessageEvent) {
     );
     return;
   }
+
+  if (event.data.method in kernelMessageHandlers) {
+    let response;
+
+    try {
+      response = await kernelMessageHandlers[event.data.method](
+        event.data.data,
+      );
+    } catch (e: any) {
+      response = { err: (e as Error).message };
+    }
+
+    (event.source as WindowProxy).postMessage(
+      {
+        nonce: event.data.nonce,
+        data: response,
+      },
+      event.origin,
+    );
+    return;
+  }
+
   (event.source as WindowProxy).postMessage(
     {
       nonce: event.data.nonce,
