@@ -1,6 +1,6 @@
 <script>
-  import '../../styles/global.scss';
-  import lumeLogo from '../../assets/lume-logo.png';
+  import "../../styles/global.scss";
+  import lumeLogo from "../../assets/lume-logo.png";
 
   let started = false;
   let step = 1;
@@ -19,54 +19,79 @@
   };
 
   const redirect = () => {
-    window.location.href = '/account.html';
+    window.location.href = "/account.html";
   };
 </script>
 
 <header>
-  <img src={lumeLogo} alt="Lume"/>
+  <img src={lumeLogo} alt="Lume" />
 </header>
-<main class:started={started} class:step-2={step === 2} class:step-3={step === 3} class:step-4={step === 4}>
-  <div class="art art-1"></div>
-  <div class="art art-2"></div>
-  <div class="art art-3"></div>
-  <div class="art art-4"></div>
+<main
+  class:started
+  class:step-2={step === 2}
+  class:step-3={step === 3}
+  class:step-4={step === 4}>
+  <div class="art art-1" />
+  <div class="art art-2" />
+  <div class="art art-3" />
+  <div class="art art-4" />
   <div class="content">
     <div>
       <div class="page content-1">
         <h1>Thank you for supporting an open web.</h1>
-        <p>We are an independent, pure organization. We have decided not to take money from venture capitalists. Nor do we have a large treasury funding our work.</p>
+        <p>
+          We are an independent, pure organization. We have decided not to take
+          money from venture capitalists. Nor do we have a large treasury
+          funding our work.
+        </p>
         <div class="btn-wrapper">
           <button class="btn-main" on:click={() => start()}>Begin</button>
         </div>
       </div>
       <div class="page content-2">
         <h1>Gateway for easy access to the open web.</h1>
-        <p>Easy Access to Web3. With native Handshake (HNS) and Ethereum (ENS) support, you can forget eth.link and hns.is. This is your gateway.</p>
+        <p>
+          Easy Access to Web3. With native Handshake (HNS) and Ethereum (ENS)
+          support, you can forget eth.link and hns.is. This is your gateway.
+        </p>
         <div class="btn-wrapper">
-          <button class="btn-main btn-black" on:click={() => redirect()}>Skip</button>
+          <button class="btn-main btn-black" on:click={() => redirect()}
+            >Skip</button>
           <button class="btn-main" on:click={() => next()}>Next</button>
         </div>
       </div>
       <div class="page content-3">
         <h1>Universal storage drive slide.</h1>
-        <p>Stop worrying about being vendor-locked. Remain flexible and reduce your storage costs by 50% or more. Lume is affordable storage on-demand.</p>
+        <p>
+          Stop worrying about being vendor-locked. Remain flexible and reduce
+          your storage costs by 50% or more. Lume is affordable storage
+          on-demand.
+        </p>
         <div class="btn-wrapper">
-          <button class="btn-main btn-black" on:click={() => prev()}>Back</button>
+          <button class="btn-main btn-black" on:click={() => prev()}
+            >Back</button>
           <button class="btn-main" on:click={() => next()}>Next</button>
         </div>
       </div>
       <div class="page content-4">
         <h1>Create decentralized websites.</h1>
-        <p>Stop worrying about being vendor-locked. Remain flexible and reduce your storage costs by 50% or more. Lume is affordable storage on-demand. Stop worrying about being vendor-locked.</p>
+        <p>
+          Stop worrying about being vendor-locked. Remain flexible and reduce
+          your storage costs by 50% or more. Lume is affordable storage
+          on-demand. Stop worrying about being vendor-locked.
+        </p>
         <div class="btn-wrapper">
-          <button class="btn-main btn-black" on:click={() => prev()}>Back</button>
-          <button class="btn-main btn-green" on:click={() => redirect()}>Get started</button>
+          <button class="btn-main btn-black" on:click={() => prev()}
+            >Back</button>
+          <button class="btn-main btn-green" on:click={() => redirect()}
+            >Get started</button>
         </div>
       </div>
     </div>
     <div class="grant-info">
-      Lume is a 503c Grant recepient, <a href="https://lumeweb.com">learn more</a> about the work we’re doing to provide accessible access to the open web for everyone.
+      Lume is a 503c Grant recepient, <a href="https://lumeweb.com"
+        >learn more</a> about the work we’re doing to provide accessible access to
+      the open web for everyone.
     </div>
   </div>
 </main>
@@ -80,9 +105,10 @@
     background: #080808;
   }
 
-  .art, .content {
+  .art,
+  .content {
     position: absolute;
-    top:0;
+    top: 0;
     bottom: 0;
     width: 50%;
   }
@@ -180,7 +206,9 @@
     }
   }
 
-  .content-2, .content-3, .content-4 {
+  .content-2,
+  .content-3,
+  .content-4 {
     display: none;
   }
 

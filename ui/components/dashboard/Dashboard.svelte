@@ -1,11 +1,11 @@
 <script>
-  import '../../styles/global.scss';
-  import lumeLogo from '../../assets/lume-logo.png';
+  import "../../styles/global.scss";
+  import lumeLogo from "../../assets/lume-logo.png";
 
-  import svgGithub from '../../assets/icon/github.svg?raw';
-  import svgDiscord from '../../assets/icon/discord.svg?raw';
-  import svgTwitter from '../../assets/icon/twitter.svg?raw';
-  import svgFacebook from '../../assets/icon/facebook.svg?raw';
+  import svgGithub from "../../assets/icon/github.svg?raw";
+  import svgDiscord from "../../assets/icon/discord.svg?raw";
+  import svgTwitter from "../../assets/icon/twitter.svg?raw";
+  import svgFacebook from "../../assets/icon/facebook.svg?raw";
 
   let step = 1;
   let userCount;
@@ -16,7 +16,7 @@
 
   setTimeout(() => {
     step = 3;
-    userCount = '23k';
+    userCount = "23k";
   }, 6000);
 
   setTimeout(() => {
@@ -25,34 +25,49 @@
 </script>
 
 <header>
-  <img src={lumeLogo} alt="Lume"/>
-  <div class="status" class:step-2={step === 2} class:step-3={step === 3} class:step-4={step === 4}>
+  <img src={lumeLogo} alt="Lume" />
+  <div
+    class="status"
+    class:step-2={step === 2}
+    class:step-3={step === 3}
+    class:step-4={step === 4}>
     <div class="network">
       <div class="connected">
-        <span class="icon icon-success"></span>
+        <span class="icon icon-success" />
         Lume Network
       </div>
       <div class="connecting">
-        <span class="icon icon-wait icon-wait-yellow"></span>
+        <span class="icon icon-wait icon-wait-yellow" />
         Lume Network
       </div>
     </div>
     <div class="user-count" class:user-count-hidden={!userCount}>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor">
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
       </svg>
       {userCount}
     </div>
   </div>
 </header>
-<main class:step-2={step === 2} class:step-3={step === 3} class:step-4={step === 4}>
+<main
+  class:step-2={step === 2}
+  class:step-3={step === 3}
+  class:step-4={step === 4}>
   <div class="art-wrapper">
     <div class="art-rotate">
       <div class="art">
-        <div class="gradient-1"></div>
-        <div class="gradient-2"></div>
-        <div class="gradient-3"></div>
-        <div class="gradient-4"></div>
+        <div class="gradient-1" />
+        <div class="gradient-2" />
+        <div class="gradient-3" />
+        <div class="gradient-4" />
       </div>
     </div>
   </div>
@@ -70,30 +85,24 @@
         <ul>
           <li class="success">
             <div class="network">
-              <span class="icon icon-success"></span>
+              <span class="icon icon-success" />
               HNS
             </div>
-            <div class="status">
-              Synced
-            </div>
+            <div class="status">Synced</div>
           </li>
           <li class="loading">
             <div class="network">
-              <span class="icon icon-wait"></span>
+              <span class="icon icon-wait" />
               ENS
             </div>
-            <div class="status">
-              Syncing
-            </div>
+            <div class="status">Syncing</div>
           </li>
           <li class="error">
             <div class="network">
-              <span class="icon icon-error"></span>
+              <span class="icon icon-error" />
               Arweave
             </div>
-            <div class="status">
-              Issue
-            </div>
+            <div class="status">Issue</div>
           </li>
         </ul>
       </div>
@@ -102,14 +111,22 @@
         <ul>
           <li class="success">
             <div class="network">
-              <span class="icon icon-success"></span>
+              <span class="icon icon-success" />
               IPFS
             </div>
             <div class="status">
               Connected
               <div class="user-count">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
                 {userCount}
               </div>
@@ -117,14 +134,22 @@
           </li>
           <li class="loading">
             <div class="network">
-              <span class="icon icon-wait"></span>
+              <span class="icon icon-wait" />
               Arweave
             </div>
             <div class="status">
               Connecting
               <div class="user-count">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
                 </svg>
                 {userCount}
               </div>
@@ -259,7 +284,8 @@
         }
       }
 
-      &.step-3, &.step-4 {
+      &.step-3,
+      &.step-4 {
         .network {
           .connecting {
             z-index: 1;
@@ -312,24 +338,48 @@
     }
 
     .gradient-1 {
-      background: linear-gradient(272.67deg, #FF005C -27.49%, #0C0C0D 26.91%, #FF005C 49.4%, #ED6A5E 99.62%);
+      background: linear-gradient(
+        272.67deg,
+        #ff005c -27.49%,
+        #0c0c0d 26.91%,
+        #ff005c 49.4%,
+        #ed6a5e 99.62%
+      );
       z-index: -1;
     }
 
     .gradient-2 {
-      background: conic-gradient(from 180deg at 50% 50%, #A67833 -15.8deg, #E91F1F 222.32deg, #A67833 344.2deg, #E91F1F 582.32deg);
+      background: conic-gradient(
+        from 180deg at 50% 50%,
+        #a67833 -15.8deg,
+        #e91f1f 222.32deg,
+        #a67833 344.2deg,
+        #e91f1f 582.32deg
+      );
       opacity: 0;
       z-index: -2;
     }
 
     .gradient-3 {
-      background: conic-gradient(from -89.79deg at 50% 50%, #33A653 -15.8deg, #080808 222.32deg, #33A653 344.2deg, #080808 582.32deg);
+      background: conic-gradient(
+        from -89.79deg at 50% 50%,
+        #33a653 -15.8deg,
+        #080808 222.32deg,
+        #33a653 344.2deg,
+        #080808 582.32deg
+      );
       opacity: 0;
       z-index: -3;
     }
 
     .gradient-4 {
-      background: conic-gradient(from 180deg at 50% 50%, #2F2F2F -15.8deg, #66D155 222.32deg, #2F2F2F 344.2deg, #66D155 582.32deg);
+      background: conic-gradient(
+        from 180deg at 50% 50%,
+        #2f2f2f -15.8deg,
+        #66d155 222.32deg,
+        #2f2f2f 344.2deg,
+        #66d155 582.32deg
+      );
       opacity: 0;
       z-index: -4;
     }

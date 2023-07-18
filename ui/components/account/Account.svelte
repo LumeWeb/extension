@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from 'svelte';
+  import { onMount } from "svelte";
 
   import * as bip39 from '@scure/bip39';
   import { wordlist } from '@scure/bip39/wordlists/english';
@@ -29,20 +29,22 @@
   let copyKeyCallback;
   let copyKeySuccess;
   let copyKeyError;
-  const copyKeyButtonTextDefault = 'Copy Account Key';
-  const copyKeyButtonTextSuccess = 'Account Key Copied';
-  const copyKeyButtonTextError = 'Account Key Copy Failed';
+  const copyKeyButtonTextDefault = "Copy Account Key";
+  const copyKeyButtonTextSuccess = "Account Key Copied";
+  const copyKeyButtonTextError = "Account Key Copy Failed";
   let copyKeyButtonText = copyKeyButtonTextDefault;
 
   onMount(() => {
-    elContentTextWrapper = document.getElementById('content-text-wrapper');
-    elContentTextDefault = document.getElementById('content-text-default');
-    elContentTextCreateAccount = document.getElementById('content-text-create-account');
-    elContentTextShowKey = document.getElementById('content-text-show-key');
+    elContentTextWrapper = document.getElementById("content-text-wrapper");
+    elContentTextDefault = document.getElementById("content-text-default");
+    elContentTextCreateAccount = document.getElementById(
+      "content-text-create-account",
+    );
+    elContentTextShowKey = document.getElementById("content-text-show-key");
 
-    elSwitch = document.getElementById('switch');
-    elSwitchDefault = document.getElementById('switch-default');
-    elSwitchShowKey = document.getElementById('switch-show-key');
+    elSwitch = document.getElementById("switch");
+    elSwitchDefault = document.getElementById("switch-default");
+    elSwitchShowKey = document.getElementById("switch-show-key");
 
     let resizeTimeout;
 
@@ -54,40 +56,46 @@
       }, 25);
     };
 
-    window.addEventListener('resize', onResize);
+    window.addEventListener("resize", onResize);
   });
 
-  const setContentTextHeight = element => {
+  const setContentTextHeight = (element) => {
     elContentTextActive = element;
-    elContentTextWrapper.style.height = element.offsetHeight + 'px';
+    elContentTextWrapper.style.height = element.offsetHeight + "px";
   };
 
-  const setAction = value => {
+  const setAction = (value) => {
     action = value;
 
-    if(!elContentTextActive) {
-      elContentTextDefault.style.position = 'absolute';
+    if (!elContentTextActive) {
+      elContentTextDefault.style.position = "absolute";
       setContentTextHeight(elContentTextDefault);
     }
 
     setTimeout(() => {
-      if((!value || value === 'sign-in') && elContentTextActive !== elContentTextDefault) {
+      if (
+        (!value || value === "sign-in") &&
+        elContentTextActive !== elContentTextDefault
+      ) {
         setContentTextHeight(elContentTextDefault);
-      } else if(value === 'create-account' && elContentTextActive !== elContentTextCreateAccount) {
+      } else if (
+        value === "create-account" &&
+        elContentTextActive !== elContentTextCreateAccount
+      ) {
         setContentTextHeight(elContentTextCreateAccount);
       }
     }, 0);
   };
 
   const signIn = () => {
-    setAction('sign-in');
+    setAction("sign-in");
 
     inputKeyRef.focus();
   };
 
   const inputKeySignIn = () => {
-    if(!bip39.validateMnemonic(inputKey, wordlist)) {
-      alert('invalid key');
+    if (!bip39.validateMnemonic(inputKey, wordlist)) {
+      alert("invalid key");
       return;
     }
 
@@ -95,7 +103,7 @@
   };
 
   const createAccount = () => {
-    setAction('create-account');
+    setAction("create-account");
     createAccountStep = 1;
   };
 
@@ -109,7 +117,7 @@
   };
 
   const createAccountReady = () => {
-    if(createAccountStep !== 1) {
+    if (createAccountStep !== 1) {
       return;
     }
 
@@ -117,34 +125,34 @@
   };
 
   const showKey = () => {
-    if(createAccountStep !== 2) {
+    if (createAccountStep !== 2) {
       return;
     }
 
     // generate key
-    generatedKey = bip39.generateMnemonic(wordlist).split(' ');
+    generatedKey = bip39.generateMnemonic(wordlist).split(" ");
 
     createAccountStep = 3;
-    elSwitch.style.height = elSwitchDefault.offsetHeight + 'px';
-    elSwitchDefault.style.position = 'absolute';
+    elSwitch.style.height = elSwitchDefault.offsetHeight + "px";
+    elSwitchDefault.style.position = "absolute";
 
     setTimeout(() => {
       setContentTextHeight(elContentTextShowKey);
-      elSwitch.style.height = elSwitchShowKey.offsetHeight + 'px';
+      elSwitch.style.height = elSwitchShowKey.offsetHeight + "px";
 
-      elSwitch.addEventListener('transitionend', event => {
-        if(event.target !== elSwitch) {
+      elSwitch.addEventListener("transitionend", (event) => {
+        if (event.target !== elSwitch) {
           return;
         }
 
-        elSwitchShowKey.style.position = 'static';
-        elSwitch.style.height = '';
+        elSwitchShowKey.style.position = "static";
+        elSwitch.style.height = "";
       });
     }, 0);
   };
 
   const showKeyWarning = () => {
-    if(createAccountStep !== 3) {
+    if (createAccountStep !== 3) {
       return;
     }
 
@@ -154,39 +162,42 @@
   const copyKey = () => {
     clearTimeout(copyKeyTimeout);
 
-    navigator.clipboard.writeText(generatedKey.join(' ')).then(() => {
-      if(copyKeyCallback) {
-        copyKeyCallback();
-      }
+    navigator.clipboard
+      .writeText(generatedKey.join(" "))
+      .then(() => {
+        if (copyKeyCallback) {
+          copyKeyCallback();
+        }
 
-      copyKeySuccess = true;
-      copyKeyButtonText = copyKeyButtonTextSuccess;
+        copyKeySuccess = true;
+        copyKeyButtonText = copyKeyButtonTextSuccess;
 
-      copyKeyCallback = () => {
-        copyKeyCallback = undefined;
-        copyKeySuccess = undefined;
-        copyKeyButtonText = copyKeyButtonTextDefault;
-      };
+        copyKeyCallback = () => {
+          copyKeyCallback = undefined;
+          copyKeySuccess = undefined;
+          copyKeyButtonText = copyKeyButtonTextDefault;
+        };
 
-      copyKeyTimeout = setTimeout(copyKeyCallback, 5000);
-    }).catch(error => {
-      console.error(error);
+        copyKeyTimeout = setTimeout(copyKeyCallback, 5000);
+      })
+      .catch((error) => {
+        console.error(error);
 
-      if(copyKeyCallback) {
-        copyKeyCallback();
-      }
+        if (copyKeyCallback) {
+          copyKeyCallback();
+        }
 
-      copyKeyError = true;
-      copyKeyButtonText = copyKeyButtonTextError;
+        copyKeyError = true;
+        copyKeyButtonText = copyKeyButtonTextError;
 
-      copyKeyCallback = () => {
-        copyKeyCallback = undefined;
-        copyKeyError = undefined;
-        copyKeyButtonText = copyKeyButtonTextDefault;
-      };
+        copyKeyCallback = () => {
+          copyKeyCallback = undefined;
+          copyKeyError = undefined;
+          copyKeyButtonText = copyKeyButtonTextDefault;
+        };
 
-      copyKeyTimeout = setTimeout(copyKeyCallback, 5000);
-    });
+        copyKeyTimeout = setTimeout(copyKeyCallback, 5000);
+      });
   };
 
   const generatedKeySignIn = () => {
@@ -212,13 +223,19 @@
 </script>
 
 <header>
-  <img src={lumeLogo} alt="Lume"/>
+  <img src={lumeLogo} alt="Lume" />
 </header>
-<main class:sign-in={action === 'sign-in'} class:create-account={action === 'create-account'} class:create-account-step-2={createAccountStep === 2} class:create-account-step-3={createAccountStep === 3} class:create-account-step-4={createAccountStep === 4} class:fade-out={fadeOut}>
+<main
+  class:sign-in={action === "sign-in"}
+  class:create-account={action === "create-account"}
+  class:create-account-step-2={createAccountStep === 2}
+  class:create-account-step-3={createAccountStep === 3}
+  class:create-account-step-4={createAccountStep === 4}
+  class:fade-out={fadeOut}>
   <div class="art">
-    <div class="gradient-1"></div>
-    <div class="gradient-2"></div>
-    <div class="gradient-3"></div>
+    <div class="gradient-1" />
+    <div class="gradient-2" />
+    <div class="gradient-3" />
   </div>
   <div class="content">
     <div>
@@ -226,11 +243,18 @@
         <div id="content-text-wrapper">
           <div id="content-text-default">
             <h1>Access the open web with ease</h1>
-            <p>Seamless access to the open web with Lume, integrated Handshake (HNS) and Ethereum (ENS) Support.</p>
+            <p>
+              Seamless access to the open web with Lume, integrated Handshake
+              (HNS) and Ethereum (ENS) Support.
+            </p>
           </div>
           <div id="content-text-create-account">
             <h1>Set up your account key</h1>
-            <p>Let’s create your account key or seed phrase. This phrase will be used to access your Lume account. Make sure to keep it safe at all times.</p>
+            <p>
+              Let’s create your account key or seed phrase. This phrase will be
+              used to access your Lume account. Make sure to keep it safe at all
+              times.
+            </p>
           </div>
           <div id="content-text-show-key">
             <h1>Here’s your account key</h1>
@@ -243,14 +267,24 @@
               <div class="content-action-sign-in">
                 <div class="content-action-inner">
                   <div class="btn-wrapper sign-in-btn">
-                    <button class="btn-main btn-black" on:click={() => signIn()}>Sign in with Account Key</button>
+                    <button class="btn-main btn-black" on:click={() => signIn()}
+                      >Sign in with Account Key
+                    </button>
                   </div>
                   <div class="sign-in-form">
                     <div class="input-wrapper">
-                      <input bind:this={inputKeyRef} type="text" bind:value={inputKey} placeholder="Insert your 12-word account key here" />
+                      <input
+                        bind:this={inputKeyRef}
+                        type="text"
+                        bind:value={inputKey}
+                        placeholder="Insert your 12-word account key here" />
                     </div>
                     <div class="btn-wrapper">
-                      <button class="btn-main btn-green" on:click={() => inputKeySignIn()}>Login</button>
+                      <button
+                        class="btn-main btn-green"
+                        on:click={() => inputKeySignIn()}
+                        >Login
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -258,17 +292,34 @@
               <div class="content-action-create-account">
                 <div class="content-action-inner">
                   <div class="btn-wrapper create-account-ready-btn">
-                    <button class="btn-main btn-green" on:click={() => createAccountReady()}>I get it, I’ll keep it safe. Let’s see the key.</button>
+                    <button
+                      class="btn-main btn-green"
+                      on:click={() => createAccountReady()}
+                      >I get it, I’ll keep it safe. Let’s see the key.
+                    </button>
                   </div>
                   <div class="create-account-ready">
                     <div class="warning">
-                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="1.5"
+                        stroke="currentColor">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                       </svg>
-                      <div>Should you lose this key, you will be forced to create a new account.</div>
+                      <div>
+                        Should you lose this key, you will be forced to create a
+                        new account.
+                      </div>
                     </div>
                     <div class="btn-wrapper create-account-show-key-btn">
-                      <button class="btn-main" on:click={() => showKey()}>I’m ready, show me the key</button>
+                      <button class="btn-main" on:click={() => showKey()}
+                        >I’m ready, show me the key
+                      </button>
                     </div>
                     <div class="btn-wrapper create-account-back-btn">
                       <button on:click={() => createAccountBack()}>
@@ -284,13 +335,25 @@
             </div>
             <div class="btn-stack">
               <div class="btn-wrapper create-account-btn">
-                <button class="btn-main btn-green" on:click={() => createAccount()}>Create an Account</button>
+                <button
+                  class="btn-main btn-green"
+                  on:click={() => createAccount()}
+                  >Create an Account
+                </button>
               </div>
               <div class="btn-wrapper create-account-gray-btn">
-                <button class="btn-main btn-black gray-text" on:click={() => createAccount()}>Create an Account</button>
+                <button
+                  class="btn-main btn-black gray-text"
+                  on:click={() => createAccount()}
+                  >Create an Account
+                </button>
               </div>
               <div class="btn-wrapper create-account-cancel-btn">
-                <button class="btn-main btn-black gray-text" on:click={() => createAccountCancel()}>Go back</button>
+                <button
+                  class="btn-main btn-black gray-text"
+                  on:click={() => createAccountCancel()}
+                  >Go back
+                </button>
               </div>
             </div>
           </div>
@@ -306,25 +369,51 @@
                   {/each}
                 </div>
                 <div class="warning">
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor">
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
                   </svg>
                   <div>Make sure to write this key down for safe keeping.</div>
                 </div>
                 <div class="btn-wrapper show-key-copy-btn">
-                  <button class="btn-main btn-black" on:click={() => copyKey()} class:success={copyKeySuccess} class:error={copyKeyError}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
+                  <button
+                    class="btn-main btn-black"
+                    on:click={() => copyKey()}
+                    class:success={copyKeySuccess}
+                    class:error={copyKeyError}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
                     </svg>
                     {copyKeyButtonText}
                   </button>
                 </div>
                 <div class="btn-stack">
                   <div class="btn-wrapper show-key-continue-btn">
-                    <button class="btn-main" on:click={() => showKeyWarning()}>Continue</button>
+                    <button class="btn-main" on:click={() => showKeyWarning()}
+                      >Continue
+                    </button>
                   </div>
                   <div class="btn-wrapper show-key-login-btn">
-                    <button class="btn-main btn-green" on:click={() => generatedKeySignIn()}>Login</button>
+                    <button
+                      class="btn-main btn-green"
+                      on:click={() => generatedKeySignIn()}
+                      >Login
+                    </button>
                   </div>
                 </div>
               </div>
@@ -334,7 +423,9 @@
       </div>
     </div>
     <div class="grant-info">
-      Lume is a 503c Grant recepient, <a href="https://lumeweb.com">learn more</a> about the work we’re doing to provide accessible access to the open web for everyone.
+      Lume is a 503c Grant recepient, <a href="https://lumeweb.com"
+        >learn more</a> about the work we’re doing to provide accessible access to
+      the open web for everyone.
     </div>
   </div>
 </main>
@@ -354,7 +445,8 @@
     }
   }
 
-  .art, .content {
+  .art,
+  .content {
     position: absolute;
     top: 0;
     bottom: 0;
@@ -375,24 +467,42 @@
     }
 
     .gradient-1 {
-      background: linear-gradient(272.67deg, #1FC3F7 -27.49%, #33A653 49.4%, #62C554 87.63%);
+      background: linear-gradient(
+        272.67deg,
+        #1fc3f7 -27.49%,
+        #33a653 49.4%,
+        #62c554 87.63%
+      );
       z-index: -1;
     }
 
     .gradient-2 {
-      background: conic-gradient(from 180deg at 50% 50%, #33A653 -15.8deg, #080808 222.32deg, #33A653 344.2deg, #080808 582.32deg);
+      background: conic-gradient(
+        from 180deg at 50% 50%,
+        #33a653 -15.8deg,
+        #080808 222.32deg,
+        #33a653 344.2deg,
+        #080808 582.32deg
+      );
       opacity: 0;
       z-index: -2;
     }
 
     .gradient-3 {
-      background: linear-gradient(272.67deg, #ED6A5E -27.49%, #0C0C0D 26.91%, #33A653 49.4%, #ED6A5E 99.62%);
+      background: linear-gradient(
+        272.67deg,
+        #ed6a5e -27.49%,
+        #0c0c0d 26.91%,
+        #33a653 49.4%,
+        #ed6a5e 99.62%
+      );
       opacity: 0;
       z-index: -3;
     }
   }
 
-  main.sign-in, main.create-account {
+  main.sign-in,
+  main.create-account {
     .art {
       .gradient-1 {
         opacity: 0;
@@ -486,7 +596,8 @@
     z-index: 2;
   }
 
-  #content-text-create-account, #content-text-show-key {
+  #content-text-create-account,
+  #content-text-show-key {
     position: absolute;
     opacity: 0;
     z-index: 1;
@@ -709,7 +820,8 @@
     z-index: 2;
   }
 
-  .create-account-gray-btn, .create-account-cancel-btn {
+  .create-account-gray-btn,
+  .create-account-cancel-btn {
     opacity: 0;
     z-index: 1;
   }
@@ -870,8 +982,12 @@
       z-index: 2;
     }
 
-    &.create-account-step-2, &.create-account-step-3 {
-      #content-text-wrapper, .separator, #switch-default .btn-stack, .grant-info {
+    &.create-account-step-2,
+    &.create-account-step-3 {
+      #content-text-wrapper,
+      .separator,
+      #switch-default .btn-stack,
+      .grant-info {
         transition-delay: 2s;
         opacity: 0.15;
         pointer-events: none;
@@ -898,8 +1014,12 @@
       }
     }
 
-    &.create-account-step-3, &.create-account-step-4 {
-      #content-text-wrapper, .separator, #switch-default .btn-stack, .grant-info {
+    &.create-account-step-3,
+    &.create-account-step-4 {
+      #content-text-wrapper,
+      .separator,
+      #switch-default .btn-stack,
+      .grant-info {
         transition-delay: 0s;
         opacity: 1;
       }
@@ -936,7 +1056,10 @@
     }
 
     &.create-account-step-4 {
-      #content-text-wrapper, .show-key-copy-btn, #switch-show-key .btn-stack, .grant-info {
+      #content-text-wrapper,
+      .show-key-copy-btn,
+      #switch-show-key .btn-stack,
+      .grant-info {
         animation: 5000ms save-key-warning;
       }
 
