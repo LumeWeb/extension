@@ -24,7 +24,7 @@ export default defineConfig({
     outDir: "lib",
     emptyOutDir: false,
     lib: {
-      formats: ["iife"],
+      formats: ["umd"],
       ...currentConfig,
       name: currentConfig.fileName,
     },

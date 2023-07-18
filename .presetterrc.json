@@ -14,7 +14,7 @@
         "build:backend:crypto": "LIB_NAME=crypto vite build",
         "build:backend:cryptoLoader": "LIB_NAME=cryptoLoader vite build",
         "build:ui": "cd ui && vite build",
-        "build:package": "mkdir -p dist; rename 's/\\.iife//' lib/*.js; cp -r assets/* lib/* ui/dist/* dist/",
+        "build:package": "mkdir -p dist; rename 's/\\.umd\\.cjs/.js/' lib/*.cjs; cp -r assets/* lib/* ui/dist/* dist/",
         "clean:ui": "shx rm -r ui/dist  || true",
         "clean:backend": "shx rm -r dist || true"
     }
