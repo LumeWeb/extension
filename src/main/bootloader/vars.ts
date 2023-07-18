@@ -20,7 +20,7 @@ export function setLogoutComplete(status: boolean) {
   logoutComplete = status;
 }
 export function getLogoutComplete() {
-  return loginComplete;
+  return logoutComplete;
 }
 export function setKernelLoaded(status: string) {
   kernelLoaded = status;
