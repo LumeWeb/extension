@@ -4,7 +4,6 @@ import {
   getLogoutComplete,
   setLoginComplete,
   setLogoutComplete,
-  setUserKey,
 } from "./vars.js";
 import { log, logErr, reloadKernel, sendAuthUpdate } from "./util.js";
 import { loadKernel } from "./kernel.js";
@@ -37,8 +36,6 @@ function handleStorage(event: StorageEvent) {
       sendAuthUpdate();
       return;
     }
-
-    setUserKey(userKey);
 
     log("user is now logged in, attempting to load kernel");
     setLoginComplete(true);

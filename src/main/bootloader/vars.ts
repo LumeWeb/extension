@@ -4,11 +4,8 @@ import { x25519 } from "@noble/curves/ed25519";
 let loginComplete = false;
 let logoutComplete = false;
 let kernelLoaded = "not yet";
-let bootloaderPortals: Client[] = [];
 let communicationKey: Uint8Array;
 let frontendCommunicationPubKey: Uint8Array;
-
-var userKey: Uint8Array;
 
 export const defaultKernelLink =
   "zduFSV7fLr7GeucUQFgxzq877rmMAbALz19nDHMtBEwz1eoGcKeQt3Lzfh";
@@ -32,15 +29,8 @@ export function setKernelLoaded(status: string) {
 export function getKernelLoaded() {
   return kernelLoaded;
 }
-export function setUserKey(key: Uint8Array) {
-  userKey = key;
-}
-export function getUserKey() {
-  return userKey;
-}
-
 export function setBootloaderPortals(portals: Client[]) {
-  bootloaderPortals = portals;
+  window.bootloaderPortals = portals;
 }
 
 export function getCommunicationKey() {

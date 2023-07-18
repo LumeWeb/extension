@@ -12,9 +12,9 @@ import {
   setBootloaderPortals,
   setKernelLoaded,
   setLoginComplete,
-  setUserKey,
 } from "./vars.js";
 import { getStoredUserKey } from "./storage.js";
+import { readableStreamToBlob } from "binconv";
 import { handleIncomingMessage } from "./messages.js";
 
 export function boot() {
@@ -29,7 +29,6 @@ export function boot() {
   }
 
   log("user is already logged in, attempting to load kernel");
-  setUserKey(userKey);
   setActivePortalMasterKey(userKey);
   setLoginComplete(true);
   sendAuthUpdate();
@@ -59,7 +58,31 @@ export async function loadKernel() {
   setBootloaderPortals(getActivePortals());
 
   try {
-    eval(kernelCode);
+    await new Promise(async (resolve, reject) => {
+      const url = URL.createObjectURL(await readableStreamToBlob(kernelCode));
+
+      const el = document.createElement("script");
+      el.src = url;
+      el.onload = () => {
+        URL.revokeObjectURL(url);
+        resolve(null);
+      };
+      el.onerror = (
+        event: Event | string,
+        source?: string,
+        lineno?: number,
+        colno?: number,
+        error?: Error,
+      ) => {
+        URL.revokeObjectURL(url);
+        reject(error);
+      };
+
+      document.head.appendChild(el);
+    });
+
+    window.removeEventListener("message", handleIncomingMessage);
+
     setKernelLoaded("success");
     sendAuthUpdate();
     log("kernel successfully loaded");
@@ -78,16 +101,18 @@ export async function loadKernel() {
 
 async function downloadKernel(
   kernelCid: string,
-): Promise<[kernelCode: string, err: Err]> {
+): Promise<[kernelCode: ReadableStream, err: Err]> {
   const [code, err] = await downloadObject(kernelCid);
 
   if (err != null) {
-    return ["", err];
+    return [null as any, err];
   }
 
   return [code, null];
 }
 
-function downloadDefaultKernel(): Promise<[kernelCode: string, err: Err]> {
+function downloadDefaultKernel(): Promise<
+  [kernelCode: ReadableStream, err: Err]
+> {
   return downloadKernel(defaultKernelLink);
 }
