@@ -29,9 +29,6 @@ export function setKernelLoaded(status: string) {
 export function getKernelLoaded() {
   return kernelLoaded;
 }
-export function setBootloaderPortals(portals: Client[]) {
-  window.bootloaderPortals = portals;
-}
 
 export function getCommunicationKey() {
   if (!communicationKey) {

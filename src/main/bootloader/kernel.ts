@@ -9,7 +9,6 @@ import {
 import { log, logErr, sendAuthUpdate } from "./util.js";
 import {
   defaultKernelLink,
-  setBootloaderPortals,
   setKernelLoaded,
   setLoginComplete,
 } from "./vars.js";
@@ -54,8 +53,6 @@ export async function loadKernel() {
     sendAuthUpdate();
     return;
   }
-
-  setBootloaderPortals(getActivePortals());
 
   try {
     await new Promise(async (resolve, reject) => {
