@@ -15,6 +15,7 @@ import {
   setUserKey,
 } from "./vars.js";
 import { getStoredUserKey } from "./storage.js";
+import { handleIncomingMessage } from "./messages.js";
 
 export function boot() {
   let userKey;
