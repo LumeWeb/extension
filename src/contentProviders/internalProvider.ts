@@ -6,17 +6,13 @@ import {
   OnRequestDetailsType,
 } from "../types.js";
 import browser from "webextension-polyfill";
-import { RequestOverrideResponse } from "@lumeweb/libweb";
-import { queryKernel } from "../main/background.js";
 import { requestProxies } from "../util.js";
 
 export default class InternalProvider extends BaseProvider {
   async shouldHandleRequest(
     details: OnBeforeRequestDetailsType,
   ): Promise<boolean> {
-    return ["http://kernel.lume/", "http://kernel.lume/favicon.ico"].includes(
-      details.url,
-    );
+    return ["http://kernel.lume/"].includes(details.url);
   }
 
   async handleRequest(
