@@ -1,34 +1,32 @@
 import {
   addContextToErr,
-  bufToStr,
   downloadObject,
   Err,
   getActivePortals,
-  hexToBuf,
 } from "@lumeweb/libweb";
-import { sendAuthUpdate } from "./util.js";
-import { log, logErr } from "@lumeweb/libkernel/kernel";
+import { log, logErr, sendAuthUpdate } from "./util.js";
 import {
   defaultKernelLink,
   setBootloaderPortals,
   setKernelLoaded,
   setLoginComplete,
+  setUserKey,
 } from "./vars.js";
+import { getStoredUserKey } from "./storage.js";
 
 export function boot() {
-  let userKeyString = window.localStorage.getItem("key");
-  if (userKeyString === null) {
-    sendAuthUpdate();
-    return;
-  }
-  let [decodedSeed, errHTB] = hexToBuf(userKeyString);
-  if (errHTB !== null) {
-    logErr(addContextToErr(errHTB, "seed could not be decoded from hex"));
+  let userKey;
+
+  try {
+    userKey = getStoredUserKey();
+  } catch (e) {
+    logErr(addContextToErr(e, "user key could not be fetched"));
     sendAuthUpdate();
     return;
   }
 
   log("user is already logged in, attempting to load kernel");
+  setUserKey(userKey as Uint8Array);
   setLoginComplete(true);
   sendAuthUpdate();
   loadKernel();

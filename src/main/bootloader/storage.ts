@@ -1,4 +1,4 @@
-import { addContextToErr, hexToBuf } from "@lumeweb/libweb";
+import { addContextToErr, bytesToHex, hexToBytes } from "@lumeweb/libweb";
 import {
   getLoginComplete,
   getLogoutComplete,
@@ -23,18 +23,22 @@ function handleStorage(event: StorageEvent) {
   }
 
   if (event.key === "key" && !getLoginComplete()) {
-    let userKey = window.localStorage.getItem("key");
+    let userKey;
+
+    try {
+      userKey = getStoredUserKey();
+    } catch (e) {
+      logErr(addContextToErr(e, "user key could not be fetched"));
+      sendAuthUpdate();
+      return;
+    }
+
     if (userKey === null) {
       sendAuthUpdate();
       return;
     }
-    let [decodedKey, errHTB] = hexToBuf(userKey);
-    if (errHTB !== null) {
-      logErr(addContextToErr(errHTB, "seed could not be decoded from hex"));
-      sendAuthUpdate();
-      return;
-    }
-    setUserKey(decodedKey);
+
+    setUserKey(userKey);
 
     log("user is now logged in, attempting to load kernel");
     setLoginComplete(true);
@@ -47,5 +51,22 @@ function handleStorage(event: StorageEvent) {
   log("attempting to do a page reload");
   reloadKernel();
 }
+window.addEventListener("storage", handleStorage);
 
-window.addEventListener("storage", (event) => handleStorage(event));
+export function saveUserKey(key: Uint8Array) {
+  window.localStorage.setItem("key", bytesToHex(key));
+  const event = new StorageEvent("storage", {
+    key: "key",
+  });
+  window.dispatchEvent(event);
+}
+
+export function getStoredUserKey() {
+  const key = window.localStorage.getItem("key");
+
+  if (key) {
+    return hexToBytes(key);
+  }
+
+  return null;
+}
