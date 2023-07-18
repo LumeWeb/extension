@@ -8,7 +8,7 @@ let communicationKey: Uint8Array;
 let frontendCommunicationPubKey: Uint8Array;
 
 export const defaultKernelLink =
-  "zduFSV7fLr7GeucUQFgxzq877rmMAbALz19nDHMtBEwz1eoGcKeQt3Lzfh";
+  "zduGxnSUFCXuVCkaGfq7761tcASmEK5WBn8kBesgTDizG6bvKuPD5RrDCj";
 
 export function setLoginComplete(status: boolean) {
   loginComplete = status;
