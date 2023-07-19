@@ -66,7 +66,7 @@ export function handleKernelMessage(event: MessageEvent) {
       } catch {}
     }
 
-    if (data.logoutComplete === true) {
+    if (getAuthStatus().logoutComplete) {
       console.log("received logout signal, clearing all ports");
 
       for (let [, port] of Object.entries(getOpenPorts())) {
