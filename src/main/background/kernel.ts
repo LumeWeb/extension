@@ -56,6 +56,7 @@ export function handleKernelMessage(event: MessageEvent) {
       }
       if (getAuthStatus().logoutComplete) {
         resetLoggedInDefer();
+        setAuthStatusKnown(false);
       }
     }
 
