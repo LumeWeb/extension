@@ -2,7 +2,6 @@ import {
   addContextToErr,
   downloadObject,
   Err,
-  getActivePortals,
   maybeInitDefaultPortals,
   setActivePortalMasterKey,
 } from "@lumeweb/libweb";
@@ -14,7 +13,6 @@ import {
 } from "./vars.js";
 import { getStoredUserKey } from "./storage.js";
 import { readableStreamToBlob } from "binconv";
-import { handleIncomingMessage } from "./messages.js";
 
 export function boot() {
   let userKey;
