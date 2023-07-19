@@ -1,11 +1,11 @@
 import type { KernelAuthStatus } from "@lumeweb/libweb";
 import defer, { DeferredPromise } from "p-defer";
 
-export let queriesNonce = 1;
-export let queries: any = {};
-export let portsNonce = 0;
-export let openPorts = {} as any;
-export let timer = 20000;
+let queriesNonce = 1;
+let queries: any = {};
+let portsNonce = 0;
+let openPorts = {} as any;
+let timer = 20000;
 
 let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
