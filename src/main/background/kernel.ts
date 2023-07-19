@@ -3,9 +3,8 @@ import {
   clearOpenPorts,
   deleteQuery,
   getAuthStatus,
+  getAuthStatusDefer,
   getAuthStatusKnown,
-  getAuthStatusResolve,
-  getBlockForBootloader,
   getKernelIframe,
   getOpenPorts,
   getQueries,
@@ -45,7 +44,7 @@ export function handleKernelMessage(event: MessageEvent) {
   if (event.data.method === "kernelAuthStatus") {
     setAuthStatus(data);
     if (!getAuthStatusKnown()) {
-      getAuthStatusResolve()();
+      getAuthStatusDefer().resolve();
       setAuthStatusKnown(true);
       console.log("bootloader is now initialized");
       if (!getAuthStatus().loginComplete) {
@@ -91,7 +90,7 @@ export function queryKernel(query: any): Promise<any> {
       resolve(data.data);
     };
 
-    getBlockForBootloader().then(() => {
+    getAuthStatusDefer().promise.then(() => {
       let nonce = getQueriesNonce();
       increaseQueriesNonce();
       query.nonce = nonce;

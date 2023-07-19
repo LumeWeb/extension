@@ -9,10 +9,7 @@ export let timer = 20000;
 
 let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
-let authStatusResolve: DataFn;
-let blockForBootloader = new Promise((resolve) => {
-  authStatusResolve = resolve;
-});
+let authStatusDefer = defer();
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
 let booted = defer();
@@ -97,12 +94,9 @@ export function setKernelIframe(iframe: HTMLIFrameElement) {
 export function getDnsSetupDefer(): DeferredPromise<any> {
   return blockForDnsSetup;
 }
-export function getAuthStatusResolve(): DataFn {
-  return authStatusResolve;
-}
 
-export function getBlockForBootloader(): Promise<unknown> {
-  return blockForBootloader;
+export function getAuthStatusDefer() {
+  return authStatusDefer;
 }
 
 export function getBooted(): Promise<unknown> {

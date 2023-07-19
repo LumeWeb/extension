@@ -2,8 +2,7 @@ import {
   addQuery,
   deleteOpenPort,
   getAuthStatus,
-  getBlockForBootloader,
-  getBridgeLoadedResolve,
+  getAuthStatusDefer,
   getKernelIframe,
   getOpenPorts,
   getPortsNonce,
@@ -58,7 +57,7 @@ export function bridgeListener(port: any) {
     handleBridgeMessage(port, portNonce, data, domain);
   });
 
-  getBlockForBootloader().then(() => {
+  getAuthStatusDefer().promise.then(() => {
     port.postMessage({
       method: "kernelAuthStatus",
       data: getAuthStatus(),
