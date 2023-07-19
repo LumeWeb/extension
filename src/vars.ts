@@ -10,16 +10,13 @@ export let timer = 20000;
 let authStatus: KernelAuthStatus;
 let authStatusKnown = false;
 let authStatusResolve: DataFn;
-let bridgeLoadedResolve: DataFn;
 let blockForBootloader = new Promise((resolve) => {
   authStatusResolve = resolve;
-});
-let blockForBridge = new Promise((resolve) => {
-  bridgeLoadedResolve = resolve;
 });
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
 let booted = defer();
+let loggedInDefer = defer();
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
@@ -107,12 +104,6 @@ export function getAuthStatusResolve(): DataFn {
 export function getBlockForBootloader(): Promise<unknown> {
   return blockForBootloader;
 }
-export function getBlockForBridge(): Promise<unknown> {
-  return blockForBridge;
-}
-export function getBridgeLoadedResolve(): DataFn {
-  return bridgeLoadedResolve;
-}
 
 export function getBooted(): Promise<unknown> {
   return booted.promise;
@@ -120,4 +111,11 @@ export function getBooted(): Promise<unknown> {
 
 export function weAreBooted(): void {
   booted.resolve();
+}
+
+export function getLoggedInDefer() {
+  return loggedInDefer;
+}
+export function resetLoggedInDefer() {
+  loggedInDefer = defer();
 }

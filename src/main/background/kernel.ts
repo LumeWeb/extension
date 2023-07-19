@@ -6,7 +6,6 @@ import {
   getAuthStatusKnown,
   getAuthStatusResolve,
   getBlockForBootloader,
-  getBlockForBridge,
   getKernelIframe,
   getOpenPorts,
   getQueries,
@@ -21,13 +20,11 @@ export function handleKernelMessage(event: MessageEvent) {
   let data = event.data.data;
 
   if (event.data.method === "kernelBridgeVersion") {
-    getBlockForBridge().then(() => {
-      for (let [, port] of Object.entries(getOpenPorts())) {
-        try {
-          (port as any).postMessage(event.data);
-        } catch {}
-      }
-    });
+    for (let [, port] of Object.entries(getOpenPorts())) {
+      try {
+        (port as any).postMessage(event.data);
+      } catch {}
+    }
 
     return;
   }
