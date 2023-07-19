@@ -1,51 +1,54 @@
-import { Client } from "@lumeweb/libportal";
 import { x25519 } from "@noble/curves/ed25519";
-
-let loginComplete = false;
-let logoutComplete = false;
-let kernelLoaded = "not yet";
-let communicationKey: Uint8Array;
-let frontendCommunicationPubKey: Uint8Array;
 
 export const defaultKernelLink =
   "zduGxnSUFCXuVCkaGfq7761tcASmEK5WBn8kBesgTDizG6bvKuPD5RrDCj";
 
+const store = new Map<string, any>(
+  Object.entries({
+    loginComplete: false,
+    logoutComplete: false,
+    kernelLoaded: "not yet",
+    communicationKey: null,
+    frontendCommunicationPubKey: null,
+  }),
+);
+
 export function setLoginComplete(status: boolean) {
-  loginComplete = status;
+  store.set("loginComplete", status);
 }
-export function getLoginComplete() {
-  return loginComplete;
+export function getLoginComplete(): boolean {
+  return store.get("loginComplete");
 }
 export function setLogoutComplete(status: boolean) {
-  logoutComplete = status;
+  store.set("logoutComplete", status);
 }
-export function getLogoutComplete() {
-  return logoutComplete;
+export function getLogoutComplete(): boolean {
+  return store.get("logoutComplete");
 }
 export function setKernelLoaded(status: string) {
-  kernelLoaded = status;
+  store.set("kernelLoaded", status);
 }
 
-export function getKernelLoaded() {
-  return kernelLoaded;
+export function getKernelLoaded(): string {
+  return store.get("kernelLoaded");
 }
 
-export function getCommunicationKey() {
-  if (!communicationKey) {
-    communicationKey = x25519.utils.randomPrivateKey();
+export function getCommunicationKey(): Uint8Array {
+  if (!store.get("communicationKey")) {
+    store.set("communicationKey", x25519.utils.randomPrivateKey());
   }
 
-  return communicationKey;
+  return store.get("communicationKey");
 }
 
 export function getCommunicationPubKey() {
   return x25519.getPublicKey(getCommunicationKey());
 }
 
-export function getFrontendCommunicationPubkey() {
-  return frontendCommunicationPubKey;
+export function getFrontendCommunicationPubkey(): Uint8Array {
+  return store.get("frontendCommunicationPubKey");
 }
 
 export function setFrontendCommunicationPubkey(key: Uint8Array) {
-  frontendCommunicationPubKey = key;
+  store.set("frontendCommunicationPubKey", key);
 }
