@@ -6,11 +6,13 @@ import {
   getAuthStatusDefer,
   getAuthStatusKnown,
   getKernelIframe,
+  getLoggedInDefer,
   getOpenPorts,
   getQueries,
   getQueriesNonce,
   getQuery,
   increaseQueriesNonce,
+  resetLoggedInDefer,
   setAuthStatus,
   setAuthStatusKnown,
 } from "../../vars.js";
@@ -49,6 +51,11 @@ export function handleKernelMessage(event: MessageEvent) {
       console.log("bootloader is now initialized");
       if (!getAuthStatus().loginComplete) {
         console.log("user is not logged in: waiting until login is confirmed");
+      } else {
+        getLoggedInDefer().resolve();
+      }
+      if (getAuthStatus().logoutComplete) {
+        resetLoggedInDefer();
       }
     }
 
