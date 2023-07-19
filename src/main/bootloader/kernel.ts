@@ -78,8 +78,6 @@ export async function loadKernel() {
       document.head.appendChild(el);
     });
 
-    window.removeEventListener("message", handleIncomingMessage);
-
     setKernelLoaded("success");
     sendAuthUpdate();
     log("kernel successfully loaded");
