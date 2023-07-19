@@ -16,11 +16,6 @@ function handleBridgeMessage(
   data: any,
   domain: string,
 ) {
-  if (data.method === "bridgeLoaded") {
-    getBridgeLoadedResolve()();
-    return;
-  }
-
   if (!("nonce" in data)) {
     return;
   }
