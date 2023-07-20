@@ -12,7 +12,6 @@ let authStatusKnown = false;
 let authStatusDefer = defer();
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
-let booted = defer();
 let loggedInDefer = defer();
 
 export function getAuthStatusKnown() {
@@ -97,14 +96,6 @@ export function getDnsSetupDefer(): DeferredPromise<any> {
 
 export function getAuthStatusDefer() {
   return authStatusDefer;
-}
-
-export function getBooted(): Promise<unknown> {
-  return booted.promise;
-}
-
-export function weAreBooted(): void {
-  booted.resolve();
 }
 
 export function getLoggedInDefer() {
