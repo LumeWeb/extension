@@ -20,11 +20,6 @@ function handleBridgeMessage(
     return;
   }
 
-  if (data.method === "response") {
-    window.postMessage(data);
-    return;
-  }
-
   if (data.method !== "queryUpdate") {
     addQuery(data.nonce, (response: any) => {
       if (portNonce in getOpenPorts()) {
