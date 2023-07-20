@@ -167,7 +167,11 @@ export default class WebEngine {
   }
 
   public registerContentProvider(provider: BaseProvider) {
-    if (this.contentProviders.includes(provider)) {
+    if (
+      this.contentProviders.filter(
+        (item) => item.constructor.name === provider.constructor.name,
+      ).length
+    ) {
       return;
     }
 
