@@ -1,4 +1,9 @@
-import { addContextToErr, bytesToHex, hexToBytes } from "@lumeweb/libweb";
+import {
+  addContextToErr,
+  bytesToHex,
+  hexToBytes,
+  setActivePortalMasterKey,
+} from "@lumeweb/libweb";
 import {
   getLoginComplete,
   getLogoutComplete,
@@ -38,6 +43,7 @@ function handleStorage(event: StorageEvent) {
     }
 
     log("user is now logged in, attempting to load kernel");
+    setActivePortalMasterKey(userKey);
     setLoginComplete(true);
     loadKernel();
     sendAuthUpdate();
