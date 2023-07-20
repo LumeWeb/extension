@@ -1,6 +1,8 @@
 import type { KernelAuthStatus } from "@lumeweb/libweb";
 import defer, { DeferredPromise } from "p-defer";
 import Emittery from "emittery";
+import objectDiff from "object-diff";
+
 let queriesNonce = 1;
 let queries: any = {};
 let portsNonce = 0;
@@ -27,7 +29,15 @@ export function getAuthStatus(): KernelAuthStatus {
 }
 
 export function setAuthStatus(status: KernelAuthStatus) {
+  let diff;
+  if (!authStatus) {
+    diff = status;
+  } else {
+    diff = objectDiff(authStatus, status);
+  }
+
   authStatus = status;
+  events.emit("authStatus", diff);
 }
 
 export function getQueriesNonce(): number {
