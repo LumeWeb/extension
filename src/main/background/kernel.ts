@@ -30,10 +30,6 @@ export function handleKernelMessage(event: MessageEvent) {
     return;
   }
 
-  if (event.origin !== "http://kernel.lume") {
-    return;
-  }
-
   if (event.data.method === "log") {
     if (data.isErr !== null && !data.isErr) {
       console.log(data.message);
