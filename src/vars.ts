@@ -1,6 +1,6 @@
 import type { KernelAuthStatus } from "@lumeweb/libweb";
 import defer, { DeferredPromise } from "p-defer";
-
+import Emittery from "emittery";
 let queriesNonce = 1;
 let queries: any = {};
 let portsNonce = 0;
@@ -13,6 +13,7 @@ let authStatusDefer = defer();
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
 let loggedInDefer = defer();
+export const events = new Emittery();
 
 export function getAuthStatusKnown() {
   return authStatusKnown;
