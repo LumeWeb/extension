@@ -25,6 +25,11 @@ export function boot() {
     return;
   }
 
+  if (!userKey) {
+    sendAuthUpdate();
+    return;
+  }
+
   log("user is already logged in, attempting to load kernel");
   setActivePortalMasterKey(userKey);
   setLoginComplete(true);
