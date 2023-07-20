@@ -59,6 +59,10 @@ export async function handleIncomingMessage(event: MessageEvent) {
     return;
   }
 
+  if (["moduleCall", "response"].includes(event.data.method)) {
+    return;
+  }
+
   (event.source as WindowProxy).postMessage(
     {
       nonce: event.data.nonce,
