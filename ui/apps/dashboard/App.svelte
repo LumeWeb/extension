@@ -1,4 +1,5 @@
 <script lang="ts">
+  import "../../styles/global.scss";
   import Header from "./components/Header.svelte";
   import Art from "./components/Art.svelte";
   import { waitForConnected } from "../../../shared/util.ts";
