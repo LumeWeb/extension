@@ -1,5 +1,6 @@
 import type { KernelAuthStatus } from "@lumeweb/libweb";
-import defer, { DeferredPromise } from "p-defer";
+import defer from "p-defer";
+import type { DeferredPromise } from "p-defer";
 import Emittery from "emittery";
 import objectDiff from "object-diff";
 
