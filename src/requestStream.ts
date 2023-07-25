@@ -1,4 +1,4 @@
-import { OnBeforeRequestDetailsType, StreamFilter } from "./types.js";
+import type { OnBeforeRequestDetailsType, StreamFilter } from "./types.js";
 import browser from "webextension-polyfill";
 import { iterateStream, streamToArray } from "./util.js";
 

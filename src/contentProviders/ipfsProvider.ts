@@ -1,5 +1,5 @@
 import BaseProvider from "./baseProvider.js";
-import {
+import type {
   BlockingResponse,
   OnBeforeRequestDetailsType,
   OnBeforeSendHeadersDetailsType,
@@ -10,9 +10,10 @@ import {
 import { getRelayProxies } from "../util.js";
 import { ipfsPath, ipnsPath, path as checkPath } from "is-ipfs";
 import { createClient } from "@lumeweb/kernel-ipfs-client";
-import { DNS_RECORD_TYPE, DNSResult } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
+import type { DNSResult } from "@lumeweb/libresolver";
 import RequestStream from "../requestStream.js";
-import { UnixFSStats } from "@helia/unixfs";
+import type { UnixFSStats } from "@helia/unixfs";
 import * as path from "path";
 import { CID } from "multiformats/cid";
 import { fileTypeFromBuffer } from "file-type";

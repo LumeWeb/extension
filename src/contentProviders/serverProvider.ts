@@ -1,11 +1,15 @@
 import BaseProvider from "./baseProvider.js";
-import { OnBeforeRequestDetailsType, OnRequestDetailsType } from "../types.js";
+import type {
+  OnBeforeRequestDetailsType,
+  OnRequestDetailsType,
+} from "../types.js";
 import { isDomain, isIp } from "../util.js";
-import { DNS_RECORD_TYPE, DNSRecord, DNSResult } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
+import type { DNSRecord, DNSResult } from "@lumeweb/libresolver";
 
 export default class ServerProvider extends BaseProvider {
   async shouldHandleRequest(
-    details: OnBeforeRequestDetailsType
+    details: OnBeforeRequestDetailsType,
   ): Promise<boolean> {
     let dnsResult: DNSResult | boolean = await this.resolveDns(details, [
       DNS_RECORD_TYPE.A,

@@ -1,10 +1,10 @@
 import {
   addContextToErr,
   downloadObject,
-  Err,
   maybeInitDefaultPortals,
   setActivePortalMasterKey,
 } from "@lumeweb/libweb";
+import type { Err } from "@lumeweb/libweb";
 import { log, logErr, sendAuthUpdate } from "./util.js";
 import {
   defaultKernelLink,

@@ -1,5 +1,5 @@
 import BaseProvider from "./baseProvider.js";
-import {
+import type {
   BlockingResponse,
   OnBeforeRequestDetailsType,
   OnHeadersReceivedDetailsType,

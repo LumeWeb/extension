@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import BaseProvider from "./contentProviders/baseProvider.js";
-import {
+import type {
   BlockingResponse,
   OnBeforeNavigateDetailsType,
   OnBeforeRequestDetailsType,
@@ -15,7 +15,7 @@ import tldEnum from "@lumeweb/tld-enum";
 import { scanRecords } from "./dns.js";
 import { bufToHex } from "@lumeweb/libweb";
 import { getAuthStatus } from "./vars.js";
-import { DNSResult } from "@lumeweb/libresolver";
+import type { DNSResult } from "@lumeweb/libresolver";
 import { blake3 } from "@noble/hashes/blake3";
 
 import "./contentFilters/index.js";

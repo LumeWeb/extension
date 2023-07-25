@@ -1,23 +1,21 @@
-import {
+import type {
   WebRequest,
   Proxy,
   Tabs,
   WebNavigation,
   Menus,
 } from "webextension-polyfill";
-import OnHeadersReceivedDetailsType = WebRequest.OnHeadersReceivedDetailsType;
-import OnBeforeRequestDetailsType = WebRequest.OnBeforeRequestDetailsType;
-import OnBeforeSendHeadersDetailsType = WebRequest.OnBeforeSendHeadersDetailsType;
-import OnCompletedDetailsType = WebRequest.OnCompletedDetailsType;
-import OnErrorOccurredDetailsType = WebRequest.OnErrorOccurredDetailsType;
-import BlockingResponse = WebRequest.BlockingResponse;
-import OnRequestDetailsType = Proxy.OnRequestDetailsType;
-import HttpHeaders = WebRequest.HttpHeaders;
-import StreamFilter = WebRequest.StreamFilter;
-import HttpHeadersItemType = WebRequest.HttpHeadersItemType;
-import OnBeforeNavigateDetailsType = WebNavigation.OnBeforeNavigateDetailsType;
+type OnHeadersReceivedDetailsType = WebRequest.OnHeadersReceivedDetailsType;
+type OnBeforeRequestDetailsType = WebRequest.OnBeforeRequestDetailsType;
+type OnBeforeSendHeadersDetailsType = WebRequest.OnBeforeSendHeadersDetailsType;
+type OnCompletedDetailsType = WebRequest.OnCompletedDetailsType;
+type OnErrorOccurredDetailsType = WebRequest.OnErrorOccurredDetailsType;
+type BlockingResponse = WebRequest.BlockingResponse;
+type OnRequestDetailsType = Proxy.OnRequestDetailsType;
+type StreamFilter = WebRequest.StreamFilter;
+type OnBeforeNavigateDetailsType = WebNavigation.OnBeforeNavigateDetailsType;
 
-export {
+export type {
   OnHeadersReceivedDetailsType,
   OnBeforeRequestDetailsType,
   OnBeforeSendHeadersDetailsType,
@@ -25,9 +23,7 @@ export {
   OnErrorOccurredDetailsType,
   BlockingResponse,
   OnRequestDetailsType,
-  HttpHeaders,
   StreamFilter,
-  HttpHeadersItemType,
   Tabs,
   OnBeforeNavigateDetailsType,
   Menus,
