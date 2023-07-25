@@ -18,7 +18,7 @@
     const types = await networkClient.getTypes();
 
     for (const type of types) {
-      types[type] = await networkClient.getNetworksByType();
+      types[type] = await networkClient.getNetworksByType(type);
     }
   });
 </script>
