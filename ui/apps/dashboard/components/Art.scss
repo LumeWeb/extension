@@ -1,0 +1,172 @@
+@import "../../../styles/mixins";
+@import "../../../styles/vars";
+@import "../../../styles/artwork";
+.art-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -125%);
+    transition: left 500ms, transform 500ms;
+    z-index: -1;
+
+    &.done {
+        top: 50%;
+        left: -35em;
+        transform: translate(0, -50%);
+    }
+}
+
+.art-rotate {
+    transform: rotate(-180deg);
+    animation: 5000ms rotate;
+    transition: transform 500ms;
+
+    &.done {
+        transform: rotate(-151.13deg);
+    }
+}
+
+.art {
+    position: relative;
+    @include fluid-width-height(9.0625rem, 9.0625rem);
+    background-image: $lume-2-base64;
+    background-size: cover;
+    background-position: 50%;
+    transition: width 500ms, height 500ms;
+
+    > div {
+        position: absolute;
+        inset: 0;
+        transition: opacity 500ms;
+    }
+
+    .gradient-1 {
+        background: linear-gradient(
+                272.67deg,
+                #ff005c -27.49%,
+                #0c0c0d 26.91%,
+                #ff005c 49.4%,
+                #ed6a5e 99.62%
+        );
+        z-index: -1;
+    }
+
+    .gradient-2 {
+        background: conic-gradient(
+                from 180deg at 50% 50%,
+                #a67833 -15.8deg,
+                #e91f1f 222.32deg,
+                #a67833 344.2deg,
+                #e91f1f 582.32deg
+        );
+        opacity: 0;
+        z-index: -2;
+    }
+
+    .gradient-3 {
+        background: conic-gradient(
+                from -89.79deg at 50% 50%,
+                #33a653 -15.8deg,
+                #080808 222.32deg,
+                #33a653 344.2deg,
+                #080808 582.32deg
+        );
+        opacity: 0;
+        z-index: -3;
+    }
+
+    .gradient-4 {
+        background: conic-gradient(
+                from 180deg at 50% 50%,
+                #2f2f2f -15.8deg,
+                #66d155 222.32deg,
+                #2f2f2f 344.2deg,
+                #66d155 582.32deg
+        );
+        opacity: 0;
+        z-index: -4;
+    }
+
+    &.pulse {
+        .gradient-1 {
+            opacity: 0;
+        }
+
+        .gradient-2 {
+            opacity: 1;
+        }
+    }
+
+    &.connected {
+        .gradient-1 {
+            opacity: 0;
+        }
+
+        .gradient-3 {
+            opacity: 1;
+        }
+    }
+
+    &.done {
+        @include fluid-width-height(72rem, 72rem);
+
+        .gradient-1 {
+            opacity: 0;
+        }
+
+        .gradient-4 {
+            opacity: 1;
+        }
+
+        .loading-text {
+            display: block;
+
+            .loading-text-connected {
+                top: 0;
+                left: -25%;
+                transform: translate(-125%, 0);
+                opacity: 0;
+            }
+        }
+    }
+}
+
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(127.54deg);
+    }
+
+    20% {
+        transform: rotate(127.54deg);
+    }
+
+    30% {
+        transform: rotate(420deg);
+    }
+
+    50% {
+        transform: rotate(420deg);
+    }
+
+    60% {
+        transform: rotate(360deg);
+    }
+
+    90% {
+        transform: rotate(360deg);
+    }
+
+    100% {
+        transform: rotate(540deg);
+    }
+}

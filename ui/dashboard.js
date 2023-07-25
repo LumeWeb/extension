@@ -1,7 +1,7 @@
-import Dashboard from './components/dashboard/Dashboard.svelte'
+import App from "./apps/dashboard/App.svelte";
 
-const app = new Dashboard({
-  target: document.getElementById('app'),
-})
+const app = new App({
+  target: document.getElementById("app"),
+});
 
-export default app
+export default app;

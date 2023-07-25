@@ -1,0 +1,101 @@
+@import "../../../styles/artwork";
+@import "../../../styles/mixins";
+@import "../../../styles/vars";
+
+h3 {
+    @include fluid-font-size(3.125rem);
+    font-family: $font-family-jetbrains-mono;
+    line-height: 110%;
+    text-shadow: 0.017em 0.017em 0.034em #000;
+}
+
+h4 {
+    @include fluid-font-size(1.5rem);
+    line-height: 168%;
+    text-shadow: 0.017em 0.017em 0.034em #000;
+
+    &:first-letter {
+        text-transform: capitalize;
+    }
+}
+
+li {
+    @include fluid-font-size(1.25rem);
+    margin-top: 0.9em;
+
+    .network {
+        display: flex;
+        align-items: center;
+        margin-bottom: -0.2em;
+    }
+
+    .status {
+        @include fluid-font-size(1rem);
+        display: flex;
+    }
+
+    &.success {
+        .status {
+            color: #62c554;
+        }
+    }
+
+    &.loading {
+        .status {
+            color: #fb891f;
+        }
+    }
+
+    &.error {
+        .status {
+            color: #cc1b50;
+        }
+    }
+
+    .user-count {
+        @include fluid-font-size(1rem);
+        color: #8e8e8e;
+        display: flex;
+        align-items: center;
+
+        svg {
+            @include fluid-width-height(1rem, 1rem);
+            margin: 0 0.3em 0 1.2em;
+        }
+    }
+}
+
+.icon {
+    display: block;
+    width: 1.125em;
+    height: 1.125em;
+    margin-right: 0.375em;
+    @include fluid-font-size(1.125rem);
+
+    &.icon-success {
+        mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>');
+        mask-size: 1.125em 1.125em;
+        mask-repeat: no-repeat;
+        mask-position: 50%;
+        background-color: #68cc58;
+    }
+
+    &.icon-wait {
+        background-image: url("../../../assets/wait-icon-orange.png");
+        background-size: 1.125em 1.125em;
+        background-repeat: no-repeat;
+        background-position: 50%;
+    }
+
+    &.icon-wait-yellow {
+        background-image: url("../../../assets/wait-icon-yellow.png");
+    }
+
+    &.icon-error {
+        mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>');
+        mask-size: 1.125em 1.125em;
+        mask-repeat: no-repeat;
+        mask-position: 50%;
+        background-color: #cc1b50;
+    }
+}

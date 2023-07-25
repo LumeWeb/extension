@@ -1,0 +1,114 @@
+@import "../../../styles/mixins";
+header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
+
+    .status {
+        @include fluid-font-size(1.25rem);
+        margin: -0.5em 0 -0.5em 1em;
+        animation: 1000ms fade-in;
+
+        > div {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .network {
+            display: grid;
+
+            > div {
+                grid-column-start: 1;
+                grid-row-start: 1;
+                display: flex;
+                align-items: center;
+                line-height: 1;
+                white-space: nowrap;
+                transition: opacity 500ms;
+            }
+
+            .connecting {
+                color: #edca4f;
+                z-index: 2;
+
+                .icon {
+                    animation: 5000ms rotate-full;
+                }
+            }
+
+            .connected {
+                color: #64c555;
+                z-index: 1;
+                opacity: 0;
+            }
+        }
+
+        .user-count {
+            @include fluid-font-size(1rem);
+            color: #8e8e8e;
+            height: 1.5em;
+            padding-top: 0.3em;
+            transition: height 500ms, padding-top 500ms;
+            overflow: hidden;
+
+            &.user-count-hidden {
+                height: 0;
+                padding: 0;
+            }
+
+            svg {
+                @include fluid-width-height(1rem, 1rem);
+                margin-right: 0.3em;
+            }
+        }
+
+        .network.connected {
+            .connecting {
+                z-index: 1;
+                opacity: 0;
+            }
+
+            .connected {
+                z-index: 2;
+                opacity: 1;
+            }
+        }
+    }
+}
+
+
+@keyframes rotate-full {
+    0% {
+        transform: rotate(-52.46deg);
+    }
+
+    20% {
+        transform: rotate(-52.46deg);
+    }
+
+    30% {
+        transform: rotate(240deg);
+    }
+
+    50% {
+        transform: rotate(240deg);
+    }
+
+    60% {
+        transform: rotate(180deg);
+    }
+
+    90% {
+        transform: rotate(180deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

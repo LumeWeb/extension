@@ -1,0 +1,36 @@
+.socials {
+    position: absolute;
+    bottom: 5em;
+    left: 5em;
+    display: flex;
+    align-items: center;
+    gap: 1.5em;
+    margin: -0.5em;
+    opacity: 0;
+    transition: opacity 500ms;
+
+    a {
+        padding: 0.5em;
+        color: #fff;
+        transition: color 250ms;
+
+        &:hover {
+            color: #62c554;
+        }
+    }
+
+    :global(svg) {
+        @include fluid-width-height(2rem, 2rem);
+    }
+
+    @media screen and (max-width: 80rem) {
+        background: rgba(#080808, 0.7);
+        border-radius: 0.5em;
+        padding: 1.25em 1.5em;
+        margin: -1.25em -1.5em;
+    }
+
+    &.connected{
+        opacity: 1;
+    }
+}
