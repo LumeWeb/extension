@@ -24,16 +24,16 @@
     },
     "dependencies": {
         "@helia/unixfs": "^1.4.0",
-        "@lumeweb/kernel-dns-client": "^0.1.0-develop.2",
-        "@lumeweb/kernel-eth-client": "^0.1.0-develop.3",
-        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.7",
-        "@lumeweb/kernel-ipfs-client": "0.1.0-develop.4",
-        "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.3",
+        "@lumeweb/kernel-dns-client": "^0.1.0-develop.3",
+        "@lumeweb/kernel-eth-client": "^0.1.0-develop.11",
+        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.14",
+        "@lumeweb/kernel-ipfs-client": "0.1.0-develop.10",
+        "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
-        "@lumeweb/kernel-swarm-client": "0.0.2-develop.9",
-        "@lumeweb/libkernel": "0.1.0-develop.21",
+        "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
+        "@lumeweb/libkernel": "0.1.0-develop.28",
         "@lumeweb/libresolver": "^0.1.0-develop.1",
-        "@lumeweb/libweb": "0.2.0-develop.26",
+        "@lumeweb/libweb": "0.2.0-develop.27",
         "@lumeweb/tld-enum": "0.1.0-develop.1",
         "@noble/ciphers": "^0.1.4",
         "@peculiar/webcrypto": "^1.4.3",
@@ -50,6 +50,6 @@
         "webextension-polyfill": "^0.10.0"
     },
     "overrides": {
-        "@lumeweb/libkernel": "0.1.0-develop.21"
+        "@lumeweb/libkernel": "0.1.0-develop.28"
     }
 }
