@@ -23,7 +23,7 @@ import {
   peerDiscoveryClient,
   swarmClient,
 } from "../../clients.js";
-import { KernelAuthStatus } from "@lumeweb/libweb";
+import type { KernelAuthStatus } from "@lumeweb/libweb";
 
 let engine: WebEngine;
 
