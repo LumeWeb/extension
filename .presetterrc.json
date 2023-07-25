@@ -3,7 +3,13 @@
         "@lumeweb/presetter-kernel-module-preset"
     ],
     "config": {
-        "official": true
+        "official": true,
+        "tsconfig": {
+            "extends": "@tsconfig/svelte/tsconfig.json",
+            "compilerOptions": {
+                "inlineSourceMap": false
+            }
+        }
     },
     "scripts": {
         "build": "cross-env NODE_ENV=production run-s clean build:typescript:* build:backend build:ui build:package",
