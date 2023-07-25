@@ -3,6 +3,7 @@ import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { resolve } from "path";
 import optimizer from "vite-plugin-optimizer";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
+import autoPreprocess from "svelte-preprocess";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -20,7 +21,9 @@ export default defineConfig({
     dedupe: ["@lumeweb/libportal", "@lumeweb/libweb", "@lumeweb/libkernel"],
   },
   plugins: [
-    svelte(),
+    svelte({
+      preprocess: autoPreprocess(),
+    }),
     optimizer({
       "node-fetch":
         "const e = undefined; export default e;export {e as Response, e as FormData, e as Blob};",
