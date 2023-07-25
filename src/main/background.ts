@@ -1,4 +1,4 @@
-import { getTimer } from "../vars.js";
+import { getBooted, getTimer } from "../vars.js";
 import browser from "webextension-polyfill";
 import { logLargeObjects } from "./background/util.js";
 import { queryKernel } from "./background/kernel.js";
@@ -23,6 +23,11 @@ browser.runtime.onMessage.addListener(async (request, sender) => {
   }
   if (!("data" in request)) {
     return Promise.reject("data required");
+  }
+
+  if (request.method === "waitForBoot") {
+    await getBooted();
+    return true;
   }
 
   const ret = await queryKernel({
