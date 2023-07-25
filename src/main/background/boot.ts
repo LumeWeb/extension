@@ -76,4 +76,6 @@ export async function doInit() {
   for (const resolver of resolvers) {
     await dnsClient.registerResolver(resolver);
   }
+
+  weAreBooted();
 }
