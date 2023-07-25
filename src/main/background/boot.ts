@@ -6,7 +6,13 @@ import WebEngine from "../../webEngine.js";
 import InternalProvider from "../../contentProviders/internalProvider.js";
 import IpfsProvider from "../../contentProviders/ipfsProvider.js";
 import ServerProvider from "../../contentProviders/serverProvider.js";
-import { events, getKernelIframe, setKernelIframe } from "../../vars.js";
+import {
+  events,
+  getKernelIframe,
+  resetBooted,
+  setKernelIframe,
+  weAreBooted,
+} from "../../vars.js";
 import { init } from "@lumeweb/libkernel/kernel";
 import {
   dnsClient,
@@ -37,6 +43,9 @@ export async function boot() {
   events.on("authStatus", async (changes: KernelAuthStatus) => {
     if (changes.loginComplete) {
       await doInit();
+    }
+    if (changes.logoutComplete) {
+      resetBooted();
     }
   });
 }
