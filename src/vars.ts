@@ -16,6 +16,7 @@ let authStatusDefer = defer();
 let kernelFrame: HTMLIFrameElement;
 let blockForDnsSetup = defer();
 let loggedInDefer = defer();
+let booted = defer();
 export const events = new Emittery();
 
 export function getAuthStatusKnown() {
@@ -115,4 +116,15 @@ export function getLoggedInDefer() {
 }
 export function resetLoggedInDefer() {
   loggedInDefer = defer();
+}
+export function getBooted(): Promise<unknown> {
+  return booted.promise;
+}
+
+export function resetBooted(): void {
+  booted = defer();
+}
+
+export function weAreBooted(): void {
+  booted.resolve();
 }
