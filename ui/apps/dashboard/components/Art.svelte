@@ -2,13 +2,14 @@
   import { waitForConnected } from "../../../../shared/util.ts";
 
   let connected = false;
+  let pulse = false;
 
   waitForConnected(() => {
     connected = true;
   });
 </script>
 
-<div class="art-wrapper">
+<div class="art-wrapper" class:pulse class:connected>
   <div class="art-rotate">
     <div class="art">
       <div class="gradient-1" />
