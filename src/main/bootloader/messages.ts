@@ -59,7 +59,7 @@ export async function handleIncomingMessage(event: MessageEvent) {
     return;
   }
 
-  if (["moduleCall", "response"].includes(event.data.method)) {
+  if (["moduleCall", "response", "version"].includes(event.data.method)) {
     return;
   }
 
