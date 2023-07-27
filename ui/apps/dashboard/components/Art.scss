@@ -9,65 +9,72 @@
     transform: translate(-50%, -125%);
     transition: left 500ms, transform 500ms;
     z-index: -1;
-    .art {
-        position: relative;
-        @include fluid-width-height(9.0625rem, 9.0625rem);
-        background-image: $lume-2-base64;
-        background-size: cover;
-        background-position: 50%;
-        transition: width 500ms, height 500ms;
 
-        > div {
-            position: absolute;
-            inset: 0;
-            transition: opacity 500ms;
-        }
+    .art-rotate {
+        //   transform: rotate(-180deg);
+        animation: 5000ms rotate linear infinite;
+        transition: transform 500ms;
 
-        .gradient-1 {
-            background: linear-gradient(
-                    272.67deg,
-                    #ff005c -27.49%,
-                    #0c0c0d 26.91%,
-                    #ff005c 49.4%,
-                    #ed6a5e 99.62%
-            );
-            z-index: -1;
-        }
+        .art {
+            position: relative;
+            @include fluid-width-height(9.0625rem, 9.0625rem);
+            background-image: $lume-2-base64;
+            background-size: cover;
+            background-position: 50%;
+            transition: width 500ms, height 500ms;
 
-        .gradient-2 {
-            background: conic-gradient(
-                    from 180deg at 50% 50%,
-                    #a67833 -15.8deg,
-                    #e91f1f 222.32deg,
-                    #a67833 344.2deg,
-                    #e91f1f 582.32deg
-            );
-            opacity: 0;
-            z-index: -2;
-        }
+            > div {
+                position: absolute;
+                inset: 0;
+                transition: opacity 500ms;
+            }
 
-        .gradient-3 {
-            background: conic-gradient(
-                    from -89.79deg at 50% 50%,
-                    #33a653 -15.8deg,
-                    #080808 222.32deg,
-                    #33a653 344.2deg,
-                    #080808 582.32deg
-            );
-            opacity: 0;
-            z-index: -3;
-        }
+            .gradient-1 {
+                background: linear-gradient(
+                        272.67deg,
+                        #ff005c -27.49%,
+                        #0c0c0d 26.91%,
+                        #ff005c 49.4%,
+                        #ed6a5e 99.62%
+                );
+                z-index: -1;
+            }
 
-        .gradient-4 {
-            background: conic-gradient(
-                    from 180deg at 50% 50%,
-                    #2f2f2f -15.8deg,
-                    #66d155 222.32deg,
-                    #2f2f2f 344.2deg,
-                    #66d155 582.32deg
-            );
-            opacity: 0;
-            z-index: -4;
+            .gradient-2 {
+                background: conic-gradient(
+                        from 180deg at 50% 50%,
+                        #a67833 -15.8deg,
+                        #e91f1f 222.32deg,
+                        #a67833 344.2deg,
+                        #e91f1f 582.32deg
+                );
+                opacity: 0;
+                z-index: -2;
+            }
+
+            .gradient-3 {
+                background: conic-gradient(
+                        from -89.79deg at 50% 50%,
+                        #33a653 -15.8deg,
+                        #080808 222.32deg,
+                        #33a653 344.2deg,
+                        #080808 582.32deg
+                );
+                opacity: 0;
+                z-index: -3;
+            }
+
+            .gradient-4 {
+                background: conic-gradient(
+                        from 180deg at 50% 50%,
+                        #2f2f2f -15.8deg,
+                        #66d155 222.32deg,
+                        #2f2f2f 344.2deg,
+                        #66d155 582.32deg
+                );
+                opacity: 0;
+                z-index: -4;
+            }
         }
     }
 
@@ -75,44 +82,43 @@
         top: 50%;
         left: -35em;
         transform: translate(0, -50%);
+
         .art-rotate {
             transform: rotate(-151.13deg);
             animation: none;
+
             .art {
                 @include fluid-width-height(72rem, 72rem);
-            }
-        }
-        .gradient-1 {
-            opacity: 0;
-        }
 
-        .gradient-4 {
-            opacity: 1;
+                .gradient-1 {
+                    opacity: 0;
+                }
+
+                .gradient-4 {
+                    opacity: 1;
+                }
+            }
         }
     }
 
     &.pulse {
-        .gradient-1 {
-            opacity: 0;
+        .art-rotate {
+            will-change: transform;
+            transform: rotate(-151.13deg);
+            animation: none;
+            .art {
+                .gradient-1 {
+                    opacity: 0;
+                }
+
+                .gradient-2 {
+                    opacity: 1;
+                }
+            }
         }
 
-        .gradient-2 {
-            opacity: 1;
-        }
     }
 }
-
-.art-rotate {
-    //   transform: rotate(-180deg);
-    animation: 5000ms rotate linear infinite;
-    transition: transform 500ms;
-
-    &.connected {
-        transform: rotate(-151.13deg);
-        animation: none;
-    }
-}
-
 @keyframes fade-in {
     0% {
         opacity: 0;
