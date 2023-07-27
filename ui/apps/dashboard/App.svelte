@@ -11,24 +11,30 @@
 
   let connected = false;
 
-  let types = {};
+  async function getNetworks() {
+    let types = {};
 
-  const waitConnect = waitForConnected(async () => {
-    connected = true;
+    return new Promise((resolve) => {
+      waitForConnected(async () => {
+        connected = true;
 
-    const types = await networkClient.getTypes();
+        const allTypes = await networkClient.getTypes();
 
-    for (const type of types) {
-      types[type] = await networkClient.getNetworksByType(type);
-    }
-  });
+        for (const type of allTypes) {
+          types[type] = await networkClient.getNetworksByType(type);
+        }
+      });
+
+      resolve(types);
+    });
+  }
 </script>
 
 <main>
   <Header />
   <Art />
-  <div class="content" class:connected>
-    {#await waitConnect}
+  <div class="content connected">
+    {#await getNetworks() then types}
       <div class="content-grid">
         {#each Object.entries(types) as [type, networks]}
           <div>
