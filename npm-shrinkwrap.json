@@ -16,7 +16,7 @@
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
                 "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
-                "@lumeweb/libkernel": "0.1.0-develop.28",
+                "@lumeweb/libkernel": "0.1.0-develop.29",
                 "@lumeweb/libresolver": "^0.1.0-develop.1",
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "@lumeweb/tld-enum": "0.1.0-develop.1",
@@ -2229,9 +2229,9 @@
             }
         },
         "node_modules/@lumeweb/libkernel": {
-            "version": "0.1.0-develop.28",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.28.tgz",
-            "integrity": "sha512-SaEX8QV5pSDAtAaQjseQiW0UYM/sqJiLm8LYj/PQmj6gwnd0NPDGlUtbsza0KjuSZaszd0DNiPgVjQ+m2tggHA==",
+            "version": "0.1.0-develop.29",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.29.tgz",
+            "integrity": "sha512-Ja+LjtUeU4tTI2hM79NEKQ7WEUBnq3Q4Lae+n39FjTnJptNp3edPrkhOpzau47soIBQl9YQ65AhLoxv9T0x7uA==",
             "dependencies": {
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "emittery": "^1.0.1",

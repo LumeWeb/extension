@@ -35,7 +35,7 @@
         "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
         "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
-        "@lumeweb/libkernel": "0.1.0-develop.28",
+        "@lumeweb/libkernel": "0.1.0-develop.29",
         "@lumeweb/libresolver": "^0.1.0-develop.1",
         "@lumeweb/libweb": "0.2.0-develop.27",
         "@lumeweb/tld-enum": "0.1.0-develop.1",
@@ -54,6 +54,6 @@
         "webextension-polyfill": "^0.10.0"
     },
     "overrides": {
-        "@lumeweb/libkernel": "0.1.0-develop.28"
+        "@lumeweb/libkernel": "0.1.0-develop.29"
     }
 }
