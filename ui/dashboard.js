@@ -1,7 +1,8 @@
-import App from "./apps/dashboard/App.svelte";
+import { createRoot } from "react-dom";
+import React from "react";
 
-const app = new App({
-  target: document.getElementById("app"),
-});
+import App from "./apps/dashboard/App.jsx";
 
-export default app;
+const root = createRoot(document.getElementById("app"));
+
+root.render(React.createElement(App));

@@ -4,6 +4,7 @@ import { resolve } from "path";
 import optimizer from "vite-plugin-optimizer";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import autoPreprocess from "svelte-preprocess";
+import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -24,6 +25,7 @@ export default defineConfig({
     svelte({
       preprocess: autoPreprocess(),
     }),
+    react(),
     optimizer({
       "node-fetch":
         "const e = undefined; export default e;export {e as Response, e as FormData, e as Blob};",

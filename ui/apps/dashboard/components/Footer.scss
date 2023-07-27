@@ -1,3 +1,4 @@
+@import "../../../styles/mixins";
 .socials {
     position: absolute;
     bottom: 5em;
@@ -19,7 +20,7 @@
         }
     }
 
-    :global(svg) {
+    svg {
         @include fluid-width-height(2rem, 2rem);
     }
 
