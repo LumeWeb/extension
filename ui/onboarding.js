@@ -1,7 +1,8 @@
-import Onboarding from './components/onboarding/Onboarding.svelte'
+import { createRoot } from "react-dom";
+import React from "react";
 
-const app = new Onboarding({
-  target: document.getElementById('app'),
-})
+import App from "./apps/onboarding/App.tsx";
 
-export default app
+const root = createRoot(document.getElementById("app"));
+
+root.render(React.createElement(App));
