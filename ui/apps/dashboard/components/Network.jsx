@@ -19,7 +19,9 @@ export default function Network({ module }) {
   }, [module]);
 
   return (
-    <li className={classNames({ success: ready, loading: !ready })}>
+    <li
+      className={classNames({ success: ready, loading: !ready })}
+      title={sync ? `${sync}% Synced` : ""}>
       <div className="network">
         <span
           className={classNames("icon", {
