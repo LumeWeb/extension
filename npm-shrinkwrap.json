@@ -9,10 +9,10 @@
             "version": "0.3.0",
             "dependencies": {
                 "@helia/unixfs": "^1.4.0",
-                "@lumeweb/kernel-dns-client": "^0.1.0-develop.3",
-                "@lumeweb/kernel-eth-client": "^0.1.0-develop.11",
-                "@lumeweb/kernel-handshake-client": "^0.0.2-develop.14",
-                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.10",
+                "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
+                "@lumeweb/kernel-eth-client": "^0.1.0-develop.12",
+                "@lumeweb/kernel-handshake-client": "^0.0.2-develop.15",
+                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.11",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
                 "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
@@ -2176,35 +2176,35 @@
             }
         },
         "node_modules/@lumeweb/kernel-dns-client": {
-            "version": "0.1.0-develop.3",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-dns-client/-/kernel-dns-client-0.1.0-develop.3.tgz",
-            "integrity": "sha512-IDggNu8aZ/QIxHVd+wk3OOlDlU9uIG5KsVa5IWqDGxhNjZoFJXAkWznxH550csWd5G+NOVCDSEk35VXR3uFutw==",
+            "version": "0.1.0-develop.4",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-dns-client/-/kernel-dns-client-0.1.0-develop.4.tgz",
+            "integrity": "sha512-PjS23UG5uMaheig7QhDu9E8u1IaR4xpdyznnjhErv1F0xH0v+ST8owwkZN7qDT8ksAUPykqiWP03ztmXs3PoQw==",
             "dependencies": {
-                "@lumeweb/libkernel": "^0.1.0-develop.27",
+                "@lumeweb/libkernel": "^0.1.0-develop.31",
                 "@lumeweb/libresolver": "^0.1.0-develop.1"
             }
         },
         "node_modules/@lumeweb/kernel-eth-client": {
-            "version": "0.1.0-develop.11",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-eth-client/-/kernel-eth-client-0.1.0-develop.11.tgz",
-            "integrity": "sha512-e1G381q5tTVWd6IjFqQuJN9MbkyiiOsMtgaLIUWCPtgpNCStT0bE6EtHQtSOyBk6djNx0g67LFcvJ39RiesIBA==",
+            "version": "0.1.0-develop.12",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-eth-client/-/kernel-eth-client-0.1.0-develop.12.tgz",
+            "integrity": "sha512-oz30HN2WECcc0iS94SLEOMI4DgWQ/h4IImGSfe+Ls7lfUblqkcwNFxKO1UdJARtG/NL4xyy+XESmgvjBsaZCEA==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27",
                 "ethers": "^6.6.3"
             }
         },
         "node_modules/@lumeweb/kernel-handshake-client": {
-            "version": "0.0.2-develop.14",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.0.2-develop.14.tgz",
-            "integrity": "sha512-nmjqmalpBlY+ypROEri9pFrKtFWXitAvh1aZ+4fZmW/+1lEl3+ZB4g2WBFW3iW+drrMO9cwTFDTsifcCla3DKQ==",
+            "version": "0.0.2-develop.15",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.0.2-develop.15.tgz",
+            "integrity": "sha512-77DKsTA9Fy/owlZj4oUnSfsGTJx1mORQDVL5Coq6XaACUTCbUCL0qtDbO4pPD8ko0uOB8NYYw9SHBCUhwHA5Qg==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27"
             }
         },
         "node_modules/@lumeweb/kernel-ipfs-client": {
-            "version": "0.1.0-develop.10",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.10.tgz",
-            "integrity": "sha512-b6eejUgGEO1pHCpVwGgxdBPeV40TjybP9B8Hp19EJcBG1wUC0RIT1R2L2sj1SOONckXJpdOKehE3RU8ZmrcZjQ==",
+            "version": "0.1.0-develop.11",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.11.tgz",
+            "integrity": "sha512-LwY1K4rfevB71pXdEFCnz9ksVdFN/HKYIt+yUQ92MNlGg8o+jsKSG18URWkoG6Afam2sbbNxgypWkk7Um7ulEA==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27",
                 "p-defer": "^4.0.0"
