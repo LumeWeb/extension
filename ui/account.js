@@ -1,7 +1,8 @@
-import Account from './components/account/Account.svelte'
+import { createRoot } from "react-dom";
+import React from "react";
 
-const app = new Account({
-  target: document.getElementById('app'),
-})
+import App from "./apps/account/App.tsx";
 
-export default app
+const root = createRoot(document.getElementById("app"));
+
+root.render(React.createElement(App));
