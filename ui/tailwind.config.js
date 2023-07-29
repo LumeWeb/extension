@@ -1,16 +1,16 @@
 module.exports = {
   content: [
-    './onboarding.html',
-    './account.html',
-    './dashboard.html',
-    './src/**/*.{svelte,js,ts}'
+    "./onboarding.html",
+    "./account.html",
+    "./dashboard.html",
+    "./src/**/*.{js,ts, tsx}",
   ],
-  mode: 'jit',
+  mode: "jit",
   theme: {
-    extend: {}
+    extend: {},
   },
   variants: {
-    extend: {}
+    extend: {},
   },
-  plugins: []
+  plugins: [],
 };
