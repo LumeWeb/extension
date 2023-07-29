@@ -10,13 +10,13 @@
             "dependencies": {
                 "@helia/unixfs": "^1.4.0",
                 "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
-                "@lumeweb/kernel-eth-client": "^0.1.0-develop.12",
-                "@lumeweb/kernel-handshake-client": "^0.0.2-develop.15",
-                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.11",
+                "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
+                "@lumeweb/kernel-handshake-client": "^0.0.2-develop.16",
+                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.12",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
-                "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
-                "@lumeweb/libkernel": "0.1.0-develop.30",
+                "@lumeweb/kernel-swarm-client": "0.1.0-develop.5",
+                "@lumeweb/libkernel": "0.1.0-develop.31",
                 "@lumeweb/libresolver": "^0.1.0-develop.1",
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "@lumeweb/tld-enum": "0.1.0-develop.1",
@@ -2185,26 +2185,26 @@
             }
         },
         "node_modules/@lumeweb/kernel-eth-client": {
-            "version": "0.1.0-develop.12",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-eth-client/-/kernel-eth-client-0.1.0-develop.12.tgz",
-            "integrity": "sha512-oz30HN2WECcc0iS94SLEOMI4DgWQ/h4IImGSfe+Ls7lfUblqkcwNFxKO1UdJARtG/NL4xyy+XESmgvjBsaZCEA==",
+            "version": "0.1.0-develop.13",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-eth-client/-/kernel-eth-client-0.1.0-develop.13.tgz",
+            "integrity": "sha512-rQ1GjOhOrVwaNSAqpD1E6dlWVfsWIUj6dk/HZfIiHXpMuBjTaFGEE6HjPeybvwjzF4kbRrYZzZfVZUSQsG2JPw==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27",
                 "ethers": "^6.6.3"
             }
         },
         "node_modules/@lumeweb/kernel-handshake-client": {
-            "version": "0.0.2-develop.15",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.0.2-develop.15.tgz",
-            "integrity": "sha512-77DKsTA9Fy/owlZj4oUnSfsGTJx1mORQDVL5Coq6XaACUTCbUCL0qtDbO4pPD8ko0uOB8NYYw9SHBCUhwHA5Qg==",
+            "version": "0.0.2-develop.16",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.0.2-develop.16.tgz",
+            "integrity": "sha512-lcAKfCyAq17ErrPc19VeU60x1dmvbqu0K3lMxW9NhyNnUDLU+H6ANHMyyxqiDVz8oX296iLLX1hb5kchJM7tUQ==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27"
             }
         },
         "node_modules/@lumeweb/kernel-ipfs-client": {
-            "version": "0.1.0-develop.11",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.11.tgz",
-            "integrity": "sha512-LwY1K4rfevB71pXdEFCnz9ksVdFN/HKYIt+yUQ92MNlGg8o+jsKSG18URWkoG6Afam2sbbNxgypWkk7Um7ulEA==",
+            "version": "0.1.0-develop.12",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.12.tgz",
+            "integrity": "sha512-V5v+3p//Jbat/8xsrTA7vVxEmt45hd/LoiM0nAEMpBRkW+3X6O6QuIbYmalXcPi8Z3vtiJzUbyI/I7/AipIk0Q==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27",
                 "p-defer": "^4.0.0"
@@ -2230,9 +2230,9 @@
             }
         },
         "node_modules/@lumeweb/kernel-swarm-client": {
-            "version": "0.1.0-develop.4",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-swarm-client/-/kernel-swarm-client-0.1.0-develop.4.tgz",
-            "integrity": "sha512-jeNdUVoor3mK4f6smRIevIcWUFfAfdn6PXsqWaAIX4qi1qvyXy4YMZWBVHvWa2tTSch7qMuX26gBOT9wbFH14w==",
+            "version": "0.1.0-develop.5",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-swarm-client/-/kernel-swarm-client-0.1.0-develop.5.tgz",
+            "integrity": "sha512-jDlHdADMpa5fRqW0peb/2uI0V1JSmkA8bh3G3TrEjlhjGTaZXN/KZPvlAvNJAimzV7gsOZ98cSs8wVGqo9shUA==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.9",
                 "async-mutex": "^0.4.0",
@@ -2241,9 +2241,9 @@
             }
         },
         "node_modules/@lumeweb/libkernel": {
-            "version": "0.1.0-develop.30",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.30.tgz",
-            "integrity": "sha512-+YdBEfwcWRv9AJnVv1c/6/tMcJeH/chSRiiuQykcxj5YOEjFKNrL4cK5ZZnZR19R8bJQsqiJvJDrl5Qd7jhkWw==",
+            "version": "0.1.0-develop.31",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.31.tgz",
+            "integrity": "sha512-uTyK2yvAvCo6hQAYILkl+Abfto0ky5ZB6UFg+LkMY2xG6KjdIxzgragQ4dI2UWvwkDGaQM+jyvxI4Bqx4le6PA==",
             "dependencies": {
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "emittery": "^1.0.1",

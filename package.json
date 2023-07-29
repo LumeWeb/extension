@@ -31,13 +31,13 @@
     "dependencies": {
         "@helia/unixfs": "^1.4.0",
         "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
-        "@lumeweb/kernel-eth-client": "^0.1.0-develop.12",
-        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.15",
-        "@lumeweb/kernel-ipfs-client": "0.1.0-develop.11",
+        "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
+        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.16",
+        "@lumeweb/kernel-ipfs-client": "0.1.0-develop.12",
         "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
-        "@lumeweb/kernel-swarm-client": "0.1.0-develop.4",
-        "@lumeweb/libkernel": "0.1.0-develop.30",
+        "@lumeweb/kernel-swarm-client": "0.1.0-develop.5",
+        "@lumeweb/libkernel": "0.1.0-develop.31",
         "@lumeweb/libresolver": "^0.1.0-develop.1",
         "@lumeweb/libweb": "0.2.0-develop.27",
         "@lumeweb/tld-enum": "0.1.0-develop.1",
@@ -60,6 +60,6 @@
         "webextension-polyfill": "^0.10.0"
     },
     "overrides": {
-        "@lumeweb/libkernel": "0.1.0-develop.30"
+        "@lumeweb/libkernel": "0.1.0-develop.31"
     }
 }
