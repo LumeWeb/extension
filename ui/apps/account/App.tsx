@@ -12,6 +12,10 @@ import browser from "webextension-polyfill";
 import { bytesToHex, hexToBytes, randomBytes } from "@lumeweb/libweb";
 import { secretbox } from "@noble/ciphers/salsa";
 import "./App.scss";
+import {
+  exchangeCommunicationKeys,
+  setLoginKey,
+} from "../../../shared/keys.js";
 
 const BIP44_PATH = "m/44'/1627'/0'/0'/0'";
 
@@ -123,37 +127,8 @@ export default function App() {
     const seed = await bip39.mnemonicToSeed(wordSeed);
     const key = HDKey.fromMasterSeed(seed).derive(BIP44_PATH);
 
-    let pubKey;
-    let privKey = x25519.utils.randomPrivateKey();
-
-    try {
-      pubKey = await browser.runtime.sendMessage({
-        method: "exchangeCommunicationKeys",
-        data: bytesToHex(x25519.getPublicKey(privKey)),
-      });
-    } catch (e) {
-      alert(`Failed to login: ${e.message}`);
-      return;
-    }
-
-    if (!pubKey) {
-      alert(`Failed to login: could not get communication key`);
-      return;
-    }
-    pubKey = hexToBytes(pubKey);
-
-    const secret = x25519.getSharedSecret(privKey, pubKey);
-    const nonce = randomBytes(24);
-    const box = secretbox(secret, nonce);
-    const ciphertext = box.seal(key.privateKey);
-
-    await browser.runtime.sendMessage({
-      method: "setLoginKey",
-      data: {
-        data: bytesToHex(ciphertext),
-        nonce: bytesToHex(nonce),
-      },
-    });
+    await exchangeCommunicationKeys();
+    await setLoginKey(key.privateKey);
 
     window.setTimeout(() => {
       window.location.href = "/dashboard.html";
