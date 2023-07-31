@@ -12,11 +12,11 @@
                 "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
                 "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
                 "@lumeweb/kernel-handshake-client": "^0.0.2-develop.17",
-                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.15",
+                "@lumeweb/kernel-ipfs-client": "0.1.0-develop.21",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
                 "@lumeweb/kernel-swarm-client": "0.1.0-develop.5",
-                "@lumeweb/libkernel": "0.1.0-develop.31",
+                "@lumeweb/libkernel": "0.1.0-develop.34",
                 "@lumeweb/libresolver": "^0.1.0-develop.1",
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "@lumeweb/tld-enum": "0.1.0-develop.1",
@@ -2202,11 +2202,11 @@
             }
         },
         "node_modules/@lumeweb/kernel-ipfs-client": {
-            "version": "0.1.0-develop.15",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.15.tgz",
-            "integrity": "sha512-IlMuM/Di5++aXvfIWplUQEt2ibkNHHO8yBbuzTR7Wgo2go0PywbnGpcJbtu91CTS6CahBWAqO2thQgTa6ngvbw==",
+            "version": "0.1.0-develop.21",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-ipfs-client/-/kernel-ipfs-client-0.1.0-develop.21.tgz",
+            "integrity": "sha512-N1piZ/jy4terH9fdxRsWXc/GoSgkGQ+8Fhp5VpgXrpYcP4O9WV2HzsXcLgPCN+6Wu9235F7EbKWf74KdtY7oYg==",
             "dependencies": {
-                "@lumeweb/libkernel": "^0.1.0-develop.27",
+                "@lumeweb/libkernel": "^0.1.0-develop.34",
                 "p-defer": "^4.0.0"
             }
         },
@@ -2241,9 +2241,9 @@
             }
         },
         "node_modules/@lumeweb/libkernel": {
-            "version": "0.1.0-develop.31",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.31.tgz",
-            "integrity": "sha512-uTyK2yvAvCo6hQAYILkl+Abfto0ky5ZB6UFg+LkMY2xG6KjdIxzgragQ4dI2UWvwkDGaQM+jyvxI4Bqx4le6PA==",
+            "version": "0.1.0-develop.34",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.34.tgz",
+            "integrity": "sha512-n/uK65vutdoLFV3EzGUckrLyb/Oqh0dPrOIOWqWLwyU1uBtAhVNGP+YQHWgtw6Wcts/i9NKQMv9wp1vJb2FIkg==",
             "dependencies": {
                 "@lumeweb/libweb": "0.2.0-develop.27",
                 "emittery": "^1.0.1",
