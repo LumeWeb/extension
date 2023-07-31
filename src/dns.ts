@@ -32,7 +32,7 @@ export async function resolve(
     return e as Error;
   }
 
-  if (res) {
+  if (res && res?.records.length) {
     cache.set(cacheId, res);
   }
 
