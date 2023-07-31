@@ -3,6 +3,7 @@ import browser from "webextension-polyfill";
 import { logLargeObjects } from "./background/util.js";
 import { queryKernel } from "./background/kernel.js";
 import { boot } from "./background/boot.js";
+import * as kernel from "@lumeweb/libkernel";
 
 setTimeout(logLargeObjects, getTimer());
 
@@ -43,3 +44,5 @@ browser.runtime.onMessage.addListener(async (request, sender) => {
 });
 
 boot();
+
+globalThis.kernel = kernel;
