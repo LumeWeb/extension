@@ -1,10 +1,11 @@
 import NodeCache from "node-cache";
-import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 import type { DNSResult, ResolverOptions } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 import { bufToHex } from "@lumeweb/libweb";
 import { getBooted } from "./vars.js";
 import { dnsClient } from "./clients.js";
 import { blake3 } from "@noble/hashes/blake3";
+import { resolverEmptyResponse } from "@lumeweb/libresolver/lib/util.js";
 
 const cache = new NodeCache({ stdTTL: 60 });
 
