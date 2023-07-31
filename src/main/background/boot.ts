@@ -69,6 +69,7 @@ export async function doInit() {
   await ipfsClient.register();
 
   const resolvers = [
+    "zduRfyhiAu871qg14RUapxxsBS4gaFxnWXs1jxf3guk2vVAhSx6vJp1kxo", // CID
     "zduPorYNSjbkTipeAtDcW8bfRw4qhEb6rbf6yrMdGcxTthkmNkHfJGyyi7", // ENS
     "zduRmRsVDNQuY5yZ4CuMZyzbdFHkHqPZ5T7GtUWSz9mP9HeyduqqfvhfLB", // HNS
   ];
