@@ -103,10 +103,6 @@ export function setKernelIframe(iframe: HTMLIFrameElement) {
   kernelFrame = iframe;
 }
 
-export function getDnsSetupDefer(): DeferredPromise<any> {
-  return blockForDnsSetup;
-}
-
 export function getAuthStatusDefer() {
   return authStatusDefer;
 }
