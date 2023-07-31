@@ -69,8 +69,8 @@ export async function doInit() {
   await ipfsClient.register();
 
   const resolvers = [
-    "zduQnoisWfCcmbFf5kNPPJQC1bLTFwzTb1Dtx9T4UX8SmFEdZEFmpp91R1", // ENS
-    "zduPAV6A3sYzvfg1PgE4evmTbA3eRWuKCYnYrv9Lfy6MrCgAWwzcjJGUQP", // HNS
+    "zduPorYNSjbkTipeAtDcW8bfRw4qhEb6rbf6yrMdGcxTthkmNkHfJGyyi7", // ENS
+    "zduRmRsVDNQuY5yZ4CuMZyzbdFHkHqPZ5T7GtUWSz9mP9HeyduqqfvhfLB", // HNS
   ];
 
   for (const resolver of resolvers) {
