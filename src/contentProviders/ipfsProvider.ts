@@ -5,19 +5,19 @@ import type {
   OnBeforeSendHeadersDetailsType,
   OnHeadersReceivedDetailsType,
   OnRequestDetailsType,
-  StreamFilter,
 } from "../types.js";
 import { getRelayProxies } from "../util.js";
 import { ipfsPath, ipnsPath, path as checkPath } from "is-ipfs";
 import { createClient } from "@lumeweb/kernel-ipfs-client";
-import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 import type { DNSResult } from "@lumeweb/libresolver";
+import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 import RequestStream from "../requestStream.js";
 import type { UnixFSStats } from "@helia/unixfs";
 import * as path from "path";
 import { CID } from "multiformats/cid";
 import { fileTypeFromBuffer } from "file-type";
 import extToMimes from "../mimes.js";
+import { stringToUint8Array } from "binconv";
 
 export default class IpfsProvider extends BaseProvider {
   private _client = createClient();
@@ -115,6 +115,9 @@ export default class IpfsProvider extends BaseProvider {
     reqStream.start();
 
     if (err) {
+      const streamWriter = reqStream.stream.writable.getWriter();
+      streamWriter.write(stringToUint8Array("failed loading web3 page"));
+      streamWriter.releaseLock();
       reqStream.close();
       return {};
     }
