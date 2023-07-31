@@ -19,6 +19,7 @@ import type { DNSResult } from "@lumeweb/libresolver";
 import { blake3 } from "@noble/hashes/blake3";
 
 import "./contentFilters/index.js";
+import defer from "p-defer";
 
 export default class WebEngine {
   private contentProviders: BaseProvider[] = [];
@@ -270,37 +271,32 @@ export default class WebEngine {
     }
     let dnsResult: boolean | DNSResult = false;
 
-    let resolveRequest: any, rejectRequest: any;
+    let requestDefer = defer();
 
-    let promise = new Promise((resolve, reject) => {
-      resolveRequest = resolve;
-      rejectRequest = reject;
-    });
-
-    this.navigations.set(this.getNavigationId(details), promise);
+    this.navigations.set(this.getNavigationId(details), requestDefer.promise);
 
     if ("kernel.lume" === queriedHost) {
       if (!queriedUrl.includes("://")) {
         queriedUrl = `http://${queriedUrl}`;
       }
-      rejectRequest(queriedUrl);
+      requestDefer.reject(queriedUrl);
       return;
     }
 
     if (!getAuthStatus().loginComplete) {
-      resolveRequest();
+      requestDefer.resolve();
       return;
     }
 
     try {
       dnsResult = await scanRecords(queriedHost);
     } catch (e) {
-      resolveRequest();
+      requestDefer.resolve();
       return;
     }
 
     if (!dnsResult) {
-      resolveRequest();
+      requestDefer.resolve();
       return;
     }
 
@@ -308,7 +304,7 @@ export default class WebEngine {
       queriedUrl = `http://${queriedUrl}`;
     }
 
-    rejectRequest(queriedUrl);
+    requestDefer.reject(queriedUrl);
   }
 
   private getNavigationId(details: any) {
