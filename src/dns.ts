@@ -2,7 +2,7 @@ import NodeCache from "node-cache";
 import { DNS_RECORD_TYPE } from "@lumeweb/libresolver";
 import type { DNSResult, ResolverOptions } from "@lumeweb/libresolver";
 import { bufToHex } from "@lumeweb/libweb";
-import { getDnsSetupDefer } from "./vars.js";
+import { getBooted } from "./vars.js";
 import { dnsClient } from "./clients.js";
 import { blake3 } from "@noble/hashes/blake3";
 
@@ -20,7 +20,9 @@ export async function resolve(
     return cache.get(cacheId) as DNSResult;
   }
 
-  await getDnsSetupDefer().promise;
+  if (!getBooted()) {
+    return resolverEmptyResponse();
+  }
 
   let res;
   try {
