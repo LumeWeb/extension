@@ -12,7 +12,7 @@
         "semantic-release": "semantic-release"
     },
     "devDependencies": {
-        "@lumeweb/presetter-kernel-module-preset": "^0.1.0-develop.43",
+        "@lumeweb/presetter-kernel-module-preset": "^0.1.0-develop.44",
         "@tsconfig/svelte": "^5.0.0",
         "@types/object-diff": "^0.0.2",
         "@types/react": "^18.2.17",
@@ -32,7 +32,7 @@
         "@helia/unixfs": "^1.4.0",
         "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
         "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
-        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.17",
+        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.18",
         "@lumeweb/kernel-ipfs-client": "0.1.0-develop.21",
         "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
