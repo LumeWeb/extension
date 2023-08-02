@@ -32,7 +32,7 @@
         "@helia/unixfs": "^1.4.0",
         "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
         "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
-        "@lumeweb/kernel-handshake-client": "^0.0.2-develop.18",
+        "@lumeweb/kernel-handshake-client": "^0.1.0-develop.2",
         "@lumeweb/kernel-ipfs-client": "0.1.0-develop.21",
         "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",

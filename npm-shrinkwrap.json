@@ -11,7 +11,7 @@
                 "@helia/unixfs": "^1.4.0",
                 "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
                 "@lumeweb/kernel-eth-client": "^0.1.0-develop.13",
-                "@lumeweb/kernel-handshake-client": "^0.0.2-develop.18",
+                "@lumeweb/kernel-handshake-client": "^0.1.0-develop.2",
                 "@lumeweb/kernel-ipfs-client": "0.1.0-develop.21",
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
@@ -2194,9 +2194,9 @@
             }
         },
         "node_modules/@lumeweb/kernel-handshake-client": {
-            "version": "0.0.2-develop.18",
-            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.0.2-develop.18.tgz",
-            "integrity": "sha512-lmiVcQ/IYfCgfkLjCvE5sso/RxIVCcB9gS0F1jBCEW3+v08BwspZKOF3Lfv9uW0PM9et9DMiwWxeKkmiLtud3g==",
+            "version": "0.1.0-develop.2",
+            "resolved": "https://registry.npmjs.org/@lumeweb/kernel-handshake-client/-/kernel-handshake-client-0.1.0-develop.2.tgz",
+            "integrity": "sha512-N0i9CESdw3g6K7GRlPhX1HpkcBOFX/2hqVXXuT+ZCm36rNGgbfa2W7T0+saqLAcwxmrvwZhbaPrvFFpt3mIo0w==",
             "dependencies": {
                 "@lumeweb/libkernel": "^0.1.0-develop.27"
             }
