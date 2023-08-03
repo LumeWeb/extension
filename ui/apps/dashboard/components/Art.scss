@@ -30,7 +30,7 @@
             }
 
             .gradient-1 {
-                background: radial-gradient(circle, rgba(75,75,75,1) 0%, rgba(0,0,0,1) 100%);
+                background: radial-gradient(circle, rgba(75, 75, 75, 1) 0%, rgba(0, 0, 0, 1) 100%);
                 z-index: -1;
             }
 
@@ -114,6 +114,8 @@
 
     }
 }
+
+
 
 @keyframes fade-in {
     0% {
