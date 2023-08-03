@@ -54,3 +54,9 @@ export function bridgeListener(port: any) {
     });
   });
 }
+
+export function broadcastToBridges(data: any) {
+  for (const port of Object.entries(getOpenPorts())) {
+    (port[1] as any).postMessage(data);
+  }
+}

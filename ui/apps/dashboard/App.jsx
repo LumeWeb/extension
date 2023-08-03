@@ -2,11 +2,12 @@ import "./App.scss";
 import { useEffect, useState } from "react";
 import Header from "./components/Header.jsx";
 import Art from "./components/Art.jsx";
-import { waitForConnected } from "../../../shared/util.ts";
+import { listenBootStatus, waitForConnected } from "../../../shared/util.ts";
 import { createClient } from "@lumeweb/kernel-network-registry-client";
 import Network from "./components/Network.jsx";
 import Footer from "./components/Footer.jsx";
 import classNames from "classnames";
+import Progress from "./components/Progress.jsx";
 
 const networkClient = createClient();
 
@@ -29,6 +30,7 @@ export default function App() {
   let [networks, setNetworks] = useState({});
   let [showConnected, setShowConnected] = useState(false);
   let [artPulse, setArtPulse] = useState(false);
+  let [bootPercent, setBootPercent] = useState(0);
 
   useEffect(() => {
     getNetworks().then((networks) => {
@@ -51,10 +53,17 @@ export default function App() {
     }
   }, [connected]);
 
+  useEffect(() => {
+    listenBootStatus((percent) => {
+      setBootPercent(percent);
+    });
+  });
+
   return (
     <main>
       <Header connected={connected} />
       <Art connected={showConnected} pulse={artPulse} />
+      {!showConnected && <Progress percent={bootPercent} />}
       <div className={classNames("content", { connected: showConnected })}>
         <h3>All set.</h3>
         <div className="content-grid">

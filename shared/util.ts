@@ -27,3 +27,13 @@ export async function waitForConnected(cb?: Function) {
   await swarmClient.ready();
   await cb?.();
 }
+
+export async function listenBootStatus(cb: (percent: number) => void) {
+  const port = browser.runtime.connect();
+
+  port.onMessage.addListener((data: any) => {
+    if (data?.method === "bootStatus") {
+      cb(data.data);
+    }
+  });
+}
