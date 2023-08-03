@@ -30,13 +30,7 @@
             }
 
             .gradient-1 {
-                background: linear-gradient(
-                        272.67deg,
-                        #ff005c -27.49%,
-                        #0c0c0d 26.91%,
-                        #ff005c 49.4%,
-                        #ed6a5e 99.62%
-                );
+                background: linear-gradient(300deg, rgba(75,75,75,1) 0%, rgba(0,0,0,1) 100%);
                 z-index: -1;
             }
 
@@ -106,6 +100,7 @@
             will-change: transform;
             transform: rotate(-151.13deg);
             animation: none;
+
             .art {
                 .gradient-1 {
                     opacity: 0;
@@ -119,6 +114,7 @@
 
     }
 }
+
 @keyframes fade-in {
     0% {
         opacity: 0;
