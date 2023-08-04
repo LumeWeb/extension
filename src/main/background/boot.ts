@@ -27,7 +27,7 @@ import type { KernelAuthStatus } from "@lumeweb/libweb";
 
 let engine: WebEngine;
 
-const BOOT_FUNCTIONS: (() => Promise<any>)[] = [];
+let BOOT_FUNCTIONS: (() => Promise<any>)[] = [];
 
 export async function boot() {
   tldEnum.list.push("localhost");
@@ -53,6 +53,8 @@ export async function boot() {
 }
 
 export async function doInit() {
+  BOOT_FUNCTIONS = [];
+
   engine.registerContentProvider(new IpfsProvider(engine));
   engine.registerContentProvider(new ServerProvider(engine));
 
