@@ -57,7 +57,12 @@ function handleStorage(event: StorageEvent) {
 window.addEventListener("storage", handleStorage);
 
 export function saveUserKey(key: Uint8Array) {
-  window.localStorage.setItem("key", bytesToHex(key));
+  if (key.length) {
+    window.localStorage.setItem("key", bytesToHex(key));
+  } else {
+    window.localStorage.removeItem("key");
+    setLogoutComplete(true);
+  }
   const event = new StorageEvent("storage", {
     key: "key",
   });
