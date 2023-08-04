@@ -45,3 +45,6 @@ export async function setLoginKey(key: Uint8Array) {
     nonce: bytesToHex(nonce),
   });
 }
+export async function clearLoginKey() {
+  return setLoginKey(new Uint8Array());
+}
