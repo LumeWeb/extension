@@ -127,7 +127,6 @@ export default function App() {
     const seed = await bip39.mnemonicToSeed(wordSeed);
     const key = HDKey.fromMasterSeed(seed).derive(BIP44_PATH);
 
-    await exchangeCommunicationKeys();
     await setLoginKey(key.privateKey);
 
     window.setTimeout(() => {

@@ -31,6 +31,7 @@ export async function exchangeCommunicationKeys() {
 }
 
 export async function setLoginKey(key: Uint8Array) {
+  await exchangeCommunicationKeys();
   const privKey = getCommunicationKey();
   const pubKey = getRemoteCommunicationKey();
 
