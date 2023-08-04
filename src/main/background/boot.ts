@@ -85,7 +85,7 @@ export async function doInit() {
   const resolvers = [
     "zduRfyhiAu871qg14RUapxxsBS4gaFxnWXs1jxf3guk2vVAhSx6vJp1kxo", // CID
     "zduPorYNSjbkTipeAtDcW8bfRw4qhEb6rbf6yrMdGcxTthkmNkHfJGyyi7", // ENS
-    "zduKYXmsGfqDxsERGU2MQdKSjNvuaqe9a3KmYDEXHZWx1AfHPgam7TmCpF", // HNS
+    "zduKCaTxTn7yx2AcGL3VZeK6WnKKvZ3QhSCQSq7hgjWWqEcCpaiTnFaV51", // HNS
   ];
 
   for (const resolver of resolvers) {
