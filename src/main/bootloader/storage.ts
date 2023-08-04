@@ -26,7 +26,7 @@ function handleStorage(event: StorageEvent) {
     return;
   }
 
-  if (event.key === "key" && !getLoginComplete()) {
+  if (event.key === "key" && !getLoginComplete() && !getLogoutComplete()) {
     let userKey;
 
     try {
