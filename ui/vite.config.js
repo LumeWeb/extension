@@ -12,6 +12,7 @@ export default defineConfig({
         onboarding: resolve(__dirname, "onboarding.html"),
         account: resolve(__dirname, "account.html"),
         dashboard: resolve(__dirname, "dashboard.html"),
+        popup: resolve(__dirname, "popup.html"),
       },
     },
     minify: false,

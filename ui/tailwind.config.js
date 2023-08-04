@@ -3,6 +3,7 @@ module.exports = {
     "./onboarding.html",
     "./account.html",
     "./dashboard.html",
+    "./popup.html",
     "./src/**/*.{js,ts, tsx}",
   ],
   mode: "jit",
