@@ -1,0 +1,59 @@
+name: Build/Publish
+
+on:
+    push:
+        branches:
+            - master
+            - develop
+            - develop-*
+    workflow_call:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@v3
+            -   name: Use Node.js
+                uses: actions/setup-node@v3
+                with:
+                    node-version: 18.x
+                    cache: 'npm'
+            -   run: npm ci
+            -   run: npm run build --if-present
+                env:
+                    NODE_OPTIONS: "--max_old_space_size=4096"
+            -   name: Install SSH key
+                uses: shimataro/ssh-key-action@v2
+                with:
+                    key: ${{ secrets.GITEA_SSH_KEY }}
+                    known_hosts: ${{ secrets.GITEA_KNOWN_HOST }}
+
+            -   name: Download YQ
+                run: |
+                    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+                    chmod +x /usr/bin/yq
+            -   name: Set up S3CMD
+                uses: s3-actions/s3cmd@v1.5.0
+                with:
+                    provider: aws # default is linode
+                    region: 'eu-central-1'
+                    access_key: ${{ secrets.S3_ACCESS_KEY }}
+                    secret_key: ${{ secrets.S3_ACCESS_KEY }}
+
+            -   name: Publish
+                run: npm run semantic-release
+                env:
+                    NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+            -   name: Publish to Firefox
+                uses: yayuyokitano/firefox-addon@v0.0.6-alpha
+                with:
+                    api_key: ${{ secrets.AMO_ISSUER }}
+                    api_secret: ${{ secrets.AMO_SECRET }}
+                    guid: 'contact@luneweb.com'
+                    xpi_path: ${{ env.PKG }}
+                    src_path: ${{ env.PKG_SRC }}
+            -   name: Setup tmate session
+                uses: mxschmitt/action-tmate@v3
+                if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled && failure() }}
+                with:
+                    limit-access-to-actor: true
