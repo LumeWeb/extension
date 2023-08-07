@@ -49,7 +49,7 @@ jobs:
                 with:
                     api_key: ${{ secrets.AMO_ISSUER }}
                     api_secret: ${{ secrets.AMO_SECRET }}
-                    guid: 'contact@lumeweb.com'
+                    guid: ${{ env.EXTENSION_GUID }}
                     xpi_path: ${{ env.PKG }}
                     src_path: ${{ env.PKG_SRC }}
             -   name: Setup tmate session
