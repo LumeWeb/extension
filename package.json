@@ -5,6 +5,10 @@
     "main": "index.js",
     "type": "module",
     "readme": "ERROR: No README data found!",
+    "repository": {
+        "type": "git",
+        "url": "gitea@git.lumeweb.com:LumeWeb/extension.git"
+    },
     "scripts": {
         "prepare": "presetter bootstrap",
         "build": "run build",
