@@ -30,7 +30,7 @@ jobs:
 
             -   name: Download YQ
                 run: |
-                    wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq &&\
+                    sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq && sudo\
                     chmod +x /usr/bin/yq
             -   name: Set up S3CMD
                 uses: s3-actions/s3cmd@v1.5.0
