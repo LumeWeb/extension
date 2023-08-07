@@ -50,7 +50,7 @@ jobs:
                     s3cmd put "${{ env.PKG }}" s3://${{ env.S3_BUCKET }} $(basename "${{ env.PKG }}")
             -   name: Publish to Firefox
                 uses: yayuyokitano/firefox-addon@v0.0.6-alpha
-                if: ${{ github.ref_name == "master" }}
+                if: ${{ github.ref_name == 'master' }}
                 with:
                     api_key: ${{ secrets.AMO_ISSUER }}
                     api_secret: ${{ secrets.AMO_SECRET }}
