@@ -48,6 +48,9 @@ jobs:
             -   name: Publish to S3
                 run: |
                     s3cmd put "${{ env.PKG }}" s3://${{ vars.S3_BUCKET }}/$(basename "${{ env.PKG }}")
+
+                    echo Release Zip: https://extension-release.lumeweb.com/$(basename "${{ env.PKG }}")
+                    echo Release Zip SHA56: $(sha256sum "${{ env.PKG }}")
             -   name: Publish to Firefox
                 uses: yayuyokitano/firefox-addon@v0.0.6-alpha
                 if: ${{ github.ref_name == 'master' }}
