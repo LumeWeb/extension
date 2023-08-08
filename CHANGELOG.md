@@ -1,3 +1,10 @@
+# [0.4.0-develop.2](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.0-develop.1...v0.4.0-develop.2) (2023-08-08)
+
+
+### Bug Fixes
+
+* **ci:** install util-linux for rename command ([6659de6](https://git.lumeweb.com/LumeWeb/extension/commit/6659de6550a01a3cf0184bc54c8680a1baf89662))
+
 # [0.4.0-develop.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.3.0...v0.4.0-develop.1) (2023-08-07)
 
 
