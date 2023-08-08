@@ -18,8 +18,8 @@ jobs:
                 with:
                     node-version: 18.x
                     cache: 'npm'
-            -   name: install APT Packages
-                run: sudo apt-get install util-linux -y
+            -   name: Install APT Packages
+                run: sudo apt-get install rename -y
             -   run: npm ci
             -   run: npm run build --if-present
                 env:
