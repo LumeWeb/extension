@@ -1,3 +1,5 @@
+# [0.4.0-develop.4](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.0-develop.3...v0.4.0-develop.4) (2023-08-10)
+
 # [0.4.0-develop.3](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.0-develop.2...v0.4.0-develop.3) (2023-08-08)
 
 
