@@ -42,9 +42,9 @@
         "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
         "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
         "@lumeweb/kernel-swarm-client": "0.1.0-develop.5",
-        "@lumeweb/libkernel": "0.1.0-develop.34",
+        "@lumeweb/libkernel": "0.1.0-develop.35",
         "@lumeweb/libresolver": "^0.1.0-develop.1",
-        "@lumeweb/libweb": "0.2.0-develop.27",
+        "@lumeweb/libweb": "0.2.0-develop.30",
         "@lumeweb/tld-enum": "0.1.0-develop.1",
         "@noble/ciphers": "^0.1.4",
         "@peculiar/webcrypto": "^1.4.3",
@@ -65,6 +65,6 @@
         "webextension-polyfill": "^0.10.0"
     },
     "overrides": {
-        "@lumeweb/libkernel": "0.1.0-develop.34"
+        "@lumeweb/libkernel": "0.1.0-develop.35"
     }
 }

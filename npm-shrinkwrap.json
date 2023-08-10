@@ -16,9 +16,9 @@
                 "@lumeweb/kernel-network-registry-client": "^0.1.0-develop.5",
                 "@lumeweb/kernel-peer-discovery-client": "0.0.2-develop.10",
                 "@lumeweb/kernel-swarm-client": "0.1.0-develop.5",
-                "@lumeweb/libkernel": "0.1.0-develop.34",
+                "@lumeweb/libkernel": "0.1.0-develop.35",
                 "@lumeweb/libresolver": "^0.1.0-develop.1",
-                "@lumeweb/libweb": "0.2.0-develop.27",
+                "@lumeweb/libweb": "0.2.0-develop.30",
                 "@lumeweb/tld-enum": "0.1.0-develop.1",
                 "@noble/ciphers": "^0.1.4",
                 "@peculiar/webcrypto": "^1.4.3",
@@ -2306,11 +2306,11 @@
             }
         },
         "node_modules/@lumeweb/libkernel": {
-            "version": "0.1.0-develop.34",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.34.tgz",
-            "integrity": "sha512-n/uK65vutdoLFV3EzGUckrLyb/Oqh0dPrOIOWqWLwyU1uBtAhVNGP+YQHWgtw6Wcts/i9NKQMv9wp1vJb2FIkg==",
+            "version": "0.1.0-develop.35",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libkernel/-/libkernel-0.1.0-develop.35.tgz",
+            "integrity": "sha512-/K2Yrcjus8NnJ9z+EdwqLHM3EPegESPcgFL2TW1qCpNzN57LeGBv7z4uuoFpZRbnrxuQDq45YmEySvk8lBOoTQ==",
             "dependencies": {
-                "@lumeweb/libweb": "0.2.0-develop.27",
+                "@lumeweb/libweb": "0.2.0-develop.30",
                 "emittery": "^1.0.1",
                 "p-defer": "^4.0.0"
             }
@@ -2324,9 +2324,9 @@
             }
         },
         "node_modules/@lumeweb/libportal": {
-            "version": "0.2.0-develop.16",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libportal/-/libportal-0.2.0-develop.16.tgz",
-            "integrity": "sha512-wyzza/ttvU6I1gIs4tnYSkcT6s7MIBnUdJSNAbe6k6NsQ1w4bhBVJhEKbBru/lAEASO/PAhHGBwaOCv20rZZfA==",
+            "version": "0.2.0-develop.17",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libportal/-/libportal-0.2.0-develop.17.tgz",
+            "integrity": "sha512-V8ac4NvRNCeE87rXNi9GX4J+ueztIWofBWMs24bmxWxrA46XOXC1Gm475IlAp4mSkyyUmy3vnnwQ4nYOi1U8Ew==",
             "dependencies": {
                 "@lumeweb/node-library-preset": "git+https://git.lumeweb.com/LumeWeb/node-library-preset.git",
                 "@noble/curves": "^1.1.0",
@@ -2346,15 +2346,16 @@
             "integrity": "sha512-vTfeRa1eNGHdBB3IMNjdV+4p0zJ5bEYMLv+N9AwVbINM1mgzETFxU2PSR6+RlyQV2ewgISo/0ODEwLZwyztpDQ=="
         },
         "node_modules/@lumeweb/libweb": {
-            "version": "0.2.0-develop.27",
-            "resolved": "https://registry.npmjs.org/@lumeweb/libweb/-/libweb-0.2.0-develop.27.tgz",
-            "integrity": "sha512-obS4a6mcHJNoWXy5fCDuGAIVMee0ivK8q/q0semqoS3v0PS7t7sUmRX5ajyCwGbACXYqEdq3vU7RwzxhUkuNGg==",
+            "version": "0.2.0-develop.30",
+            "resolved": "https://registry.npmjs.org/@lumeweb/libweb/-/libweb-0.2.0-develop.30.tgz",
+            "integrity": "sha512-6T/yhjk/2KYiJ4gjVQwHDFcjOlzz/EosZPbpkpAdUDW+yuFW0XiGKh7nQWyjVuk8C2zDawNh3jTRTz/FRiSFhg==",
             "dependencies": {
                 "@lumeweb/community-portals": "^0.1.0-develop.6",
-                "@lumeweb/libportal": "^0.2.0-develop.16",
+                "@lumeweb/libportal": "0.2.0-develop.17",
                 "@lumeweb/node-library-preset": "0.2.7",
                 "@noble/curves": "^1.1.0",
-                "@noble/hashes": "^1.3.1"
+                "@noble/hashes": "^1.3.1",
+                "binconv": "^0.2.0"
             }
         },
         "node_modules/@lumeweb/node-library-preset": {
@@ -24663,9 +24664,9 @@
             }
         },
         "node_modules/tus-js-client": {
-            "version": "3.1.0",
-            "resolved": "https://registry.npmjs.org/tus-js-client/-/tus-js-client-3.1.0.tgz",
-            "integrity": "sha512-Hfpc8ho4C9Lhs/OflPUA/nHUHZJUrKD5upoPBq7dYJJ9DQhWocsjJU2RZYfN16Y5n19j9dFDszwCvVZ5sfcogw==",
+            "version": "3.1.1",
+            "resolved": "https://registry.npmjs.org/tus-js-client/-/tus-js-client-3.1.1.tgz",
+            "integrity": "sha512-SZzWP62jEFLmROSRZx+uoGLKqsYWMGK/m+PiNehPVWbCm7/S9zRIMaDxiaOcKdMnFno4luaqP5E+Y1iXXPjP0A==",
             "dependencies": {
                 "buffer-from": "^1.1.2",
                 "combine-errors": "^3.0.3",
