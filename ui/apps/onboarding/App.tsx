@@ -25,30 +25,42 @@ const contentPages = [
     ),
   },
   {
-    heading: <>Thank you for supporting an open web.</>,
+    heading: <>Your means to access all of the open web</>,
     content: (
       <>
-        Easy Access to Web3. With native Handshake (HNS) and Ethereum (ENS)
-        support, you can forget eth.link and hns.is. This is your gateway.
+        Web3 is made up of a diverse set of open networks and projects, all with
+        the intention of letting you be in control.
+        <br /> <br />
+        You can now <i>freely</i>&nbsp;access all these platforms and services
+        without a concern for censorship.
       </>
     ),
   },
   {
-    heading: <>Thank you for supporting an open web.</>,
+    heading: <>An early demo</>,
     content: (
       <>
-        We are an independent, pure organization. We have decided not to take
-        money from venture capitalists. Nor do we have a large treasury funding
-        our work.
+        Be aware this system is effectively a prototype/product demo/tech demo.
+        <br /> <br />
+        It relies on you to provide feedback and the direction you want to see
+        it evolve.
+        <br /> <br />
+        In short, we are here to show you what is possible with web3, and the
+        rest is in your court!
+        <br /> <br />
+        We are starting off with: Handshake, Ethereum, and IPFS.
       </>
     ),
   },
   {
-    heading: <>Thank you for supporting an open web.</>,
+    heading: <>The next step is to create an account</>,
     content: (
       <>
-        Stop worrying about being vendor-locked. Remain flexible and reduce your
-        storage costs by 50% or more. Lume is affordable storage on-demand.
+        If you are new to web3, this is a 12 word code that represents your
+        account. <i>Keep it safe</i>. If you share it, that person can access
+        everything and <b>you cannot revoke access</b>. <br /> <br />
+        If you are not new, consider this as a wallet, but for the web, not for
+        crypto.
       </>
     ),
   },
