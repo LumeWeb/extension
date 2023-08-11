@@ -208,10 +208,7 @@ export default function App() {
               <div id="content-text-wrapper" ref={elContentTextWrapper}>
                 <div id="content-text-default" ref={elContentTextDefault}>
                   <h1>Access the open web with ease</h1>
-                  <p>
-                    Seamless access to the open web with Lume, integrated
-                    Handshake (HNS) and Ethereum (ENS) Support.
-                  </p>
+                  <p>Seamless access to your favorite networks</p>
                 </div>
                 <div
                   id="content-text-create-account"
