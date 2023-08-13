@@ -1,3 +1,10 @@
+## [0.4.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.0...v0.4.1) (2023-08-13)
+
+
+### Bug Fixes
+
+* update social links ([9de1301](https://git.lumeweb.com/LumeWeb/extension/commit/9de130107aa6ed631dd2246a5aa7322e27e2eedc))
+
 # [0.4.0](https://git.lumeweb.com/LumeWeb/extension/compare/v0.3.0...v0.4.0) (2023-08-13)
 
 
