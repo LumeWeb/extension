@@ -59,13 +59,7 @@
             }
 
             .gradient-4 {
-                background: conic-gradient(
-                        from 180deg at 50% 50%,
-                        #2f2f2f -15.8deg,
-                        #66d155 222.32deg,
-                        #2f2f2f 344.2deg,
-                        #66d155 582.32deg
-                );
+                background: radial-gradient(circle, rgba(75,75,75,1) 0%, rgba(0,0,0,1) 100%);
                 opacity: 0;
                 z-index: -4;
             }
