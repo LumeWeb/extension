@@ -1,3 +1,10 @@
+# [0.5.0-develop.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.2-develop.1...v0.5.0-develop.1) (2023-08-13)
+
+
+### Features
+
+* add error tracking support via glitchtip ([e5e5e4c](https://git.lumeweb.com/LumeWeb/extension/commit/e5e5e4c9b95740646f93477b38c6246af513ff7e))
+
 ## [0.4.2-develop.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.1...v0.4.2-develop.1) (2023-08-13)
 
 
