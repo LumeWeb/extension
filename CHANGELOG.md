@@ -1,3 +1,10 @@
+## [0.4.2-develop.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.1...v0.4.2-develop.1) (2023-08-13)
+
+
+### Bug Fixes
+
+* have gradient-4 duplicate 1 ([1fc9cd8](https://git.lumeweb.com/LumeWeb/extension/commit/1fc9cd82d37c8274e586ab475bdd70de63b5f902))
+
 ## [0.4.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.4.0...v0.4.1) (2023-08-13)
 
 
