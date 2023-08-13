@@ -1,12 +1,12 @@
 {
     "name": "@lumeweb/extension",
-    "version": "0.4.0-develop.6",
+    "version": "0.4.1",
     "lockfileVersion": 3,
     "requires": true,
     "packages": {
         "": {
             "name": "@lumeweb/extension",
-            "version": "0.4.0-develop.6",
+            "version": "0.4.1",
             "dependencies": {
                 "@helia/unixfs": "^1.4.0",
                 "@lumeweb/kernel-dns-client": "^0.1.0-develop.4",
