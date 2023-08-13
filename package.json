@@ -1,6 +1,6 @@
 {
     "name": "@lumeweb/extension",
-    "version": "0.5.0-develop.1",
+    "version": "0.5.0",
     "description": "Lume Web is your decentralized gateway into the web3 internet, the web owned and controlled by its users",
     "main": "index.js",
     "type": "module",
