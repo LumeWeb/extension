@@ -1,3 +1,10 @@
+## [0.5.1](https://git.lumeweb.com/LumeWeb/extension/compare/v0.5.0...v0.5.1) (2023-08-14)
+
+
+### Bug Fixes
+
+* add missing import for Sentry ([9c76875](https://git.lumeweb.com/LumeWeb/extension/commit/9c768759155375bef948cff1a6cfcf00cae2eb76))
+
 # [0.5.0-develop.2](https://git.lumeweb.com/LumeWeb/extension/compare/v0.5.0-develop.1...v0.5.0-develop.2) (2023-08-14)
 
 
