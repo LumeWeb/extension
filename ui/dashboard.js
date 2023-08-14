@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom";
 import React from "react";
+import * as Sentry from "@sentry/browser";
 import App from "./apps/dashboard/App.jsx";
 import { SENTRY_DSN } from "../shared/constants.ts";
 
